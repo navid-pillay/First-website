@@ -7,16 +7,19 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     "main section:not(.hero) .container > h2," +
     "main section:not(.hero) .container > .lead," +
     "main section:not(.hero) .container > .btn," +
+    "main section:not(.hero) .container > .fc-actions," +
+    "main section:not(.hero) .container > .eyebrow," +
     "main section:not(.hero) .container > .contact-list," +
     "main section:not(.hero) .container > .tags," +
     "main section:not(.hero) .container > blockquote," +
-    ".card, .stat, .pillar, .way-item, .method li, .contact-info, .contact-card"
+    ".card, .stat, .pillar, .way-item, .method li, .contact-info, .contact-card," +
+    ".fc-stat, .path-step, .squad, .fc-quote, .standard-card"
   );
 
   // Stagger items that sit side by side (cards, stats).
   targets.forEach(function (el) {
     el.classList.add("reveal");
-    if (el.matches(".card, .stat, .way-item, .method li")) {
+    if (el.matches(".card, .stat, .way-item, .method li, .fc-stat, .path-step, .squad, .standard-card")) {
       var index = Array.prototype.indexOf.call(el.parentNode.children, el);
       var step = el.closest(".method, .cards-3") ? index % 3 : index;
       el.style.transitionDelay = step * 120 + "ms";
