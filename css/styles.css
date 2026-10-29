@@ -50,21 +50,80 @@ a {
   padding-bottom: 1rem;
 }
 
+/* Logo: Power Soccer ball mark and wordmark, then the Power FC mark */
 .logo {
-  display: block;
-  line-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #fff;
+  text-decoration: none;
+  font-style: italic;
+  text-transform: uppercase;
 }
 
-.logo img {
-  display: block;
-  height: 56px;
-  width: auto;
+.logo-mark {
+  flex: none;
+  width: 44px;
+  height: 36px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-@media (max-width: 600px) {
-  .logo img {
-    height: 48px;
-  }
+.logo-mark .logo-panel {
+  fill: #3fbf8f;
+  stroke: #3fbf8f;
+}
+
+.logo-mark .logo-speed {
+  stroke: #3fbf8f;
+}
+
+.logo-ps {
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 0.95;
+  letter-spacing: 0.03em;
+}
+
+.logo-ps span + span {
+  color: #3fbf8f;
+}
+
+.logo-divider {
+  width: 1px;
+  height: 34px;
+  margin: 0 0.35rem;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.logo-fc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.logo-fc-name {
+  font-weight: 800;
+  font-size: 1.3rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.logo-fc-name em {
+  color: #3fbf8f;
+}
+
+.logo-fc-tag {
+  font-style: normal;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .nav {
@@ -438,6 +497,167 @@ h2 {
 .hero-bg .cone {
   stroke-opacity: 0.25;
   stroke-width: 2;
+}
+
+/* About page hero: a slow 3v3 move with players that drift with the play */
+.hero-bg .player {
+  stroke-opacity: 0.4;
+  stroke-width: 2.5;
+  animation-duration: 24s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.hero-bg .seq .line,
+.hero-bg .seq .head,
+.hero-bg .run path,
+.hero-bg .run polygon {
+  stroke-opacity: 0.3;
+  stroke-width: 2.5;
+}
+
+.hero-bg .seq .line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: seq-draw 24s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .seq .head,
+.hero-bg .seq-ball {
+  opacity: 0;
+  animation: seq-head 24s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .seq-ball {
+  animation-delay: calc(var(--delay, 0s) + 0.1s);
+}
+
+.hero-bg .run {
+  opacity: 0;
+  animation: seq-run 24s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .run path,
+.hero-bg .run polygon {
+  stroke-opacity: 0.22;
+}
+
+@keyframes seq-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  1% { opacity: 1; }
+  7% { stroke-dashoffset: 0; }
+  32% { opacity: 1; stroke-dashoffset: 0; }
+  40%, 100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+@keyframes seq-head {
+  0%, 6% { opacity: 0; }
+  8%, 32% { opacity: 1; }
+  40%, 100% { opacity: 0; }
+}
+
+@keyframes seq-run {
+  0% { opacity: 0; }
+  4%, 26% { opacity: 1; }
+  34%, 100% { opacity: 0; }
+}
+
+/* About page hero: player movement (generated, 24s loop) */
+.hero-bg .p-o1 {
+  transform: translate(360px, 170px);
+  animation-name: move-o1;
+}
+
+@keyframes move-o1 {
+  0% { transform: translate(360px, 170px); }
+  5% { transform: translate(365px, 168px); }
+  10% { transform: translate(410px, 140px); }
+  18% { transform: translate(520px, 66px); }
+  28% { transform: translate(625px, 72px); }
+  40% { transform: translate(700px, 82px); }
+  48% { transform: translate(708px, 86px); }
+  62% { transform: translate(760px, 112px); }
+  80% { transform: translate(760px, 112px); }
+  100% { transform: translate(360px, 170px); }
+}
+
+.hero-bg .p-o2 {
+  transform: translate(470px, 100px);
+  animation-name: move-o2;
+}
+
+@keyframes move-o2 {
+  0% { transform: translate(470px, 100px); }
+  5% { transform: translate(472px, 101px); }
+  14% { transform: translate(505px, 110px); }
+  26% { transform: translate(541px, 120px); }
+  40% { transform: translate(560px, 140px); }
+  80% { transform: translate(560px, 140px); }
+  100% { transform: translate(470px, 100px); }
+}
+
+.hero-bg .p-o3 {
+  transform: translate(470px, 245px);
+  animation-name: move-o3;
+}
+
+@keyframes move-o3 {
+  0% { transform: translate(470px, 245px); }
+  28% { transform: translate(482px, 244px); }
+  38% { transform: translate(600px, 228px); }
+  47% { transform: translate(700px, 190px); }
+  54% { transform: translate(708px, 188px); }
+  62% { transform: translate(735px, 182px); }
+  80% { transform: translate(735px, 182px); }
+  100% { transform: translate(470px, 245px); }
+}
+
+.hero-bg .p-x1 {
+  transform: translate(640px, 110px);
+  animation-name: move-x1;
+}
+
+@keyframes move-x1 {
+  0% { transform: translate(640px, 110px); }
+  10% { transform: translate(600px, 106px); }
+  26% { transform: translate(612px, 96px); }
+  40% { transform: translate(662px, 100px); }
+  80% { transform: translate(668px, 102px); }
+  100% { transform: translate(640px, 110px); }
+}
+
+.hero-bg .p-x2 {
+  transform: translate(640px, 235px);
+  animation-name: move-x2;
+}
+
+@keyframes move-x2 {
+  0% { transform: translate(640px, 235px); }
+  30% { transform: translate(628px, 226px); }
+  46% { transform: translate(652px, 214px); }
+  80% { transform: translate(656px, 212px); }
+  100% { transform: translate(640px, 235px); }
+}
+
+.hero-bg .p-x3 {
+  transform: translate(800px, 170px);
+  animation-name: move-x3;
+}
+
+@keyframes move-x3 {
+  0% { transform: translate(800px, 170px); }
+  30% { transform: translate(795px, 160px); }
+  42% { transform: translate(768px, 128px); }
+  52% { transform: translate(790px, 160px); }
+  80% { transform: translate(795px, 165px); }
+  100% { transform: translate(800px, 170px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg .player {
+    animation: none;
+  }
 }
 
 

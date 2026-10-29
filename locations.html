@@ -6,13 +6,18 @@
   <title>Locations | Power FC</title>
   <meta name="description" content="Find Power Soccer and Power FC program locations across Toronto: East York, North Toronto, Bloor West, Forest Hill, Lawrence Park, Leaside, York Mills, and the Danforth.">
   <link rel="stylesheet" href="vendor/maplibre/maplibre-gl.css">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=14">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body class="map-page">
   <header class="site-header">
     <div class="container">
-      <a class="logo" href="index.html"><img src="img/power-soccer-logo.png" alt="Power Soccer" width="401" height="152"></a>
+      <a class="logo" href="index.html" aria-label="Power Soccer and Power FC, home">
+        <svg class="logo-mark" viewBox="0 0 44 36" aria-hidden="true"><path class="logo-speed" d="M2 12h9M0 18h8M3 24h8"/><circle cx="27" cy="18" r="14"/><path class="logo-panel" d="M27 12.5l5.2 3.8-2 6.1h-6.4l-2-6.1z"/><path d="M27 12.5V4M32.2 16.3l8.1-2.6M30.2 22.4l5 6.9M23.8 22.4l-5 6.9M21.8 16.3l-8.1-2.6"/></svg>
+        <span class="logo-ps"><span>Power</span><span>Soccer</span></span>
+        <span class="logo-divider" aria-hidden="true"></span>
+        <span class="logo-fc"><span class="logo-fc-name">Power <em>FC</em></span><span class="logo-fc-tag">High Performance Academy</span></span>
+      </a>
       <nav>
         <ul class="nav">
           <li><a href="index.html">Home</a></li>
@@ -29,8 +34,8 @@
     <aside id="map-panel" class="map-panel" aria-live="polite"></aside>
   </main>
 
-  <script src="js/main.js?v=13"></script>
+  <script src="js/main.js?v=14"></script>
   <script src="vendor/maplibre/maplibre-gl.js"></script>
-  <script src="js/locations.js?v=13"></script>
+  <script src="js/locations.js?v=14"></script>
 </body>
 </html>
