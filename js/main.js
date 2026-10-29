@@ -9,15 +9,17 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     "main section:not(.hero) .container > .btn," +
     "main section:not(.hero) .container > .contact-list," +
     "main section:not(.hero) .container > .tags," +
-    ".card, .stat, .contact-info, .contact-card"
+    "main section:not(.hero) .container > blockquote," +
+    ".card, .stat, .pillar, .way-item, .method li, .contact-info, .contact-card"
   );
 
   // Stagger items that sit side by side (cards, stats).
   targets.forEach(function (el) {
     el.classList.add("reveal");
-    if (el.classList.contains("card") || el.classList.contains("stat")) {
+    if (el.matches(".card, .stat, .way-item, .method li")) {
       var index = Array.prototype.indexOf.call(el.parentNode.children, el);
-      el.style.transitionDelay = index * 120 + "ms";
+      var step = el.closest(".method, .cards-3") ? index % 3 : index;
+      el.style.transitionDelay = step * 120 + "ms";
     }
   });
 
