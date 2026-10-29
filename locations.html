@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Locations | Power FC</title>
   <meta name="description" content="Find Power Soccer and Power FC program locations across Toronto: East York, North Toronto, Bloor West, Forest Hill, Lawrence Park, Leaside, York Mills, and the Danforth.">
-  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="vendor/maplibre/maplibre-gl.css">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   <script>document.documentElement.classList.add("js");</script>
 </head>
-<body>
+<body class="map-page">
   <header class="site-header">
     <div class="container">
       <a class="logo" href="index.html">POWER <span>FC</span></a>
@@ -24,34 +24,12 @@
   </header>
 
   <main>
-    <section class="hero page-hero">
-      <div class="container">
-        <span class="eyebrow">Locations</span>
-        <h1>Find Us Across Toronto</h1>
-        <p>Select a pin on the map to see the address and get directions.</p>
-      </div>
-    </section>
-
-    <section class="map-section">
-      <div class="container">
-        <div class="map-layout">
-          <div id="map" class="map" role="region" aria-label="Map of Power Soccer locations in Toronto"></div>
-          <aside id="map-panel" class="map-panel" aria-live="polite"></aside>
-        </div>
-        <p class="map-note">Pins show the general area. Use the Google Maps link for exact directions, or call <a href="tel:+14164256062">416.425.6062</a> to confirm where your program runs.</p>
-      </div>
-    </section>
+    <div id="map" class="map" role="region" aria-label="Map of Power Soccer locations in Toronto"></div>
+    <aside id="map-panel" class="map-panel" aria-live="polite"></aside>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>201 Wicksteed Ave, Suite 8, Toronto, ON M4G 0B1 &middot; <a href="tel:+14164256062">416.425.6062</a> &middot; <a href="mailto:info@powersoccer.ca">info@powersoccer.ca</a></p>
-      <p>&copy; <span id="year">2026</span> Power Soccer Inc. &middot; Power FC. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script src="js/main.js?v=7"></script>
-  <script src="vendor/leaflet/leaflet.js"></script>
-  <script src="js/locations.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
+  <script src="vendor/maplibre/maplibre-gl.js"></script>
+  <script src="js/locations.js?v=8"></script>
 </body>
 </html>
