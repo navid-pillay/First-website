@@ -596,8 +596,8 @@ h2 {
 }
 
 /* Map pins */
+/* MapLibre positions each pin absolutely; don't override its position. */
 .pin {
-  position: relative;
   width: 22px;
   height: 22px;
   padding: 0;
