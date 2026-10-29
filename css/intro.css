@@ -1,0 +1,346 @@
+/* Intro page: two pendants on black, with green light behind fluted glass */
+:root {
+  --green: #0f4d3a;
+  --green-bright: #1a7a5a;
+  --mint: #3fbf8f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body.intro {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #000;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Background */
+.intro-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  animation: fade-in 2.4s ease-out 0.2s forwards;
+}
+
+.glow {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(26, 122, 90, 0.55) 0%, rgba(15, 77, 58, 0.25) 35%, transparent 65%);
+  filter: blur(30px);
+  opacity: 0;
+}
+
+.glow-1 {
+  left: -30vmax;
+  top: -20vmax;
+  animation: glow-a 18s ease-in-out infinite;
+}
+
+.glow-2 {
+  right: -30vmax;
+  top: 0;
+  animation: glow-b 22s ease-in-out 4s infinite;
+}
+
+.glow-3 {
+  left: 15vw;
+  bottom: -45vmax;
+  animation: glow-c 20s ease-in-out 9s infinite;
+}
+
+/* Vertical flutes, like ribbed glass the light shines through */
+.flutes {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.7) 0,
+    rgba(0, 0, 0, 0) 12px,
+    rgba(255, 255, 255, 0.05) 20px,
+    rgba(0, 0, 0, 0) 28px,
+    rgba(0, 0, 0, 0.7) 40px
+  );
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.1) 40%, #000 90%);
+}
+
+@keyframes glow-a {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  45% { opacity: 0.9; transform: translate(18vw, 10vh); }
+  70% { opacity: 0.4; }
+}
+
+@keyframes glow-b {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  50% { opacity: 0.8; transform: translate(-16vw, 8vh); }
+}
+
+@keyframes glow-c {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  50% { opacity: 0.7; transform: translate(10vw, -12vh); }
+}
+
+/* Layout */
+.intro-main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 2rem 1rem;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.is-leaving .intro-main {
+  opacity: 0;
+  transform: scale(1.03);
+}
+
+.pendants {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(2rem, 8vw, 7rem);
+}
+
+/* Pendants */
+.pendant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0;
+  animation: pendant-in 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.pendant-ps {
+  animation-delay: 0.5s;
+}
+
+.pendant-fc {
+  animation-delay: 0.85s;
+}
+
+.pendant-art {
+  position: relative;
+  display: block;
+  width: clamp(150px, 22vw, 260px);
+  transition: transform 0.4s ease, filter 0.4s ease;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 22px rgba(26, 122, 90, 0.25));
+}
+
+.pendant-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pendant:hover .pendant-art,
+.pendant:focus-visible .pendant-art {
+  transform: translateY(-6px);
+  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 34px rgba(63, 191, 143, 0.45));
+}
+
+.pendant:focus-visible {
+  outline: none;
+}
+
+.pendant:focus-visible .pendant-label strong {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.badge-word {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 1px;
+  fill: #fff;
+}
+
+.badge-green {
+  fill: var(--mint);
+}
+
+.badge-tag {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  fill: rgba(255, 255, 255, 0.55);
+}
+
+.pendant-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  opacity: 0;
+  animation: fade-in 1s ease-out forwards;
+}
+
+.pendant-ps .pendant-label {
+  animation-delay: 1.6s;
+}
+
+.pendant-fc .pendant-label {
+  animation-delay: 1.9s;
+}
+
+.pendant-label strong {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pendant-label span {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.intro-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  animation: fade-in 1.2s ease-out 2.4s forwards;
+}
+
+/* Shine sweeping across the metal */
+.sheen {
+  animation: sheen 8s ease-in-out infinite;
+}
+
+.pendant-ps .sheen {
+  animation-delay: 1.4s;
+}
+
+.pendant-fc .sheen {
+  animation-delay: 1.8s;
+}
+
+@keyframes sheen {
+  0% { transform: skewX(-18deg) translateX(0); }
+  22%, 100% { transform: skewX(-18deg) translateX(480px); }
+}
+
+/* Sparkles */
+.sparkle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  background: #fff;
+  filter: drop-shadow(0 0 6px rgba(63, 191, 143, 0.9));
+  opacity: 0;
+  transform: scale(0);
+  animation: sparkle 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.s1 { top: 6%; right: 12%; }
+.s2 { top: 42%; left: -2%; width: 18px; height: 18px; }
+.s3 { bottom: 18%; right: 4%; width: 20px; height: 20px; }
+
+.pendant-ps .s1 { animation-delay: 1.1s; }
+.pendant-ps .s2 { animation-delay: 1.5s; }
+.pendant-ps .s3 { animation-delay: 1.9s; }
+.pendant-fc .s1 { animation-delay: 1.4s; }
+.pendant-fc .s2 { animation-delay: 1.8s; }
+.pendant-fc .s3 { animation-delay: 2.2s; }
+
+@keyframes sparkle {
+  0% { opacity: 0; transform: scale(0) rotate(0deg); }
+  6% { opacity: 1; transform: scale(1) rotate(45deg); }
+  14%, 100% { opacity: 0; transform: scale(0) rotate(90deg); }
+}
+
+@keyframes pendant-in {
+  0% { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(8px); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes fade-in {
+  to { opacity: 1; }
+}
+
+/* Phones: stack the pendants */
+@media (max-width: 600px) {
+  .intro-main {
+    gap: 1.5rem;
+  }
+
+  .pendants {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  .pendant {
+    gap: 0.75rem;
+  }
+
+  .pendant-art {
+    width: 140px;
+  }
+}
+
+@media (max-height: 560px) and (max-width: 600px) {
+  body.intro {
+    overflow: auto;
+  }
+}
+
+/* Reduced motion: keep the fades, drop the drifting and sweeping */
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .sheen,
+  .sparkle {
+    animation: none;
+  }
+
+  .glow-1,
+  .glow-2 {
+    opacity: 0.5;
+  }
+
+  @keyframes pendant-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
