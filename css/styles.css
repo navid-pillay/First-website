@@ -311,8 +311,66 @@ h2 {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: url("../img/tactics.svg") center / cover no-repeat;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+}
+
+.hero-bg .pitch {
+  stroke-opacity: 0.1;
+  stroke-width: 2;
+}
+
+.hero-bg .mark {
+  stroke-opacity: 0.3;
+  stroke-width: 2.5;
+  opacity: 0.35;
+  animation: mark-pulse var(--d, 8s) ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .play path,
+.hero-bg .play polygon {
+  stroke-opacity: 0.3;
+  stroke-width: 2.5;
+}
+
+.hero-bg .play .line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: pass-draw 14s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .play .head {
+  opacity: 0;
+  animation: pass-head 14s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .ball {
+  stroke: #3fbf8f;
+  stroke-width: 3.5;
+  stroke-opacity: 0.8;
+  opacity: 0;
+  animation: pass-head 14s ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes mark-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+@keyframes pass-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  4% { opacity: 1; }
+  30% { stroke-dashoffset: 0; }
+  72% { opacity: 1; stroke-dashoffset: 0; }
+  86%, 100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+@keyframes pass-head {
+  0%, 28% { opacity: 0; }
+  33%, 72% { opacity: 1; }
+  86%, 100% { opacity: 0; }
 }
 
 /* Hero text rises in on page load */
@@ -357,12 +415,16 @@ h2 {
 
 @media (prefers-reduced-motion: reduce) {
   .hero .container > * {
-    animation: none;
+    animation-name: fade-in;
   }
 
   .js .reveal {
-    opacity: 1;
     transform: none;
-    transition: none;
+    transition: opacity 0.8s ease;
   }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
