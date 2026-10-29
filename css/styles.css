@@ -428,3 +428,251 @@ h2 {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Drill cones on the About page hero */
+.hero-bg .cone {
+  stroke-opacity: 0.25;
+  stroke-width: 2;
+}
+
+/* Locations page */
+.map-section {
+  padding-top: 3rem;
+}
+
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--black);
+  box-shadow: 0 10px 40px rgba(13, 15, 14, 0.25);
+  border: 1px solid #262b29;
+}
+
+.map {
+  height: 580px;
+  background: var(--black);
+}
+
+.map-panel {
+  background: var(--charcoal);
+  color: #fff;
+  padding: 1.75rem;
+  max-height: 580px;
+  overflow-y: auto;
+  border-left: 3px solid var(--green);
+}
+
+.map-panel h2 {
+  color: #fff;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.map-panel .eyebrow {
+  margin-bottom: 0.4rem;
+}
+
+.map-panel a:not(.btn) {
+  color: #8fd1b5;
+}
+
+.panel-hint {
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 0 1.25rem;
+}
+
+.loc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.loc-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  margin-bottom: 0.35rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.loc-item:hover,
+.loc-item:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(143, 209, 181, 0.35);
+  outline: none;
+}
+
+.loc-item strong {
+  display: block;
+  font-weight: 600;
+}
+
+.loc-item small {
+  display: block;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+}
+
+.loc-dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green-bright);
+  box-shadow: 0 0 0 3px rgba(26, 122, 90, 0.35);
+}
+
+.loc-dot-hq {
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+.panel-back {
+  display: block;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.panel-back:hover,
+.panel-back:focus-visible {
+  color: #fff;
+}
+
+.loc-venue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #8fd1b5;
+  margin: 0 0 0.25rem;
+}
+
+.loc-address {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 1.5rem;
+}
+
+.map-panel .btn:hover {
+  background: var(--green-bright);
+}
+
+.map-note {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 1rem 0 0;
+}
+
+/* Map pins */
+.pin span {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--green-bright);
+  border: 3px solid var(--black);
+  box-shadow: 0 0 0 2px var(--green-bright);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.pin span::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid #3fbf8f;
+  opacity: 0;
+  animation: pin-pulse 2.6s ease-out infinite;
+}
+
+.pin-hq span {
+  background: #fff;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.pin:hover span,
+.pin.is-active span {
+  transform: scale(1.3);
+  background: #3fbf8f;
+  box-shadow: 0 0 0 2px #3fbf8f;
+}
+
+@keyframes pin-pulse {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.leaflet-tooltip.pin-label {
+  background: var(--black);
+  color: #fff;
+  border: 1px solid var(--green);
+  border-radius: 6px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.leaflet-tooltip-top.pin-label::before {
+  border-top-color: var(--green);
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: var(--black);
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--charcoal);
+  color: #fff;
+  border-bottom-color: #2c312f;
+}
+
+.leaflet-bar a:hover {
+  background: var(--green);
+}
+
+.leaflet-container .leaflet-control-attribution {
+  background: rgba(13, 15, 14, 0.8);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.leaflet-container .leaflet-control-attribution a {
+  color: #8fd1b5;
+}
+
+@media (max-width: 860px) {
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map {
+    height: 420px;
+  }
+
+  .map-panel {
+    max-height: none;
+    border-left: 0;
+    border-top: 3px solid var(--green);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin span::after {
+    animation: none;
+  }
+}
