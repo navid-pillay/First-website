@@ -51,15 +51,20 @@ a {
 }
 
 .logo {
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-decoration: none;
+  display: block;
+  line-height: 0;
 }
 
-.logo span {
-  color: var(--green-bright);
+.logo img {
+  display: block;
+  height: 56px;
+  width: auto;
+}
+
+@media (max-width: 600px) {
+  .logo img {
+    height: 48px;
+  }
 }
 
 .nav {
@@ -1013,4 +1018,48 @@ h2 {
     gap: 0.5rem;
     padding: 1.5rem 0;
   }
+}
+
+/* Contact page hero: free kicks into the corners */
+.hero-bg .net {
+  stroke-opacity: 0.06;
+  stroke-width: 1.5;
+}
+
+.hero-bg .kick .line {
+  stroke-opacity: 0.32;
+  stroke-width: 2.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: kick-draw 20s ease-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .kick .end {
+  stroke-width: 3.5;
+  stroke-opacity: 0.85;
+  opacity: 0;
+  animation: kick-end 20s ease-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .kick.goal .end {
+  stroke: #3fbf8f;
+}
+
+.hero-bg .kick.miss .end {
+  stroke: #e0574a;
+}
+
+@keyframes kick-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  1% { opacity: 1; }
+  8% { stroke-dashoffset: 0; opacity: 1; }
+  20% { stroke-dashoffset: 0; opacity: 1; }
+  25%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes kick-end {
+  0%, 7.5% { opacity: 0; }
+  9%, 20% { opacity: 1; }
+  25%, 100% { opacity: 0; }
 }
