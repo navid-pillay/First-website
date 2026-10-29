@@ -1,4 +1,5 @@
-document.getElementById("year").textContent = new Date().getFullYear();
+var yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // Fade content in as it scrolls up from the bottom of the screen.
 (function () {
