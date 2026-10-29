@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About | Power FC</title>
   <meta name="description" content="About Power Soccer Inc. and Power FC: a Toronto youth soccer academy since 1996, with boys teams U8 to U18 and girls teams U8 to U14.">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=14">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
   <header class="site-header">
     <div class="container">
-      <a class="logo" href="index.html"><img src="img/power-soccer-logo.png" alt="Power Soccer" width="401" height="152"></a>
+      <a class="logo" href="index.html" aria-label="Power Soccer and Power FC, home">
+        <svg class="logo-mark" viewBox="0 0 44 36" aria-hidden="true"><path class="logo-speed" d="M2 12h9M0 18h8M3 24h8"/><circle cx="27" cy="18" r="14"/><path class="logo-panel" d="M27 12.5l5.2 3.8-2 6.1h-6.4l-2-6.1z"/><path d="M27 12.5V4M32.2 16.3l8.1-2.6M30.2 22.4l5 6.9M23.8 22.4l-5 6.9M21.8 16.3l-8.1-2.6"/></svg>
+        <span class="logo-ps"><span>Power</span><span>Soccer</span></span>
+        <span class="logo-divider" aria-hidden="true"></span>
+        <span class="logo-fc"><span class="logo-fc-name">Power <em>FC</em></span><span class="logo-fc-tag">High Performance Academy</span></span>
+      </a>
       <nav>
         <ul class="nav">
           <li><a href="index.html">Home</a></li>
@@ -52,33 +57,37 @@
       <polygon class="mark cone" style="--d:9.4s;--delay:3.6s" points="1050,171 1058,186 1042,186"/>
       <polygon class="mark cone" style="--d:10.7s;--delay:4.3s" points="1050,226 1058,241 1042,241"/>
       <polygon class="mark cone" style="--d:8.0s;--delay:5.0s" points="1050,281 1058,296 1042,296"/>
-      <circle class="mark" style="--d:6.0s;--delay:0.0s" cx="360" cy="110" r="10"/>
-      <circle class="mark" style="--d:7.7s;--delay:5.6s" cx="360" cy="235" r="10"/>
-      <circle class="mark" style="--d:9.4s;--delay:5.2s" cx="560" cy="170" r="10"/>
-      <path class="mark" style="--d:7.1s;--delay:0.8s" d="M690 95L710 115M710 95L690 115"/>
-      <path class="mark" style="--d:8.8s;--delay:0.4s" d="M680 230L700 250M700 230L680 250"/>
-      <path class="mark" style="--d:6.5s;--delay:2.5s" d="M810 160L830 180M830 160L810 180"/>
-      <g class="play" style="--delay:0.0s">
-      <path class="line" pathLength="1" d="M372 118Q470 120 548 162"/>
-      <polygon class="head" points="548,162 528.4,160.5 535.9,146.4"/>
+      <g class="run" style="--delay:1.44s">
+      <path d="M374 162Q470 30 625 72" stroke-dasharray="6 9"/>
+      <polygon points="625,72 607.7,74.6 611.4,61.1"/>
       </g>
-      <g class="play" style="--delay:2.0s">
-      <path class="line" pathLength="1" d="M548 180Q470 230 374 232"/>
-      <polygon class="head" points="374,232 391.8,223.6 392.2,239.6"/>
+      <g class="run" style="--delay:6.72s">
+      <path d="M482 244Q590 250 700 190" stroke-dasharray="6 9"/>
+      <polygon points="700,190 689.3,203.8 682.6,191.5"/>
       </g>
-      <g class="play" style="--delay:4.0s">
-      <path class="line" pathLength="1" d="M374 222Q520 300 640 250"/>
-      <polygon class="head" points="640,250 626.5,264.3 620.3,249.5"/>
+      <g class="seq" style="--delay:0.96s">
+      <path class="line" pathLength="1" d="M364 168Q420 120 494 107"/>
+      <polygon class="head" points="494,107 479.5,116.7 477.0,102.9"/>
       </g>
-      <g class="play" style="--delay:6.0s">
-      <path class="line" pathLength="1" d="M640 250Q661 264 682 246Q703 228 724 242Q745 256 766 238Q787 220 808 234Q829 248 850 230"/>
-      <polygon class="head" points="850,230 832.8,239.7 831.3,223.7"/>
+      <g class="seq" style="--delay:6.24s">
+      <path class="line" pathLength="1" d="M541 120Q590 120 656 76"/>
+      <polygon class="head" points="656,76 646.8,90.8 639.0,79.2"/>
       </g>
-      <g class="play" style="--delay:8.5s">
-      <path class="line" pathLength="1" d="M860 222Q900 190 948 172"/>
-      <polygon class="head" points="948,172 934.0,185.8 928.3,170.8"/>
+      <g class="seq" style="--delay:11.04s">
+      <path class="line" pathLength="1" d="M706 85Q725 140 707 188"/>
+      <polygon class="head" points="707,188 705.9,170.8 719.0,175.8"/>
       </g>
-      <circle class="ball" style="--delay:9s" cx="952" cy="170" r="10"/>
+      <g class="seq" style="--delay:12.96s">
+      <path class="line" pathLength="1" d="M708 188Q840 205 948 172"/>
+      <polygon class="head" points="948,172 934.7,183.4 930.7,170.0"/>
+      </g>
+      <circle class="ball seq-ball" style="--delay:12.96s" cx="952" cy="170" r="10"/>
+      <circle class="player p-o1" r="10"/>
+      <circle class="player p-o2" r="10"/>
+      <circle class="player p-o3" r="10"/>
+      <path class="player p-x1" d="M-10 -10L10 10M10 -10L-10 10"/>
+      <path class="player p-x2" d="M-10 -10L10 10M10 -10L-10 10"/>
+      <path class="player p-x3" d="M-10 -10L10 10M10 -10L-10 10"/>
       </svg>
       <div class="container">
         <span class="eyebrow">About Us</span>
@@ -207,6 +216,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=13"></script>
+  <script src="js/main.js?v=14"></script>
 </body>
 </html>
