@@ -6,7 +6,21 @@
   <title>Power FC | High Performance Academy in Toronto</title>
   <meta name="description" content="Power FC, the high performance academy program of Power Soccer: boys teams U8 to U18 and girls teams U8 to U14 in Toronto since 2005.">
   <link rel="stylesheet" href="css/styles.css?v=15">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    // Show the intro whenever the site is opened: on a refresh, or when
+    // arriving from outside the site (search results, bookmarks, typed links).
+    (function () {
+      var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+      var type = nav ? nav.type : (performance.navigation && performance.navigation.type === 1 ? "reload" : "navigate");
+      var fromSite = false;
+      try { fromSite = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (e) {}
+      if (type === "reload" || (type === "navigate" && !fromSite)) {
+        location.replace("index.html");
+        return;
+      }
+      document.documentElement.classList.add("js");
+    })();
+  </script>
 </head>
 <body>
   <header class="site-header">
