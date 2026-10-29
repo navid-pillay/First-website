@@ -635,6 +635,11 @@ h2 {
   background: var(--black);
 }
 
+/* Recolour the OpenStreetMap tiles: black land, grey street lines */
+.map-tiles {
+  filter: grayscale(1) invert(1) brightness(1.15) contrast(1.35);
+}
+
 .leaflet-bar a,
 .leaflet-bar a:hover {
   background: var(--charcoal);

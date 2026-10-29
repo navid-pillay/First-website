@@ -98,11 +98,12 @@ var LOCATIONS = [
     attributionControl: true
   });
 
-  // Dark basemap: black background with grey streets.
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    subdomains: "abcd",
+  // OpenStreetMap tiles (free, including commercial use, with attribution).
+  // A CSS filter on the tile layer turns them black with grey streets.
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    className: "map-tiles",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
   var bounds = L.latLngBounds(LOCATIONS.map(function (loc) { return [loc.lat, loc.lng]; }));
