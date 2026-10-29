@@ -297,3 +297,72 @@ h2 {
     padding: 3rem 0;
   }
 }
+
+/* Animated tactics board behind the home page hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero .container {
+  position: relative;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url("../img/tactics.svg") center / cover no-repeat;
+  pointer-events: none;
+}
+
+/* Hero text rises in on page load */
+.hero .container > * {
+  animation: rise-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.hero .container > *:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.hero .container > *:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.hero .container > *:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Scroll reveal (only hides content when JavaScript is running) */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .container > * {
+    animation: none;
+  }
+
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
