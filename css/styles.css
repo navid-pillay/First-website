@@ -850,24 +850,11 @@ h2 {
   display: none;
 }
 
-.honeypot {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
 .btn-submit {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
   min-width: 180px;
-}
-
-.btn-submit:disabled {
-  opacity: 0.7;
-  cursor: wait;
 }
 
 .form-status {
@@ -878,45 +865,11 @@ h2 {
   display: none;
 }
 
-.form-status.is-error {
-  color: #c0392b;
-}
-
-.form-success {
-  text-align: center;
-  padding: 2rem 0.5rem;
-}
-
-.form-success h2 {
-  font-size: 1.6rem;
-  margin: 1.25rem 0 0.5rem;
-}
-
-.form-success p {
-  color: var(--muted);
-  margin: 0 auto;
-  max-width: 420px;
-}
-
-.success-mark {
-  display: inline-block;
-  position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--green);
-}
-
-.success-mark::after {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 14px;
-  width: 14px;
-  height: 28px;
-  border: solid #fff;
-  border-width: 0 4px 4px 0;
-  transform: rotate(45deg);
+.form-status.is-notice {
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  background: var(--green-tint);
+  color: var(--green);
 }
 
 @media (max-width: 860px) {
