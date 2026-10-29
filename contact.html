@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Power FC</title>
+  <meta name="description" content="Contact Power Soccer Inc. and Power FC about the academy, soccer schools, summer camps, or private training in Toronto.">
+  <link rel="stylesheet" href="css/styles.css?v=10">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href="index.html">POWER <span>FC</span></a>
+      <nav>
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="locations.html">Locations</a></li>
+          <li><a href="contact.html" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero page-hero">
+      <div class="container">
+        <span class="eyebrow">Contact</span>
+        <h1>Get in Touch</h1>
+        <p>Questions about the academy, camps, or training? Send us a message and we'll get back to you.</p>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="container contact-layout">
+        <aside class="contact-info">
+          <h2>Power Soccer Inc.</h2>
+          <p class="lead">Home of the Power FC Academy, developing players in Toronto since 1996.</p>
+          <dl>
+            <dt>Office</dt>
+            <dd>201 Wicksteed Ave, Suite 8<br>Toronto, ON M4G 0B1</dd>
+            <dt>Phone</dt>
+            <dd><a href="tel:+14164256062">416.425.6062</a></dd>
+            <dt>Email</dt>
+            <dd><a href="mailto:info@powersoccer.ca">info@powersoccer.ca</a></dd>
+          </dl>
+          <a class="btn btn-outline" href="locations.html">View Our Locations</a>
+        </aside>
+
+        <div class="contact-card">
+          <form id="contact-form" class="contact-form" action="https://formsubmit.co/pillaynavid.2007@gmail.com" method="POST" novalidate>
+            <input type="hidden" name="_subject" value="New message from the Power FC website">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="https://navid-pillay.github.io/First-website/contact.html?sent=1">
+            <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Name <span aria-hidden="true">*</span></label>
+                <input id="name" name="name" type="text" autocomplete="name" required>
+                <p class="field-error" id="name-error"></p>
+              </div>
+              <div class="field">
+                <label for="email">Email <span aria-hidden="true">*</span></label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+                <p class="field-error" id="email-error"></p>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="phone">Phone <span class="optional">(optional)</span></label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel">
+              </div>
+              <div class="field">
+                <label for="age-group">Player age group <span class="optional">(optional)</span></label>
+                <select id="age-group" name="age_group">
+                  <option value="">Select an age group</option>
+                  <option>Under 8</option>
+                  <option>U8 &ndash; U10</option>
+                  <option>U11 &ndash; U12</option>
+                  <option>U13 &ndash; U14</option>
+                  <option>U15 &ndash; U18</option>
+                  <option>Adult</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="topic">What can we help with? <span aria-hidden="true">*</span></label>
+              <select id="topic" name="topic" required>
+                <option value="">Choose a topic</option>
+                <option>Power FC Academy / assessment</option>
+                <option>Soccer schools</option>
+                <option>Summer camps</option>
+                <option>Private training</option>
+                <option>Adult clinics</option>
+                <option>General question</option>
+              </select>
+              <p class="field-error" id="topic-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="message">Message <span aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" rows="6" required></textarea>
+              <p class="field-error" id="message-error"></p>
+            </div>
+
+            <button type="submit" class="btn btn-submit">Send Message</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>201 Wicksteed Ave, Suite 8, Toronto, ON M4G 0B1 &middot; <a href="tel:+14164256062">416.425.6062</a> &middot; <a href="mailto:info@powersoccer.ca">info@powersoccer.ca</a></p>
+      <p>&copy; <span id="year">2026</span> Power Soccer Inc. &middot; Power FC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js?v=10"></script>
+  <script src="js/contact.js?v=10"></script>
+</body>
+</html>

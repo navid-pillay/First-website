@@ -9,7 +9,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
     "main section:not(.hero) .container > .btn," +
     "main section:not(.hero) .container > .contact-list," +
     "main section:not(.hero) .container > .tags," +
-    ".card, .stat"
+    ".card, .stat, .contact-info, .contact-card"
   );
 
   // Stagger items that sit side by side (cards, stats).
