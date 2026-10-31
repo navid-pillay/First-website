@@ -161,10 +161,63 @@ body.intro {
   filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 22px rgba(26, 122, 90, 0.25));
 }
 
-.pendant-art svg {
+/* Each original logo sits in a round metal pendant */
+.medallion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 9px solid transparent;
+  background:
+    radial-gradient(circle at 50% 30%, #222826 0%, #0c0e0d 62%, #050606 100%) padding-box,
+    conic-gradient(from 200deg, #ffffff, #8d938f, #e9ecea, #6f7572, #ffffff, #b9bfbc, #ffffff) border-box;
+  box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.08), inset 0 -12px 30px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.medallion::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Shine sweeping across the pendant */
+.medallion::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
+  background-size: 300% 100%;
+  background-position: 120% 0;
+  animation: sheen 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.pendant-ps .medallion::after {
+  animation-delay: 1.4s;
+}
+
+.pendant-fc .medallion::after {
+  animation-delay: 1.8s;
+}
+
+.medallion img {
+  position: relative;
   display: block;
-  width: 100%;
   height: auto;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+}
+
+.pendant-ps .medallion img {
+  width: 92%;
+}
+
+.pendant-fc .medallion img {
+  width: 54%;
 }
 
 .pendant:hover .pendant-art,
@@ -180,25 +233,6 @@ body.intro {
 .pendant:focus-visible .pendant-label strong {
   text-decoration: underline;
   text-underline-offset: 6px;
-}
-
-.badge-word {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: 1px;
-  fill: #fff;
-}
-
-.badge-green {
-  fill: var(--mint);
-}
-
-.badge-tag {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 600;
-  letter-spacing: 3.5px;
-  fill: rgba(255, 255, 255, 0.55);
 }
 
 .pendant-label {
@@ -241,22 +275,9 @@ body.intro {
   animation: fade-in 1.2s ease-out 2.4s forwards;
 }
 
-/* Shine sweeping across the metal */
-.sheen {
-  animation: sheen 8s ease-in-out infinite;
-}
-
-.pendant-ps .sheen {
-  animation-delay: 1.4s;
-}
-
-.pendant-fc .sheen {
-  animation-delay: 1.8s;
-}
-
 @keyframes sheen {
-  0% { transform: skewX(-18deg) translateX(0); }
-  22%, 100% { transform: skewX(-18deg) translateX(480px); }
+  0% { background-position: 120% 0; }
+  22%, 100% { background-position: -20% 0; }
 }
 
 /* Sparkles */
@@ -316,7 +337,7 @@ body.intro {
   }
 
   .pendant-art {
-    width: 140px;
+    width: 170px;
   }
 }
 
@@ -329,7 +350,7 @@ body.intro {
 /* Reduced motion: keep the fades, drop the drifting and sweeping */
 @media (prefers-reduced-motion: reduce) {
   .glow,
-  .sheen,
+  .medallion::after,
   .sparkle {
     animation: none;
   }
