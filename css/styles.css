@@ -283,6 +283,7 @@ h2 {
 }
 
 .card {
+  position: relative;
   background: #fff;
   border-radius: 10px;
   padding: 1.75rem;
@@ -1006,6 +1007,7 @@ h2 {
 }
 
 .contact-card {
+  position: relative;
   background: #fff;
   border-radius: 12px;
   border-top: 4px solid var(--green);
@@ -1184,6 +1186,7 @@ h2 {
 }
 
 .method li {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -1713,5 +1716,53 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .fc-crest {
     animation: none;
+  }
+}
+
+/* Load-in: typed text and box outlines that draw themselves */
+.pre-type main {
+  visibility: hidden;
+}
+
+.type-ghost {
+  visibility: hidden;
+}
+
+@property --draw {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.box-draw::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1.5px solid rgba(15, 77, 58, 0.3);
+  pointer-events: none;
+  --draw: 0deg;
+  -webkit-mask: conic-gradient(from -45deg, #000 var(--draw), transparent 0);
+  mask: conic-gradient(from -45deg, #000 var(--draw), transparent 0);
+}
+
+.squad.box-draw::after,
+.standard-card.box-draw::after,
+.method li.box-draw::after {
+  border-color: rgba(233, 236, 234, 0.28);
+}
+
+.box-draw.is-drawn::after {
+  animation: box-draw 0.8s ease-out forwards;
+}
+
+@keyframes box-draw {
+  to { --draw: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box-draw.is-drawn::after {
+    animation: none;
+    --draw: 360deg;
   }
 }

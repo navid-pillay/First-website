@@ -6,7 +6,7 @@
   <title>Locations | Power FC</title>
   <meta name="description" content="Find Power Soccer and Power FC program locations across Toronto: East York, North Toronto, Bloor West, Forest Hill, Lawrence Park, Leaside, York Mills, and the Danforth.">
   <link rel="stylesheet" href="vendor/maplibre/maplibre-gl.css">
-  <link rel="stylesheet" href="css/styles.css?v=17">
+  <link rel="stylesheet" href="css/styles.css?v=18">
   <script>
     // Show the intro whenever the site is opened: on a refresh, or when
     // arriving from outside the site (search results, bookmarks, typed links).
@@ -19,7 +19,8 @@
         location.replace("index.html");
         return;
       }
-      document.documentElement.classList.add("js");
+      document.documentElement.classList.add("js", "pre-type");
+      setTimeout(function () { document.documentElement.classList.remove("pre-type"); }, 2000);
     })();
   </script>
 </head>
@@ -51,8 +52,8 @@
     <aside id="map-panel" class="map-panel" aria-live="polite"></aside>
   </main>
 
-  <script src="js/main.js?v=17"></script>
+  <script src="js/main.js?v=18"></script>
   <script src="vendor/maplibre/maplibre-gl.js"></script>
-  <script src="js/locations.js?v=17"></script>
+  <script src="js/locations.js?v=18"></script>
 </body>
 </html>
