@@ -69,70 +69,34 @@ a {
   transition: opacity 0.2s ease;
 }
 
+.logo-ps-img {
+  display: block;
+  height: 48px;
+  width: auto;
+}
+
+.logo-fc-img {
+  display: block;
+  height: 44px;
+  width: auto;
+}
+
+@media (max-width: 600px) {
+  .logo-ps-img {
+    height: 40px;
+  }
+
+  .logo-fc-img {
+    height: 38px;
+  }
+}
+
 .logo:has(.is-current) .logo-brand:not(.is-current) {
   opacity: 0.55;
 }
 
 .logo:has(.is-current) .logo-brand:not(.is-current):hover {
   opacity: 1;
-}
-
-.logo-shield {
-  flex: none;
-  width: 28px;
-  height: 34px;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 1.8;
-  stroke-linejoin: round;
-}
-
-.logo-shield .logo-shield-ball {
-  fill: #fff;
-  stroke: none;
-}
-
-.logo-shield .logo-shield-streak {
-  fill: rgba(255, 255, 255, 0.75);
-  stroke: none;
-}
-
-.logo-shield .logo-shield-green {
-  fill: #3fbf8f;
-  stroke: none;
-}
-
-.logo-mark {
-  flex: none;
-  width: 44px;
-  height: 36px;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.logo-mark .logo-panel {
-  fill: #3fbf8f;
-  stroke: #3fbf8f;
-}
-
-.logo-mark .logo-speed {
-  stroke: #3fbf8f;
-}
-
-.logo-ps {
-  display: flex;
-  flex-direction: column;
-  font-weight: 800;
-  font-size: 1.05rem;
-  line-height: 0.95;
-  letter-spacing: 0.03em;
-}
-
-.logo-ps span + span {
-  color: #3fbf8f;
 }
 
 .logo-divider {
@@ -1498,46 +1462,20 @@ h2 {
 
 .fc-crest {
   justify-self: center;
-  width: min(340px, 100%);
+  width: min(280px, 100%);
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 40px rgba(26, 122, 90, 0.35));
   animation: crest-float 9s ease-in-out infinite;
 }
 
-.fc-crest svg {
+.fc-crest img {
   display: block;
   width: 100%;
   height: auto;
 }
 
-.fc-crest .badge-word {
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: 1px;
-  fill: #fff;
-}
-
-.fc-crest .badge-green {
-  fill: #3fbf8f;
-}
-
-.fc-crest .badge-tag {
-  font-weight: 600;
-  letter-spacing: 3.5px;
-  fill: rgba(255, 255, 255, 0.55);
-}
-
-.fc-crest .sheen {
-  animation: crest-sheen 8s ease-in-out 1s infinite;
-}
-
 @keyframes crest-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
-}
-
-@keyframes crest-sheen {
-  0% { transform: skewX(-18deg) translateX(0); }
-  22%, 100% { transform: skewX(-18deg) translateX(480px); }
 }
 
 /* Sections */
@@ -1773,8 +1711,7 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fc-crest,
-  .fc-crest .sheen {
+  .fc-crest {
     animation: none;
   }
 }
