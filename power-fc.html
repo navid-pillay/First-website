@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Power FC | High Performance Academy in Toronto</title>
   <meta name="description" content="Power FC, the high performance academy program of Power Soccer: boys teams U8 to U18 and girls teams U8 to U14 in Toronto since 2005.">
-  <link rel="stylesheet" href="css/styles.css?v=17">
+  <link rel="stylesheet" href="css/styles.css?v=18">
   <script>
     // Show the intro whenever the site is opened: on a refresh, or when
     // arriving from outside the site (search results, bookmarks, typed links).
@@ -18,7 +18,8 @@
         location.replace("index.html");
         return;
       }
-      document.documentElement.classList.add("js");
+      document.documentElement.classList.add("js", "pre-type");
+      setTimeout(function () { document.documentElement.classList.remove("pre-type"); }, 2000);
     })();
   </script>
 </head>
@@ -210,6 +211,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=17"></script>
+  <script src="js/main.js?v=18"></script>
 </body>
 </html>
