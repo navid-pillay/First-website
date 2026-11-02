@@ -418,3 +418,15 @@ body.intro {
     to { opacity: 1; }
   }
 }
+
+/* Motto under the pendants */
+.intro-motto {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(143, 209, 181, 0.85);
+  opacity: 0;
+  animation: fade-in 1.2s ease-out 2.2s forwards;
+}
