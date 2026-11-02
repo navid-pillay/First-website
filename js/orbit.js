@@ -1,6 +1,7 @@
-// Power Soccer programs on a slowly turning ring. Green lines link the
-// programs and every few seconds reconnect into a different shape. The
-// selected program's details show in the middle.
+// Power Soccer programs on a slowly turning ring that never stops and can be
+// grabbed and spun. Green lines link the programs and every few seconds
+// reconnect into a different shape. The selected program's details show in
+// the middle.
 (function () {
   var orbit = document.querySelector("[data-orbit]");
   if (!orbit) return;
@@ -138,6 +139,7 @@
       select(node.getAttribute("data-id"));
     });
     node.addEventListener("mouseenter", function () {
+      if (dragging) return;
       lastPick = performance.now();
       select(node.getAttribute("data-id"));
     });
@@ -145,6 +147,68 @@
   var hovering = false;
   orbit.addEventListener("mouseenter", function () { hovering = true; });
   orbit.addEventListener("mouseleave", function () { hovering = false; });
+
+  // Grab and spin: drag around the centre to turn the ring. Letting go
+  // keeps the spin going, easing back to the normal slow turn.
+  var dragging = false, dragMoved = false, dragAngle = 0, momentum = 0, lastMove = 0, dragPointer = null;
+  function pointerAngle(e) {
+    var r = orbit.getBoundingClientRect();
+    return Math.atan2(e.clientY - (r.top + size / 2), e.clientX - (r.left + size / 2));
+  }
+  orbit.addEventListener("pointerdown", function (e) {
+    var onNode = e.target.closest(".orbit-node");
+    // Touch and pen grab a program label, so swiping elsewhere still scrolls.
+    if (!onNode && (e.pointerType !== "mouse" || e.target.closest(".orbit-center"))) return;
+    if (e.button !== 0) return;
+    dragging = true;
+    dragMoved = false;
+    dragAngle = pointerAngle(e);
+    lastMove = performance.now();
+    momentum = 0;
+    dragPointer = e.pointerId;
+  });
+  orbit.addEventListener("pointermove", function (e) {
+    if (!dragging) return;
+    var a = pointerAngle(e);
+    var d = a - dragAngle;
+    if (d > Math.PI) d -= Math.PI * 2;
+    if (d < -Math.PI) d += Math.PI * 2;
+    if (!dragMoved && Math.abs(d) > 0.02) {
+      // Only take over the pointer once it's really a drag, so a plain tap
+      // or click still selects the program.
+      dragMoved = true;
+      orbit.classList.add("is-dragging");
+      orbit.setPointerCapture(dragPointer);
+    }
+    if (!dragMoved) return;
+    var now = performance.now();
+    var dt = Math.max(now - lastMove, 1);
+    angle += d;
+    momentum = momentum * 0.6 + (d / dt) * 0.4;
+    dragAngle = a;
+    lastMove = now;
+    place();
+  });
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    orbit.classList.remove("is-dragging");
+    if (performance.now() - lastMove > 120) momentum = 0;
+    // Keep a hard flick lively but not wild (about two-thirds of a turn per second).
+    var MAX = 0.004;
+    momentum = Math.max(-MAX, Math.min(MAX, momentum));
+    if (orbit.hasPointerCapture(e.pointerId)) orbit.releasePointerCapture(e.pointerId);
+    // The click that follows a drag (if any) is cancelled below; clear the
+    // flag afterwards so the next real click works.
+    setTimeout(function () { dragMoved = false; }, 0);
+  }
+  orbit.addEventListener("pointerup", endDrag);
+  orbit.addEventListener("pointercancel", endDrag);
+  // A drag shouldn't also count as clicking the program it started on.
+  orbit.addEventListener("click", function (e) {
+    if (dragMoved) { e.stopPropagation(); e.preventDefault(); }
+    dragMoved = false;
+  }, true);
 
   measure();
   showShape();
@@ -168,7 +232,10 @@
     if (!visible) return;
     if (last !== null) {
       var dt = Math.min(now - last, 100);
-      if (!hovering) angle += SPIN * dt;
+      if (!dragging) {
+        angle += (SPIN + momentum) * dt;
+        momentum *= Math.exp(-dt / 900);
+      }
       sinceShape += dt;
       if (sinceShape > SHAPE_EVERY) {
         sinceShape = 0;
@@ -176,7 +243,7 @@
         showShape();
       }
       sinceTour += dt;
-      if (sinceTour > TOUR_EVERY && !hovering && now - lastPick > TOUR_PAUSE) {
+      if (sinceTour > TOUR_EVERY && !hovering && !dragging && now - lastPick > TOUR_PAUSE) {
         sinceTour = 0;
         var ids = Object.keys(PROGRAMS);
         select(ids[(ids.indexOf(active) + 1) % ids.length]);

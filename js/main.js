@@ -42,3 +42,31 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   targets.forEach(function (el) { observer.observe(el); });
 })();
+
+// Twinkling green stars in the gradient sections marked data-stars.
+(function () {
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-stars]").forEach(function (section) {
+    var layer = document.createElement("span");
+    layer.className = "section-stars";
+    layer.setAttribute("aria-hidden", "true");
+    var area = section.offsetWidth * section.offsetHeight;
+    var count = Math.max(8, Math.min(36, Math.round(area / 22000)));
+    for (var i = 0; i < count; i++) {
+      var star = document.createElement("span");
+      star.className = "sparkle-star" + (i % 7 === 0 ? " cross" : "");
+      var dur = 3 + Math.random() * 4.5;
+      star.style.cssText =
+        "left:" + (Math.random() * 100).toFixed(2) + "%;" +
+        "top:" + (Math.random() * 100).toFixed(2) + "%;" +
+        "--size:" + (1.5 + Math.random() * 2).toFixed(1) + "px;" +
+        "--dur:" + dur.toFixed(1) + "s;" +
+        "--delay:" + (-Math.random() * dur).toFixed(1) + "s;" +
+        "--peak:" + (0.4 + Math.random() * 0.5).toFixed(2);
+      layer.appendChild(star);
+    }
+    section.classList.add("has-stars");
+    section.insertBefore(layer, section.querySelector(".container"));
+    if (reduceMotion) layer.classList.add("is-still");
+  });
+})();
