@@ -1715,3 +1715,218 @@ h2 {
     animation: none;
   }
 }
+
+/* Power Soccer: programs on a slowly turning ring */
+.orbit-section {
+  background: radial-gradient(ellipse at 50% 60%, rgba(26, 122, 90, 0.28), transparent 60%), #0a0c0b;
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+
+.orbit-section h2 {
+  color: #fff;
+}
+
+.orbit-section .lead {
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.orbit {
+  position: relative;
+  width: min(660px, 100%);
+  aspect-ratio: 1;
+  margin: 2.5rem auto 1rem;
+}
+
+.orbit-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.orbit-link {
+  stroke: #3fbf8f;
+  stroke-width: 1.5;
+  stroke-opacity: 0;
+  transition: stroke-opacity 2.4s ease;
+}
+
+.orbit-link.is-on {
+  stroke-opacity: 0.32;
+}
+
+.orbit-link.is-on.is-hot {
+  stroke-opacity: 0.7;
+}
+
+.orbit-nodes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(63, 191, 143, 0.45);
+  background: rgba(13, 15, 14, 0.92);
+  color: #fff;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(13, 15, 14, 0.6);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.orbit-node:hover,
+.orbit-node:focus-visible {
+  border-color: #3fbf8f;
+  outline: none;
+}
+
+.orbit-node.is-active {
+  background: var(--green);
+  border-color: #3fbf8f;
+  box-shadow: 0 0 0 4px rgba(13, 15, 14, 0.6), 0 0 24px rgba(63, 191, 143, 0.45);
+}
+
+.orbit-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46%;
+  transform: translate(-50%, -50%);
+}
+
+.orbit-center.is-in > * {
+  animation: orbit-in 0.6s ease both;
+}
+
+.orbit-when {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8fd1b5;
+}
+
+.orbit-center h3 {
+  margin: 0.4rem 0 0.5rem;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.orbit-center p {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.orbit-center .orbit-where {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.orbit-center .btn {
+  margin-top: 0.25rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+.orbit-fc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.orbit-fc a {
+  color: #8fd1b5;
+  font-weight: 600;
+}
+
+@keyframes orbit-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Phones: the ring stays, the details move below it */
+@media (max-width: 640px) {
+  .orbit {
+    margin-bottom: 0;
+  }
+
+  .orbit-node {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.72rem;
+  }
+
+  .orbit-center {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    transform: none;
+  }
+
+  .orbit-fc {
+    margin-top: 1.75rem;
+  }
+
+  /* Room for the ring above the details */
+  .orbit {
+    aspect-ratio: auto;
+    padding-top: calc(100% + 1rem);
+  }
+
+  .orbit-lines {
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
+
+/* Motto: Learn. Develop. Grow. */
+.footer-motto {
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #8fd1b5;
+}
+
+.fc-motto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  margin: -0.5rem 0 1.5rem;
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fc-motto span {
+  color: #e9ecea;
+}
+
+.fc-motto span:nth-child(2) {
+  color: #b9bfbc;
+}
+
+.fc-motto span:nth-child(3) {
+  color: #3fbf8f;
+}
+
+@media (max-width: 860px) {
+  .fc-motto {
+    justify-content: center;
+  }
+}

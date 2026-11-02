@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Power Soccer | Training &amp; Soccer Schools in Toronto</title>
   <meta name="description" content="Power Soccer Inc.: year-round soccer schools, summer camps, team and private training across Toronto and the GTA since 1996.">
-  <link rel="stylesheet" href="css/styles.css?v=17">
+  <link rel="stylesheet" href="css/styles.css?v=19">
   <script>
     // Show the intro whenever the site is opened: on a refresh, or when
     // arriving from outside the site (search results, bookmarks, typed links).
@@ -120,36 +120,31 @@
       </div>
     </section>
 
-    <section id="programs">
+    <section class="orbit-section" id="programs">
       <div class="container">
-        <h2>Our Programs</h2>
-        <p class="lead">Dynamic, enjoyable programs that are completely focused on player development, for every age and skill level.</p>
-        <div class="cards cards-3">
-          <div class="card">
-            <h3>Soccer Schools</h3>
-            <p>Year-round skills sessions that build technique, confidence, and a love of the game.</p>
+        <span class="eyebrow">Ways to Play</span>
+        <h2>Find Your Program</h2>
+        <p class="lead">From seasonal soccer schools to camps and private sessions, there's a way to play all year round. Select a program to see when and where it runs.</p>
+        <div class="orbit" data-orbit>
+          <svg class="orbit-lines" aria-hidden="true"></svg>
+          <div class="orbit-center" aria-live="polite">
+            <span class="orbit-when">October &ndash; December</span>
+            <h3>Fall Soccer Schools</h3>
+            <p>Classes for ages 4 to 15, with adult clinics available.</p>
+            <p class="orbit-where">Crescent School &middot; Toronto City Sports Centre &middot; Monarch Park &middot; Upper Canada College</p>
+            <a class="btn" href="contact.html">Ask About This Program</a>
           </div>
-          <div class="card">
-            <h3>Summer Camps</h3>
-            <p>Fun, high-energy camps where players learn creative moves, turns and ball skills all summer long.</p>
-          </div>
-          <div class="card">
-            <h3>Private Training</h3>
-            <p>Focused, individual coaching tailored to each player's goals.</p>
-          </div>
-          <div class="card">
-            <h3>Team Training</h3>
-            <p>Sessions for whole teams, led by Power Soccer coaches and built around a skill or tactical focus.</p>
-          </div>
-          <div class="card">
-            <h3>Player Profiles</h3>
-            <p>Detailed Player Profile reports and constant communication with coaches keep every player improving.</p>
-          </div>
-          <div class="card">
-            <h3>Power FC Academy</h3>
-            <p>Ready for the next step? Our high performance academy offers a competitive pathway. <a href="power-fc.html">Visit Power FC</a></p>
-          </div>
+          <ul class="orbit-nodes">
+            <li><button type="button" class="orbit-node is-active" data-id="fall">Fall Schools</button></li>
+            <li><button type="button" class="orbit-node" data-id="winter">Winter Schools</button></li>
+            <li><button type="button" class="orbit-node" data-id="pa">PA Day Camps</button></li>
+            <li><button type="button" class="orbit-node" data-id="summer">Summer Camps</button></li>
+            <li><button type="button" class="orbit-node" data-id="private">Private Training</button></li>
+            <li><button type="button" class="orbit-node" data-id="team">Team Training</button></li>
+            <li><button type="button" class="orbit-node" data-id="adult">Adult Clinics</button></li>
+          </ul>
         </div>
+        <p class="orbit-fc">Ready for the next step? <a href="power-fc.html">Explore the Power FC Academy</a></p>
       </div>
     </section>
 
@@ -208,10 +203,12 @@
   <footer class="site-footer">
     <div class="container">
       <p>201 Wicksteed Ave, Suite 8, Toronto, ON M4G 0B1 &middot; <a href="tel:+14164256062">416.425.6062</a> &middot; <a href="mailto:info@powersoccer.ca">info@powersoccer.ca</a></p>
+      <p class="footer-motto">Learn. Develop. Grow.</p>
       <p>&copy; <span id="year">2026</span> Power Soccer Inc. &middot; Power FC. All rights reserved.</p>
     </div>
   </footer>
 
-  <script src="js/main.js?v=17"></script>
+  <script src="js/main.js?v=19"></script>
+  <script src="js/orbit.js?v=19"></script>
 </body>
 </html>
