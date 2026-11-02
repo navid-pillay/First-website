@@ -1930,3 +1930,73 @@ h2 {
     justify-content: center;
   }
 }
+
+/* Orbit: grab and spin */
+.orbit {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.orbit.is-dragging,
+.orbit.is-dragging .orbit-node {
+  cursor: grabbing;
+}
+
+.orbit-center {
+  cursor: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.orbit-node {
+  touch-action: none;
+}
+
+/* Twinkling stars in gradient sections */
+.has-stars {
+  position: relative;
+}
+
+.has-stars > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.section-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sparkle-star {
+  position: absolute;
+  width: var(--size, 2px);
+  height: var(--size, 2px);
+  border-radius: 50%;
+  background: #8fe0bd;
+  box-shadow: 0 0 6px 1px rgba(63, 191, 143, 0.8);
+  opacity: 0;
+  animation: section-twinkle var(--dur, 5s) ease-in-out var(--delay, 0s) infinite;
+}
+
+.sparkle-star.cross {
+  width: calc(var(--size) * 4);
+  height: calc(var(--size) * 4);
+  border-radius: 0;
+  background: #b6f0d6;
+  box-shadow: none;
+  clip-path: polygon(50% 0, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0 50%, 44% 44%);
+  filter: drop-shadow(0 0 4px rgba(63, 191, 143, 0.9));
+}
+
+.section-stars.is-still .sparkle-star {
+  animation: none;
+  opacity: 0.45;
+}
+
+@keyframes section-twinkle {
+  0%, 100% { opacity: 0.05; transform: scale(0.6); }
+  50% { opacity: var(--peak, 0.8); transform: scale(1); }
+}
