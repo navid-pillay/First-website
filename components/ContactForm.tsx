@@ -13,7 +13,7 @@ const MESSAGES: Record<Field, string> = {
 };
 
 const INPUT =
-  "w-full rounded-lg border border-[#d5dbd8] bg-mist px-3.5 py-3 text-coal transition-[border-color,box-shadow,background] focus:border-green-bright focus:bg-white focus:shadow-[0_0_0_3px_rgba(26,122,90,0.18)] focus:outline-none aria-[invalid=true]:border-[#c0392b] aria-[invalid=true]:bg-white";
+  "w-full rounded-lg border border-[#d5dbd8] bg-mist px-3.5 py-3 text-coal transition-[border-color,box-shadow,background] focus:border-green-bright focus:bg-white focus:shadow-[0_0_0_3px_rgba(66,226,2,0.18)] focus:outline-none aria-[invalid=true]:border-[#c0392b] aria-[invalid=true]:bg-white";
 
 // Checks the fields in the page. Online sending isn't set up yet, so a valid
 // form shows how to reach the club instead.
@@ -121,11 +121,11 @@ export default function ContactForm() {
       </div>
       <button
         type="submit"
-        className="min-w-[180px] cursor-pointer rounded-md border-2 border-green bg-green px-6 py-3 font-bold text-white transition-colors hover:border-green-bright hover:bg-green-bright"
+        className="min-w-[180px] cursor-pointer rounded-md border-2 border-green bg-green px-6 py-3 font-bold text-ink transition-colors hover:border-green-bright hover:bg-green-bright"
       >
         Send Message
       </button>
-      <p role="status" aria-live="polite" className={notice ? "mt-4 rounded-lg bg-tint px-4 py-3.5 text-green" : "sr-only"}>
+      <p role="status" aria-live="polite" className={notice ? "mt-4 rounded-lg border-l-4 border-green bg-tint px-4 py-3.5 text-ink" : "sr-only"}>
         {notice && (
           <>
             Online messages aren&apos;t available yet. Please email <a href={CONTACT.emailHref}>{CONTACT.email}</a> or call{" "}

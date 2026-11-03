@@ -24,7 +24,7 @@ export default function FcCrest({ className = "", title }: { className?: string;
       <stop offset="0" stopColor="#a7abab"/><stop offset="0.55" stopColor="#d9dcdc"/><stop offset="1" stopColor="#f4f5f5"/>
       </linearGradient>
       <linearGradient id={`${id}-green`} x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stopColor="#5fe04a"/><stop offset="1" stopColor="#2fae2a"/>
+      <stop offset="0" stopColor="#42e202"/><stop offset="1" stopColor="#42e202"/>
       </linearGradient>
       <linearGradient id={`${id}-grey`} x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stopColor="#c9cccc"/><stop offset="1" stopColor="#9ea3a3"/>

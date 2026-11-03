@@ -29,7 +29,7 @@ export default function PowerSoccerPage() {
   return (
     <>
       <main>
-        <section className="relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-20 text-center text-white max-sm:py-14">
+        <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_100%,rgba(66,226,2,0.32),transparent_60%),linear-gradient(135deg,var(--color-ink),var(--color-coal))] py-20 text-center text-white max-sm:py-14">
           <Stars />
           <Container className="rise-in relative z-10">
             <Eyebrow>Power Soccer Inc. &middot; Toronto since 1996</Eyebrow>
@@ -56,7 +56,7 @@ export default function PowerSoccerPage() {
 
         <section
           id="programs"
-          className="relative overflow-hidden bg-[#0a0c0b] bg-[radial-gradient(ellipse_at_50%_60%,rgba(26,122,90,0.28),transparent_60%)] py-16 text-center text-white"
+          className="relative overflow-hidden bg-[#0a0c0b] bg-[radial-gradient(ellipse_at_50%_60%,rgba(66,226,2,0.28),transparent_60%)] py-16 text-center text-white"
         >
           <Stars />
           <Container className="relative z-10">
@@ -87,7 +87,7 @@ export default function PowerSoccerPage() {
             <div className="my-10 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8">
               {WAY.map(([num, title, text], i) => (
                 <Reveal key={num} delay={i * 120} className="border-t-2 border-green pt-5">
-                  <span className="text-[2.25rem] font-extrabold leading-none text-green-bright">{num}</span>
+                  <span className="text-[2.25rem] font-extrabold leading-none text-green">{num}</span>
                   <h3 className="mt-3 mb-2 text-[1.35rem] font-bold">{title}</h3>
                   <p className="m-0 text-white/70">{text}</p>
                 </Reveal>
@@ -106,7 +106,7 @@ export default function PowerSoccerPage() {
             <Reveal>
               <ul className="mt-6 mb-8 flex list-none flex-wrap gap-2.5 p-0">
                 {NEIGHBOURHOODS.map((n) => (
-                  <li key={n} className="rounded-full bg-tint px-3.5 py-1.5 font-semibold text-green">{n}</li>
+                  <li key={n} className="rounded-full border border-green bg-tint px-3.5 py-1.5 font-semibold text-ink">{n}</li>
                 ))}
               </ul>
             </Reveal>

@@ -278,12 +278,12 @@ export default function Orbit() {
               aria-pressed={i === active}
               onClick={() => select(i, true)}
               onMouseEnter={() => { if (!state.current.dragging) select(i, true); }}
-              className={`absolute top-0 left-0 touch-none whitespace-nowrap rounded-full border px-4 py-2.5 text-[0.92rem] font-semibold text-white shadow-[0_0_0_4px_rgba(13,15,14,0.6)] outline-none transition-[background,border-color,box-shadow] duration-300 focus-visible:border-mint before:absolute before:-inset-y-2 before:inset-x-0 before:content-[''] max-[640px]:px-2.5 max-[640px]:py-1.5 max-[640px]:text-[0.72rem] ${
+              className={`absolute top-0 left-0 touch-none whitespace-nowrap rounded-full border px-4 py-2.5 text-[0.92rem] font-semibold shadow-[0_0_0_4px_rgba(13,15,14,0.6)] outline-none transition-[background,border-color,box-shadow] duration-300 focus-visible:border-mint before:absolute before:-inset-y-2 before:inset-x-0 before:content-[''] max-[640px]:px-2.5 max-[640px]:py-1.5 max-[640px]:text-[0.72rem] ${
                 dragging ? "cursor-grabbing" : "cursor-pointer"
               } ${
                 i === active
-                  ? "border-mint bg-green shadow-[0_0_0_4px_rgba(13,15,14,0.6),0_0_24px_rgba(63,191,143,0.45)]"
-                  : "border-mint/45 bg-ink/90 hover:border-mint"
+                  ? "border-mint bg-green text-ink shadow-[0_0_0_4px_rgba(13,15,14,0.6),0_0_24px_rgba(66,226,2,0.45)]"
+                  : "border-mint/45 bg-ink/90 text-white hover:border-mint"
               }`}
             >
               {prog.label}

@@ -38,7 +38,7 @@ export default function AboutPage() {
   return (
     <>
       <main>
-        <section className="relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-14 text-center text-white">
+        <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_100%,rgba(66,226,2,0.32),transparent_60%),linear-gradient(135deg,var(--color-ink),var(--color-coal))] py-14 text-center text-white">
           <Container className="rise-in relative z-10">
             <Eyebrow>About Us</Eyebrow>
             <h1 className="mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]">About Power Soccer &amp; Power FC</h1>
@@ -105,7 +105,7 @@ export default function AboutPage() {
                   key={num}
                   className="grid grid-cols-[90px_minmax(0,260px)_minmax(0,1fr)] items-baseline gap-6 border-b border-[#e1e6e3] py-8 max-md:grid-cols-1 max-md:gap-2 max-md:py-6"
                 >
-                  <span className="text-[2.25rem] font-extrabold leading-none text-green-bright">{num}</span>
+                  <span className="border-l-4 border-green pl-3 text-[2.25rem] font-extrabold leading-none text-ink">{num}</span>
                   <h3 className="m-0 text-2xl font-bold text-ink">{title}</h3>
                   <p className="m-0 text-muted">{text}</p>
                 </Reveal>

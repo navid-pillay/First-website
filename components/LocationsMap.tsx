@@ -153,7 +153,7 @@ export default function LocationsMap() {
               href={mapsUrl(selected)}
               target="_blank"
               rel="noopener"
-              className="btn inline-block rounded-md border-2 border-green bg-green px-6 py-3 font-bold text-white no-underline hover:border-green-bright hover:bg-green-bright"
+              className="btn inline-block rounded-md border-2 border-green bg-green px-6 py-3 font-bold text-ink no-underline hover:border-green-bright hover:bg-green-bright"
             >
               Open in Google Maps
             </a>
@@ -176,7 +176,7 @@ export default function LocationsMap() {
                     <span
                       aria-hidden="true"
                       className={`size-3 flex-none rounded-full ${
-                        loc.type === "Head Office" ? "bg-white shadow-[0_0_0_3px_rgba(255,255,255,0.25)]" : "bg-green-bright shadow-[0_0_0_3px_rgba(26,122,90,0.35)]"
+                        loc.type === "Head Office" ? "bg-white shadow-[0_0_0_3px_rgba(255,255,255,0.25)]" : "bg-green-bright shadow-[0_0_0_3px_rgba(66,226,2,0.35)]"
                       }`}
                     />
                     <span>

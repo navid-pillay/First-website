@@ -52,7 +52,7 @@ export default function Header() {
                     aria-current={current ? "page" : undefined}
                     className={
                       item.cta
-                        ? "inline-flex min-h-11 items-center rounded-md border-2 border-green bg-green px-4 font-semibold text-white no-underline transition-colors duration-200 hover:border-green-bright hover:bg-green-bright aria-[current=page]:border-mint"
+                        ? "inline-flex min-h-11 items-center rounded-md border-2 border-green bg-green px-4 font-semibold text-ink no-underline transition-colors duration-200 hover:border-green-bright hover:bg-green-bright aria-[current=page]:border-mint"
                         : "relative inline-flex min-h-11 items-center font-semibold text-white no-underline after:absolute after:inset-x-0 after:bottom-2 after:h-0.5 after:bg-transparent after:transition-colors after:duration-200 after:content-[''] hover:after:bg-green-bright aria-[current=page]:after:bg-green-bright"
                     }
                   >

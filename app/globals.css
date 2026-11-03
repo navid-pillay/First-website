@@ -1,13 +1,14 @@
 @import "tailwindcss";
 @source not "../.claude";
 
-/* Brand colours: Isle of Man green and professional black */
+/* Brand colours: the Power FC crest green (#42e202) and professional black.
+   Text on green is black, since white on this bright green is hard to read. */
 @theme {
-  --color-green: #0f4d3a;
-  --color-green-bright: #1a7a5a;
-  --color-mint: #3fbf8f;
-  --color-mint-soft: #8fd1b5;
-  --color-tint: #e8f1ed;
+  --color-green: #42e202;
+  --color-green-bright: #66f02e; /* hover state */
+  --color-mint: #42e202;
+  --color-mint-soft: #42e202;
+  --color-tint: #ecfce4;
   --color-ink: #0d0f0e;
   --color-coal: #1a1d1c;
   --color-night: #070808;
@@ -29,7 +30,7 @@
   }
 
   a {
-    @apply text-green;
+    @apply text-ink underline decoration-green decoration-2 underline-offset-4;
   }
 
   /* Headings use the Power FC crest lettering. It has one weight, so don't
@@ -89,7 +90,7 @@
 }
 
 .hero-bg .ball {
-  stroke: #3fbf8f;
+  stroke: #42e202;
   stroke-width: 3.5;
   stroke-opacity: 0.8;
   opacity: 0;
@@ -294,7 +295,7 @@
 }
 
 .hero-bg .kick.goal .end {
-  stroke: #3fbf8f;
+  stroke: #42e202;
 }
 
 .hero-bg .kick.miss .end {
@@ -388,8 +389,8 @@
   width: var(--size, 2px);
   height: var(--size, 2px);
   border-radius: 50%;
-  background: #8fe0bd;
-  box-shadow: 0 0 6px 1px rgba(63, 191, 143, 0.8);
+  background: #42e202;
+  box-shadow: 0 0 6px 1px rgba(66, 226, 2, 0.8);
   opacity: 0;
   animation: twinkle var(--dur, 5s) ease-in-out var(--delay, 0s) infinite;
 }
@@ -398,10 +399,10 @@
   width: calc(var(--size) * 4);
   height: calc(var(--size) * 4);
   border-radius: 0;
-  background: #b6f0d6;
+  background: #42e202;
   box-shadow: none;
   clip-path: polygon(50% 0, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0 50%, 44% 44%);
-  filter: drop-shadow(0 0 4px rgba(63, 191, 143, 0.9));
+  filter: drop-shadow(0 0 4px rgba(66, 226, 2, 0.9));
 }
 
 @keyframes twinkle {
@@ -417,7 +418,7 @@
 
 /* Program orbit links */
 .orbit-link {
-  stroke: #3fbf8f;
+  stroke: #42e202;
   stroke-width: 1.5;
   stroke-opacity: 0;
   transition: stroke-opacity 2.4s ease;
@@ -448,7 +449,7 @@
   width: 70vmax;
   height: 70vmax;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(26, 122, 90, 0.55) 0%, rgba(15, 77, 58, 0.25) 35%, transparent 65%);
+  background: radial-gradient(circle, rgba(66, 226, 2, 0.55) 0%, rgba(66, 226, 2, 0.25) 35%, transparent 65%);
   filter: blur(30px);
   opacity: 0;
 }
@@ -476,7 +477,7 @@
 
 /* Cursor light, masked to the ridge of each flute (same 40px rhythm) */
 .flute-glow {
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(63, 191, 143, 0.75), rgba(26, 122, 90, 0.25) 45%, transparent 70%);
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(66, 226, 2, 0.75), rgba(66, 226, 2, 0.25) 45%, transparent 70%);
   -webkit-mask: repeating-linear-gradient(90deg, transparent 0, transparent 13px, #000 20px, transparent 27px, transparent 40px);
   mask: repeating-linear-gradient(90deg, transparent 0, transparent 13px, #000 20px, transparent 27px, transparent 40px);
 }
@@ -486,12 +487,12 @@
   100% { opacity: 1; transform: none; filter: blur(0); }
 }
 
-/* Round pendant around each logo, with an Isle of Man green rim */
+/* Round pendant around each logo, with a crest-green rim */
 .medallion {
   border: 9px solid transparent;
   background:
     radial-gradient(circle at 50% 30%, #222826 0%, #0c0e0d 62%, #050606 100%) padding-box,
-    conic-gradient(from 200deg, #1a7a5a, #0b3a2c, #0f4d3a, #08261d, #1a7a5a, #0f4d3a, #1a7a5a) border-box;
+    conic-gradient(from 200deg, #42e202, #1d6401, #42e202, #123d01, #42e202, #1d6401, #42e202) border-box;
   box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.08), inset 0 -12px 30px rgba(0, 0, 0, 0.7);
 }
 
@@ -508,7 +509,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: linear-gradient(105deg, transparent 40%, rgba(63, 191, 143, 0.14) 50%, transparent 60%);
+  background: linear-gradient(105deg, transparent 40%, rgba(66, 226, 2, 0.14) 50%, transparent 60%);
   background-size: 300% 100%;
   background-position: 120% 0;
   animation: sheen 8s ease-in-out var(--sheen-delay, 1.4s) infinite;
@@ -524,7 +525,7 @@
   position: absolute;
   clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
   background: #fff;
-  filter: drop-shadow(0 0 6px rgba(63, 191, 143, 0.9));
+  filter: drop-shadow(0 0 6px rgba(66, 226, 2, 0.9));
   opacity: 0;
   transform: scale(0);
   animation: sparkle 7s ease-in-out infinite;
@@ -578,7 +579,7 @@
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  border: 2px solid #3fbf8f;
+  border: 2px solid #42e202;
   opacity: 0;
   animation: pin-pulse 2.6s ease-out infinite;
 }
@@ -592,8 +593,8 @@
 .pin:focus-visible span,
 .pin.is-active span {
   transform: scale(1.3);
-  background: #3fbf8f;
-  box-shadow: 0 0 0 2px #3fbf8f;
+  background: #42e202;
+  box-shadow: 0 0 0 2px #42e202;
 }
 
 .pin-label {
@@ -655,7 +656,8 @@
 }
 
 .maplibregl-ctrl-attrib a {
-  color: #8fd1b5;
+  color: #42e202 !important;
+  text-decoration: none;
 }
 
 .maplibregl-ctrl-attrib-button {

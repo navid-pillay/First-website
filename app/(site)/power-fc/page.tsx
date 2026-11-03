@@ -44,7 +44,7 @@ function FcHeading({ children }: { children: ReactNode }) {
 }
 
 const PANEL =
-  "relative overflow-hidden rounded-[14px] border border-white/10 bg-[linear-gradient(160deg,#151918,#0a0c0b)] p-8 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-[linear-gradient(90deg,#3fbf8f,transparent)]";
+  "relative overflow-hidden rounded-[14px] border border-white/10 bg-[linear-gradient(160deg,#151918,#0a0c0b)] p-8 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-[linear-gradient(90deg,#42e202,transparent)]";
 
 function AgeBar({ upTo }: { upTo: number }) {
   return (
@@ -53,7 +53,7 @@ function AgeBar({ upTo }: { upTo: number }) {
         <li
           key={i}
           className={`min-h-[1.6rem] text-center text-[0.78rem] before:mb-2 before:block before:h-2 before:rounded before:content-[''] ${
-            i <= upTo ? "text-white/80 before:bg-[linear-gradient(90deg,var(--color-green-bright),#3fbf8f)]" : "text-white/55 before:bg-white/10"
+            i <= upTo ? "text-white/80 before:bg-[linear-gradient(90deg,var(--color-green-bright),#42e202)]" : "text-white/55 before:bg-white/10"
           }`}
         >
           {label}
@@ -69,7 +69,7 @@ export default function PowerFcPage() {
       <main>
         <section className="relative overflow-hidden bg-[#151716]">
           <HalftoneCamo />
-          <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_50%,rgba(26,122,90,0.3),transparent_55%),linear-gradient(90deg,rgba(7,8,8,0.75)_0%,rgba(7,8,8,0.2)_60%,transparent_100%)]" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_50%,rgba(66,226,2,0.3),transparent_55%),linear-gradient(90deg,rgba(7,8,8,0.75)_0%,rgba(7,8,8,0.2)_60%,transparent_100%)]" />
           <Stars />
           <Container className="relative z-10 grid min-h-[min(calc(100vh-80px),760px)] grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-center gap-12 py-16 max-[860px]:min-h-0 max-[860px]:grid-cols-1 max-[860px]:gap-8 max-[860px]:text-center">
             <div className="rise-in">
@@ -89,7 +89,7 @@ export default function PowerFcPage() {
               </div>
             </div>
             <div className="w-[min(280px,100%)] justify-self-center drop-shadow-[0_30px_60px_rgba(0,0,0,0.8)] [animation:crest-float_9s_ease-in-out_infinite] max-[860px]:order-first max-[860px]:w-[190px]">
-              <FcCrest title="Power FC crest" className="block h-auto w-full drop-shadow-[0_0_40px_rgba(26,122,90,0.35)]" />
+              <FcCrest title="Power FC crest" className="block h-auto w-full drop-shadow-[0_0_40px_rgba(66,226,2,0.35)]" />
             </div>
           </Container>
           <a href="#pathway" aria-label="Scroll to the pathway" className="scroll-cue absolute bottom-5 left-1/2 z-10 grid size-11 -translate-x-1/2 place-items-center rounded-full text-white/55 transition-colors hover:text-white max-[860px]:hidden">
@@ -116,10 +116,10 @@ export default function PowerFcPage() {
             <Reveal><Eyebrow className="tracking-[0.3em]">The Pathway</Eyebrow></Reveal>
             <Reveal><FcHeading>From Assessment to the Crest</FcHeading></Reveal>
             <Reveal><p className="max-w-[720px] text-[1.1rem] text-white/70">Every Power FC player follows the same pathway, built around long-term development.</p></Reveal>
-            <ol className="relative mt-12 grid list-none grid-cols-4 gap-8 p-0 before:absolute before:inset-x-7 before:top-7 before:h-px before:bg-[linear-gradient(90deg,#3fbf8f,rgba(233,236,234,0.5),rgba(233,236,234,0.1))] max-[860px]:grid-cols-2 max-[860px]:before:hidden max-[520px]:grid-cols-1">
+            <ol className="relative mt-12 grid list-none grid-cols-4 gap-8 p-0 before:absolute before:inset-x-7 before:top-7 before:h-px before:bg-[linear-gradient(90deg,#42e202,rgba(255,255,255,0.35),rgba(255,255,255,0.08))] max-[860px]:grid-cols-2 max-[860px]:before:hidden max-[520px]:grid-cols-1">
               {PATHWAY.map(([num, title, text], i) => (
                 <Reveal as="li" key={num} delay={i * 120}>
-                  <span className="relative mb-5 grid size-14 place-items-center rounded-full border border-mint/45 bg-[radial-gradient(circle_at_35%_30%,#1b2a24,#0b0d0c_70%)] font-bold tracking-wider text-white shadow-[0_0_0_6px_#070808,0_0_24px_rgba(63,191,143,0.18)]">
+                  <span className="relative mb-5 grid size-14 place-items-center rounded-full border border-mint/45 bg-[radial-gradient(circle_at_35%_30%,#18210f,#0b0d0c_70%)] font-bold tracking-wider text-white shadow-[0_0_0_6px_#070808,0_0_24px_rgba(66,226,2,0.18)]">
                     {num}
                   </span>
                   <h3 className="mb-2 text-xl font-bold">{title}</h3>
@@ -167,7 +167,7 @@ export default function PowerFcPage() {
           </Container>
         </section>
 
-        <section className="relative overflow-hidden border-t border-white/[0.07] bg-[radial-gradient(ellipse_at_50%_100%,rgba(26,122,90,0.3),transparent_60%)] py-16 text-center">
+        <section className="relative overflow-hidden border-t border-white/[0.07] bg-[radial-gradient(ellipse_at_50%_100%,rgba(66,226,2,0.3),transparent_60%)] py-16 text-center">
           <Stars />
           <Container className="relative z-10">
             <Reveal><FcHeading>Wear the Crest</FcHeading></Reveal>

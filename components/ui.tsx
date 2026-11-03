@@ -43,9 +43,9 @@ export function Lead({ className = "", children }: { className?: string; childre
 }
 
 const BUTTONS = {
-  primary: "border-green bg-green text-white hover:border-green-bright hover:bg-green-bright",
+  primary: "border-green bg-green text-ink hover:border-green-bright hover:bg-green-bright",
   light: "border-white bg-white text-ink hover:border-tint hover:bg-tint",
-  outline: "border-green bg-transparent text-green hover:bg-green hover:text-white",
+  outline: "border-green bg-transparent text-ink hover:bg-green hover:text-ink",
   silver: "border border-white/45 bg-transparent text-white hover:border-white hover:bg-white hover:text-ink",
 } as const;
 

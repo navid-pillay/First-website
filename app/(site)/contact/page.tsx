@@ -14,7 +14,7 @@ export default function ContactPage() {
   return (
     <>
       <main>
-        <section className="relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-14 text-center text-white">
+        <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_100%,rgba(66,226,2,0.32),transparent_60%),linear-gradient(135deg,var(--color-ink),var(--color-coal))] py-14 text-center text-white">
           <Container className="rise-in relative z-10">
             <Eyebrow>Contact</Eyebrow>
             <h1 className="mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]">Get in Touch</h1>
@@ -29,7 +29,7 @@ export default function ContactPage() {
             <Reveal as="aside">
               <H2 className="text-ink">Power Soccer Inc.</H2>
               <Lead className="mb-7 text-muted">Home of the Power FC Academy, developing players in Toronto since 1996.</Lead>
-              <dl className="mb-8 [&_dd]:mt-1 [&_dd]:mb-5 [&_dd]:text-[1.05rem] [&_dt]:text-[0.8rem] [&_dt]:font-bold [&_dt]:uppercase [&_dt]:tracking-[0.12em] [&_dt]:text-green">
+              <dl className="mb-8 [&_dd]:mt-1 [&_dd]:mb-5 [&_dd]:text-[1.05rem] [&_dt]:text-[0.8rem] [&_dt]:font-bold [&_dt]:uppercase [&_dt]:tracking-[0.12em] [&_dt]:text-ink">
                 <dt>Office</dt>
                 <dd>{CONTACT.addressLines[0]}<br />{CONTACT.addressLines[1]}</dd>
                 <dt>Phone</dt>
