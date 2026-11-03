@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source not "../.claude";
 
 /* Brand colours: Isle of Man green and professional black */
 @theme {

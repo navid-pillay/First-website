@@ -3,7 +3,7 @@
 import type { Map as MapLibreMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { LOCATIONS, MAP_STYLE, type Location } from "@/data/locations";
+import { LOCATIONS, MAP_STYLE, type Location } from "@/lib/locations";
 import { CONTACT } from "@/lib/site";
 
 function mapsUrl(loc: Location) {

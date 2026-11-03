@@ -17,6 +17,19 @@ const INPUT =
 
 // Checks the fields in the page. Online sending isn't set up yet, so a valid
 // form shows how to reach the club instead.
+function Label({ htmlFor, children, optional }: { htmlFor: string; children: ReactNode; optional?: boolean }) {
+  return (
+    <label htmlFor={htmlFor} className="mb-1.5 block font-semibold text-ink">
+      {children}{" "}
+      {optional ? <span className="text-sm font-normal text-muted">(optional)</span> : <span aria-hidden="true" className="text-green-bright">*</span>}
+    </label>
+  );
+}
+
+function FieldError({ errors, name }: { errors: Partial<Record<Field, string>>; name: Field }) {
+  return errors[name] ? <p id={`${name}-error`} className="mt-1.5 text-sm text-[#c0392b]">{errors[name]}</p> : null;
+}
+
 export default function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
@@ -56,28 +69,18 @@ export default function ContactForm() {
     },
   });
 
-  const Label = ({ htmlFor, children, optional }: { htmlFor: string; children: ReactNode; optional?: boolean }) => (
-    <label htmlFor={htmlFor} className="mb-1.5 block font-semibold text-ink">
-      {children}{" "}
-      {optional ? <span className="text-sm font-normal text-muted">(optional)</span> : <span aria-hidden="true" className="text-green-bright">*</span>}
-    </label>
-  );
-
-  const Error = ({ name }: { name: Field }) =>
-    errors[name] ? <p id={`${name}-error`} className="mt-1.5 text-sm text-[#c0392b]">{errors[name]}</p> : null;
-
   return (
     <form ref={formRef} noValidate onSubmit={onSubmit}>
       <div className="grid grid-cols-2 gap-5 max-sm:grid-cols-1 max-sm:gap-0">
         <div className="mb-5">
           <Label htmlFor="name">Name</Label>
           <input type="text" autoComplete="name" className={INPUT} {...field("name")} />
-          <Error name="name" />
+          <FieldError errors={errors} name="name" />
         </div>
         <div className="mb-5">
           <Label htmlFor="email">Email</Label>
           <input type="email" autoComplete="email" className={INPUT} {...field("email")} />
-          <Error name="email" />
+          <FieldError errors={errors} name="email" />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-5 max-sm:grid-cols-1 max-sm:gap-0">
@@ -109,12 +112,12 @@ export default function ContactForm() {
           <option>Adult clinics</option>
           <option>General question</option>
         </select>
-        <Error name="topic" />
+        <FieldError errors={errors} name="topic" />
       </div>
       <div className="mb-5">
         <Label htmlFor="message">Message</Label>
         <textarea rows={6} className={`${INPUT} min-h-[140px] resize-y`} {...field("message")} />
-        <Error name="message" />
+        <FieldError errors={errors} name="message" />
       </div>
       <button
         type="submit"
