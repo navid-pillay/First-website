@@ -136,7 +136,7 @@ export default function Intro() {
         <p className="m-0 text-[0.9rem] font-bold uppercase tracking-[0.35em] text-mint-soft/85 opacity-0 [animation:fade-in_1.2s_ease-out_2.2s_forwards]">
           Learn &middot; Develop &middot; Grow
         </p>
-        <p className="m-0 text-xs uppercase tracking-[0.25em] text-white/40 opacity-0 [animation:fade-in_1.2s_ease-out_2.4s_forwards]">
+        <p className="m-0 text-[0.8rem] uppercase tracking-[0.25em] text-white/55 opacity-0 [animation:fade-in_1.2s_ease-out_2.4s_forwards]">
           Select a program to enter
         </p>
       </main>

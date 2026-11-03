@@ -53,8 +53,8 @@ function AgeBar({ upTo }: { upTo: number }) {
       {AGES.map((label, i) => (
         <li
           key={i}
-          className={`min-h-[1.6rem] text-center text-[0.72rem] before:mb-2 before:block before:h-2 before:rounded before:content-[''] ${
-            i <= upTo ? "text-white/80 before:bg-[linear-gradient(90deg,var(--color-green-bright),#3fbf8f)]" : "text-white/45 before:bg-white/10"
+          className={`min-h-[1.6rem] text-center text-[0.78rem] before:mb-2 before:block before:h-2 before:rounded before:content-[''] ${
+            i <= upTo ? "text-white/80 before:bg-[linear-gradient(90deg,var(--color-green-bright),#3fbf8f)]" : "text-white/55 before:bg-white/10"
           }`}
         >
           {label}
@@ -97,6 +97,9 @@ export default function PowerFcPage() {
               <Image src={fcCrest} alt="Power FC crest" priority className="h-auto w-full drop-shadow-[0_0_40px_rgba(26,122,90,0.35)]" />
             </div>
           </Container>
+          <a href="#pathway" aria-label="Scroll to the pathway" className="scroll-cue absolute bottom-5 left-1/2 z-10 grid size-11 -translate-x-1/2 place-items-center rounded-full text-white/55 transition-colors hover:text-white max-[860px]:hidden">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+          </a>
         </section>
 
         <section className="relative overflow-hidden border-t border-white/[0.07] bg-[linear-gradient(180deg,#0c0f0e,#070808)] py-12">

@@ -544,9 +544,30 @@
   14%, 100% { opacity: 0; transform: scale(0) rotate(90deg); }
 }
 
+/* Visible keyboard focus everywhere (components can still restyle it) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 3px;
+}
+
+/* Hero "more below" cue: a slow nudge downwards */
+.scroll-cue svg { animation: cue-nudge 2.4s ease-in-out infinite; }
+@keyframes cue-nudge {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+
 /* ---------------------------------------------------------------
    Map pins (MapLibre markers)
    --------------------------------------------------------------- */
+.pin::before {
+  /* Invisible 44px tap area around the 22px pin */
+  content: "";
+  position: absolute;
+  inset: -11px;
+  border-radius: 50%;
+}
+
 .pin span {
   position: relative;
   display: block;
@@ -617,6 +638,11 @@
   border: 1px solid #2a2f2d;
 }
 
+.maplibregl-ctrl-group button {
+  width: 44px !important;
+  height: 44px !important;
+}
+
 .maplibregl-ctrl-group button + button {
   border-top-color: #2a2f2d !important;
 }
@@ -646,6 +672,7 @@
 
 /* Reduced motion: keep fades, drop movement */
 @media (prefers-reduced-motion: reduce) {
+  .scroll-cue svg { animation: none; }
   .rise-in > * {
     animation-name: fade-in;
   }
