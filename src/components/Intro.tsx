@@ -124,7 +124,7 @@ export default function Intro() {
                 className="flex flex-col items-center gap-0.5 text-center opacity-0"
                 style={{ animation: `fade-in 1s ease-out ${1.6 + i * 0.3}s forwards` }}
               >
-                <strong className="text-[1.1rem] font-bold uppercase tracking-[0.08em] group-focus-visible:underline group-focus-visible:underline-offset-[6px]">
+                <strong className="font-display text-[1.1rem] font-normal uppercase tracking-[0.06em] group-focus-visible:underline group-focus-visible:underline-offset-[6px]">
                   {p.name}
                 </strong>
                 <span className="text-[0.85rem] text-white/60">{p.tagline}</span>

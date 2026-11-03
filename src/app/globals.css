@@ -14,6 +14,7 @@
   --color-mist: #f4f6f5;
   --color-silver: #e9ecea;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-audiowide), system-ui, sans-serif;
 }
 
 @layer base {
@@ -28,6 +29,15 @@
 
   a {
     @apply text-green;
+  }
+
+  /* Headings use the Power FC crest lettering. It has one weight, so don't
+     let the browser fake a bold version. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-synthesis: none;
   }
 }
 

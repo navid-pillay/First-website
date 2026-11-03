@@ -37,8 +37,8 @@ export default function Header() {
           <Link href="/power-fc/" aria-label="Power FC home" className={`flex items-center gap-2.5 text-white no-underline transition-opacity ${dim(onFc)}`}>
             <Image src={fcCrest} alt="" priority className="h-11 w-auto max-sm:h-[38px]" />
             <span className="flex flex-col gap-1">
-              <span className="text-[1.3rem] font-extrabold leading-none tracking-[0.04em]">
-                Power <em className="text-mint">FC</em>
+              <span className="font-display text-[1.25rem] leading-none tracking-[0.02em] not-italic">
+                Power <em className="text-mint not-italic">FC</em>
               </span>
               <span className="text-[0.55rem] font-semibold not-italic tracking-[0.16em] text-white/60 max-md:hidden">
                 High Performance Academy

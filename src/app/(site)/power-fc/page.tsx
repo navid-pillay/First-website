@@ -79,7 +79,7 @@ export default function PowerFcPage() {
                 <br />
                 Academy
               </h1>
-              <p className="-mt-2 mb-6 flex flex-wrap gap-x-4 gap-y-1 text-[clamp(1.1rem,2.4vw,1.5rem)] font-extrabold uppercase tracking-[0.12em] max-[860px]:justify-center">
+              <p className="-mt-2 mb-6 flex flex-wrap gap-x-4 gap-y-1 font-display text-[clamp(1.1rem,2.4vw,1.5rem)] uppercase tracking-[0.1em] max-[860px]:justify-center">
                 {MOTTO.map((word, i) => (
                   <span key={word} className={["text-silver", "text-[#b9bfbc]", "text-mint"][i]}>{word}</span>
                 ))}

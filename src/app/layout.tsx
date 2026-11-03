@@ -1,9 +1,19 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import Script from "next/script";
 import type { ReactNode } from "react";
 import SmoothScroll from "@/components/SmoothScroll";
 import "lenis/dist/lenis.css";
 import "./globals.css";
+
+// Audiowide: the rounded, squared lettering of the Power FC crest, used for
+// headings. It has a single weight (SIL Open Font License, fonts/Audiowide-OFL.txt).
+const display = localFont({
+  src: "./fonts/audiowide-latin-400.woff2",
+  weight: "400",
+  display: "swap",
+  variable: "--font-audiowide",
+});
 
 export const metadata: Metadata = {
   title: "Power Soccer & Power FC | Toronto",
@@ -35,7 +45,7 @@ const bootScript = `(function () {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={display.variable} suppressHydrationWarning>
       <body>
         <Script id="boot" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: bootScript }} />
         <SmoothScroll>{children}</SmoothScroll>
