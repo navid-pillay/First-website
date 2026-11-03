@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import fcCrest from "@/assets/power-fc-crest.png";
 import psLogo from "@/assets/power-soccer-logo.png";
+import FcCrest from "@/components/FcCrest";
 
 const NAV = [
   { href: "/about/", label: "About" },
@@ -22,20 +22,15 @@ export default function Header() {
 
   return (
     <header
-      className={`bg-ink text-white ${
-        onFc
-          ? "border-b border-transparent [border-image:linear-gradient(90deg,transparent,#9aa19d_30%,#e9ecea_50%,#9aa19d_70%,transparent)_1]"
-          : "border-b-[3px] border-green"
-      }`}
+      className={`sticky top-0 z-50 bg-ink/95 text-white backdrop-blur-md ${onFc ? "" : "border-b-[3px] border-green"}`}
     >
-      <div className="mx-auto flex w-full max-w-[1100px] flex-wrap items-center justify-between gap-3 px-4 py-4 max-sm:justify-center">
-        <div className="flex items-center gap-2.5 italic uppercase">
+      <div className="mx-auto flex w-full max-w-[1100px] flex-wrap items-center justify-between gap-3 px-4 py-4 max-sm:justify-center max-sm:gap-y-1 max-sm:py-2">
+        <div className="flex items-center gap-5 italic uppercase max-sm:gap-4">
           <Link href="/power-soccer/" aria-label="Power Soccer home" className={`flex min-h-11 items-center transition-opacity ${dim(onPs)}`}>
             <Image src={psLogo} alt="Power Soccer" priority className="h-12 w-auto max-sm:h-10" />
           </Link>
-          <span aria-hidden="true" className="mx-1.5 h-[34px] w-px bg-white/20" />
           <Link href="/power-fc/" aria-label="Power FC home" className={`flex min-h-11 items-center gap-2.5 text-white no-underline transition-opacity ${dim(onFc)}`}>
-            <Image src={fcCrest} alt="" priority className="h-11 w-auto max-sm:h-[38px]" />
+            <FcCrest className="h-11 w-auto max-sm:h-[38px]" />
             <span className="flex flex-col gap-1">
               <span className="font-display text-[1.25rem] leading-none tracking-[0.02em] not-italic">
                 Power <em className="text-mint not-italic">FC</em>

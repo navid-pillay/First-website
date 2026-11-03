@@ -4,15 +4,15 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
-import fcCrest from "@/assets/power-fc-crest.png";
 import psLogo from "@/assets/power-soccer-logo.png";
+import FcCrest from "@/components/FcCrest";
 import Stars from "@/components/Stars";
 
 type Pendant = {
   href: string;
   name: string;
   tagline: string;
-  logo: StaticImageData;
+  logo: StaticImageData | "crest";
   alt: string;
   logoWidth: string;
   delay: number;
@@ -20,7 +20,7 @@ type Pendant = {
 
 const PENDANTS: Pendant[] = [
   { href: "/power-soccer/", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "92%", delay: 0.5 },
-  { href: "/power-fc/", name: "Power FC", tagline: "High Performance Academy", logo: fcCrest, alt: "Power FC", logoWidth: "54%", delay: 0.85 },
+  { href: "/power-fc/", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "54%", delay: 0.85 },
 ];
 
 const SPARKLES = [
@@ -108,13 +108,19 @@ export default function Intro() {
                   className="medallion relative grid aspect-square place-items-center overflow-hidden rounded-full shadow-[0_0_22px_rgba(26,122,90,0.25)] transition-shadow duration-400 group-hover:shadow-[0_0_34px_rgba(63,191,143,0.45)]"
                   style={{ "--sheen-delay": `${1.4 + i * 0.4}s` } as CSSProperties}
                 >
-                  <Image
-                    src={p.logo}
-                    alt={p.alt}
-                    priority
-                    className="relative h-auto drop-shadow-[0_6px_14px_rgba(0,0,0,0.6)]"
-                    style={{ width: p.logoWidth }}
-                  />
+                  {p.logo === "crest" ? (
+                    <span className="relative block drop-shadow-[0_6px_14px_rgba(0,0,0,0.6)]" style={{ width: p.logoWidth }}>
+                      <FcCrest title={p.alt} className="block h-auto w-full" />
+                    </span>
+                  ) : (
+                    <Image
+                      src={p.logo}
+                      alt={p.alt}
+                      priority
+                      className="relative h-auto drop-shadow-[0_6px_14px_rgba(0,0,0,0.6)]"
+                      style={{ width: p.logoWidth }}
+                    />
+                  )}
                 </span>
                 {SPARKLES.map((s) => (
                   <span key={s.className} className={`sparkle ${s.className}`} style={{ animationDelay: `${p.delay + s.offset}s` }} />

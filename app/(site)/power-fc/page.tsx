@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import type { ReactNode } from "react";
-import fcCrest from "@/assets/power-fc-crest.png";
+import FcCrest from "@/components/FcCrest";
 import Footer from "@/components/Footer";
 import HalftoneCamo from "@/components/heroes/HalftoneCamo";
 import Reveal from "@/components/Reveal";
@@ -74,19 +73,15 @@ export default function PowerFcPage() {
           <Stars />
           <Container className="relative z-10 grid min-h-[min(calc(100vh-80px),760px)] grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-center gap-12 py-16 max-[860px]:min-h-0 max-[860px]:grid-cols-1 max-[860px]:gap-8 max-[860px]:text-center">
             <div className="rise-in">
-              <Eyebrow className="tracking-[0.3em]">High Performance Academy Program &middot; Est. 2005</Eyebrow>
-              <h1 className="metal-text mt-2 mb-6 text-[clamp(3rem,8vw,5.5rem)] font-extrabold uppercase leading-[0.95] tracking-[0.02em]">
-                Power FC
+              <h1 className="mt-2 mb-6 text-[clamp(3rem,8vw,5.5rem)] font-extrabold uppercase leading-[0.95] tracking-[0.02em]">
+                <span className="metal-text">Power FC</span>
                 <br />
-                Academy
+                <span className="text-white">Academy</span>
               </h1>
-              <p className="-mt-2 mb-6 flex flex-wrap gap-x-4 gap-y-1 font-display text-[clamp(1.1rem,2.4vw,1.5rem)] uppercase tracking-[0.1em] max-[860px]:justify-center">
+              <p className="-mt-2 mb-8 flex flex-wrap gap-x-4 gap-y-1 font-display text-[clamp(1.1rem,2.4vw,1.5rem)] uppercase tracking-[0.1em] max-[860px]:justify-center">
                 {MOTTO.map((word, i) => (
                   <span key={word} className={["text-silver", "text-[#b9bfbc]", "text-mint"][i]}>{word}</span>
                 ))}
-              </p>
-              <p className="mb-8 max-w-[520px] text-white/75 max-[860px]:mx-auto">
-                The academy team program of Power Soccer. A competitive pathway and elite-level opportunities for players ready to advance their game.
               </p>
               <div className="flex flex-wrap gap-3.5 max-[860px]:justify-center">
                 <Button href="/contact/">Book an Assessment</Button>
@@ -94,7 +89,7 @@ export default function PowerFcPage() {
               </div>
             </div>
             <div className="w-[min(280px,100%)] justify-self-center drop-shadow-[0_30px_60px_rgba(0,0,0,0.8)] [animation:crest-float_9s_ease-in-out_infinite] max-[860px]:order-first max-[860px]:w-[190px]">
-              <Image src={fcCrest} alt="Power FC crest" priority className="h-auto w-full drop-shadow-[0_0_40px_rgba(26,122,90,0.35)]" />
+              <FcCrest title="Power FC crest" className="block h-auto w-full drop-shadow-[0_0_40px_rgba(26,122,90,0.35)]" />
             </div>
           </Container>
           <a href="#pathway" aria-label="Scroll to the pathway" className="scroll-cue absolute bottom-5 left-1/2 z-10 grid size-11 -translate-x-1/2 place-items-center rounded-full text-white/55 transition-colors hover:text-white max-[860px]:hidden">
