@@ -1,0 +1,666 @@
+@import "tailwindcss";
+
+/* Brand colours: Isle of Man green and professional black */
+@theme {
+  --color-green: #0f4d3a;
+  --color-green-bright: #1a7a5a;
+  --color-mint: #3fbf8f;
+  --color-mint-soft: #8fd1b5;
+  --color-tint: #e8f1ed;
+  --color-ink: #0d0f0e;
+  --color-coal: #1a1d1c;
+  --color-night: #070808;
+  --color-muted: #5a6360;
+  --color-mist: #f4f6f5;
+  --color-silver: #e9ecea;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white font-sans text-coal antialiased;
+    line-height: 1.6;
+  }
+
+  a {
+    @apply text-green;
+  }
+}
+
+/* Brushed-silver text, used on the Power FC page */
+@utility metal-text {
+  background: linear-gradient(180deg, #ffffff 0%, #dfe3e1 40%, #8e9592 62%, #e9ecea 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------------
+   Drawn hero backgrounds (SVG): pitch lines, players, passes
+   --------------------------------------------------------------- */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-bg .pitch {
+  stroke-opacity: 0.1;
+  stroke-width: 2;
+}
+
+.hero-bg .mark {
+  stroke-opacity: 0.3;
+  stroke-width: 2.5;
+  opacity: 0.35;
+  animation: mark-pulse var(--d, 8s) ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .cone {
+  stroke-opacity: 0.25;
+  stroke-width: 2;
+}
+
+.hero-bg .play path,
+.hero-bg .play polygon {
+  stroke-opacity: 0.3;
+  stroke-width: 2.5;
+}
+
+.hero-bg .play .line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: pass-draw 14s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .play .head {
+  opacity: 0;
+  animation: pass-head 14s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .ball {
+  stroke: #3fbf8f;
+  stroke-width: 3.5;
+  stroke-opacity: 0.8;
+  opacity: 0;
+  animation: pass-head 14s ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes mark-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+@keyframes pass-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  4% { opacity: 1; }
+  30% { stroke-dashoffset: 0; }
+  72% { opacity: 1; stroke-dashoffset: 0; }
+  86%, 100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+@keyframes pass-head {
+  0%, 28% { opacity: 0; }
+  33%, 72% { opacity: 1; }
+  86%, 100% { opacity: 0; }
+}
+
+/* About: a slow 3v3 move with players that drift with the play */
+.hero-bg .player {
+  stroke-opacity: 0.4;
+  stroke-width: 2.5;
+  animation-duration: 24s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.hero-bg .seq .line,
+.hero-bg .seq .head,
+.hero-bg .run path,
+.hero-bg .run polygon {
+  stroke-opacity: 0.3;
+  stroke-width: 2.5;
+}
+
+.hero-bg .run path,
+.hero-bg .run polygon {
+  stroke-opacity: 0.22;
+}
+
+.hero-bg .seq .line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: seq-draw 24s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .seq .head,
+.hero-bg .seq-ball {
+  opacity: 0;
+  animation: seq-head 24s ease-in-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .seq-ball {
+  animation-delay: calc(var(--delay, 0s) + 0.1s);
+}
+
+.hero-bg .run {
+  opacity: 0;
+  animation: seq-run 24s ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes seq-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  1% { opacity: 1; }
+  7% { stroke-dashoffset: 0; }
+  32% { opacity: 1; stroke-dashoffset: 0; }
+  40%, 100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+@keyframes seq-head {
+  0%, 6% { opacity: 0; }
+  8%, 32% { opacity: 1; }
+  40%, 100% { opacity: 0; }
+}
+
+@keyframes seq-run {
+  0% { opacity: 0; }
+  4%, 26% { opacity: 1; }
+  34%, 100% { opacity: 0; }
+}
+
+/* About page hero: player movement (generated, 24s loop) */
+.hero-bg .p-o1 {
+  transform: translate(360px, 170px);
+  animation-name: move-o1;
+}
+
+@keyframes move-o1 {
+  0% { transform: translate(360px, 170px); }
+  5% { transform: translate(365px, 168px); }
+  10% { transform: translate(410px, 140px); }
+  18% { transform: translate(520px, 66px); }
+  28% { transform: translate(625px, 72px); }
+  40% { transform: translate(700px, 82px); }
+  48% { transform: translate(708px, 86px); }
+  62% { transform: translate(760px, 112px); }
+  80% { transform: translate(760px, 112px); }
+  100% { transform: translate(360px, 170px); }
+}
+
+.hero-bg .p-o2 {
+  transform: translate(470px, 100px);
+  animation-name: move-o2;
+}
+
+@keyframes move-o2 {
+  0% { transform: translate(470px, 100px); }
+  5% { transform: translate(472px, 101px); }
+  14% { transform: translate(505px, 110px); }
+  26% { transform: translate(541px, 120px); }
+  40% { transform: translate(560px, 140px); }
+  80% { transform: translate(560px, 140px); }
+  100% { transform: translate(470px, 100px); }
+}
+
+.hero-bg .p-o3 {
+  transform: translate(470px, 245px);
+  animation-name: move-o3;
+}
+
+@keyframes move-o3 {
+  0% { transform: translate(470px, 245px); }
+  28% { transform: translate(482px, 244px); }
+  38% { transform: translate(600px, 228px); }
+  47% { transform: translate(700px, 190px); }
+  54% { transform: translate(708px, 188px); }
+  62% { transform: translate(735px, 182px); }
+  80% { transform: translate(735px, 182px); }
+  100% { transform: translate(470px, 245px); }
+}
+
+.hero-bg .p-x1 {
+  transform: translate(640px, 110px);
+  animation-name: move-x1;
+}
+
+@keyframes move-x1 {
+  0% { transform: translate(640px, 110px); }
+  10% { transform: translate(600px, 106px); }
+  26% { transform: translate(612px, 96px); }
+  40% { transform: translate(662px, 100px); }
+  80% { transform: translate(668px, 102px); }
+  100% { transform: translate(640px, 110px); }
+}
+
+.hero-bg .p-x2 {
+  transform: translate(640px, 235px);
+  animation-name: move-x2;
+}
+
+@keyframes move-x2 {
+  0% { transform: translate(640px, 235px); }
+  30% { transform: translate(628px, 226px); }
+  46% { transform: translate(652px, 214px); }
+  80% { transform: translate(656px, 212px); }
+  100% { transform: translate(640px, 235px); }
+}
+
+.hero-bg .p-x3 {
+  transform: translate(800px, 170px);
+  animation-name: move-x3;
+}
+
+@keyframes move-x3 {
+  0% { transform: translate(800px, 170px); }
+  30% { transform: translate(795px, 160px); }
+  42% { transform: translate(768px, 128px); }
+  52% { transform: translate(790px, 160px); }
+  80% { transform: translate(795px, 165px); }
+  100% { transform: translate(800px, 170px); }
+}
+
+
+/* Contact: free kicks into the corners */
+.hero-bg .net {
+  stroke-opacity: 0.06;
+  stroke-width: 1.5;
+}
+
+.hero-bg .kick .line {
+  stroke-opacity: 0.32;
+  stroke-width: 2.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: kick-draw 20s ease-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .kick .end {
+  stroke-width: 3.5;
+  stroke-opacity: 0.85;
+  opacity: 0;
+  animation: kick-end 20s ease-out var(--delay, 0s) infinite;
+}
+
+.hero-bg .kick.goal .end {
+  stroke: #3fbf8f;
+}
+
+.hero-bg .kick.miss .end {
+  stroke: #e0574a;
+}
+
+@keyframes kick-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  1% { opacity: 1; }
+  8% { stroke-dashoffset: 0; opacity: 1; }
+  20% { stroke-dashoffset: 0; opacity: 1; }
+  25%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes kick-end {
+  0%, 7.5% { opacity: 0; }
+  9%, 20% { opacity: 1; }
+  25%, 100% { opacity: 0; }
+}
+
+/* Power FC: a 4-3-3 shape with its passing network */
+.hero-bg .team {
+  animation: team-shift 22s ease-in-out infinite;
+}
+
+.hero-bg .opponents {
+  stroke-opacity: 0.16;
+  stroke-width: 2;
+  animation: opponents-shift 22s ease-in-out infinite;
+}
+
+.hero-bg .link {
+  stroke-opacity: 0.28;
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: link-draw 20s ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes team-shift {
+  0%, 100% { transform: translate(0, 0); }
+  30% { transform: translate(28px, -18px); }
+  65% { transform: translate(44px, 16px); }
+}
+
+@keyframes opponents-shift {
+  0%, 100% { transform: translate(0, 0); }
+  30% { transform: translate(-10px, -14px); }
+  65% { transform: translate(-18px, 12px); }
+}
+
+@keyframes link-draw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  1% { opacity: 1; }
+  5% { stroke-dashoffset: 0; }
+  55% { opacity: 1; stroke-dashoffset: 0; }
+  65%, 100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+/* Hero text rises in on page load */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.rise-in > * {
+  animation: rise-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.rise-in > *:nth-child(2) { animation-delay: 0.12s; }
+.rise-in > *:nth-child(3) { animation-delay: 0.24s; }
+.rise-in > *:nth-child(4) { animation-delay: 0.36s; }
+.rise-in > *:nth-child(5) { animation-delay: 0.48s; }
+
+/* Scroll reveal: added by the Reveal component */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Twinkling stars (intro and gradient sections) */
+.star {
+  position: absolute;
+  width: var(--size, 2px);
+  height: var(--size, 2px);
+  border-radius: 50%;
+  background: #8fe0bd;
+  box-shadow: 0 0 6px 1px rgba(63, 191, 143, 0.8);
+  opacity: 0;
+  animation: twinkle var(--dur, 5s) ease-in-out var(--delay, 0s) infinite;
+}
+
+.star.cross {
+  width: calc(var(--size) * 4);
+  height: calc(var(--size) * 4);
+  border-radius: 0;
+  background: #b6f0d6;
+  box-shadow: none;
+  clip-path: polygon(50% 0, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0 50%, 44% 44%);
+  filter: drop-shadow(0 0 4px rgba(63, 191, 143, 0.9));
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.05; transform: scale(0.6); }
+  50% { opacity: var(--peak, 0.8); transform: scale(1); }
+}
+
+/* Power FC crest floating in the hero */
+@keyframes crest-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Program orbit links */
+.orbit-link {
+  stroke: #3fbf8f;
+  stroke-width: 1.5;
+  stroke-opacity: 0;
+  transition: stroke-opacity 2.4s ease;
+}
+
+.orbit-link.is-on {
+  stroke-opacity: 0.32;
+}
+
+.orbit-link.is-on.is-hot {
+  stroke-opacity: 0.7;
+}
+
+@keyframes orbit-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------------------------------------------------------------
+   Intro page
+   --------------------------------------------------------------- */
+@keyframes fade-in {
+  to { opacity: 1; }
+}
+
+.intro-glow {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(26, 122, 90, 0.55) 0%, rgba(15, 77, 58, 0.25) 35%, transparent 65%);
+  filter: blur(30px);
+  opacity: 0;
+}
+
+@keyframes glow-a {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  45% { opacity: 0.9; transform: translate(18vw, 10vh); }
+  70% { opacity: 0.4; }
+}
+
+@keyframes glow-b {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  50% { opacity: 0.8; transform: translate(-16vw, 8vh); }
+}
+
+@keyframes glow-c {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  50% { opacity: 0.7; transform: translate(10vw, -12vh); }
+}
+
+/* Vertical flutes, like ribbed glass the light shines through */
+.flutes {
+  background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0, rgba(0, 0, 0, 0) 12px, rgba(255, 255, 255, 0.05) 20px, rgba(0, 0, 0, 0) 28px, rgba(0, 0, 0, 0.7) 40px);
+}
+
+/* Cursor light, masked to the ridge of each flute (same 40px rhythm) */
+.flute-glow {
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(63, 191, 143, 0.75), rgba(26, 122, 90, 0.25) 45%, transparent 70%);
+  -webkit-mask: repeating-linear-gradient(90deg, transparent 0, transparent 13px, #000 20px, transparent 27px, transparent 40px);
+  mask: repeating-linear-gradient(90deg, transparent 0, transparent 13px, #000 20px, transparent 27px, transparent 40px);
+}
+
+@keyframes pendant-in {
+  0% { opacity: 0; transform: translateY(14px) scale(0.96); filter: blur(8px); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* Round metal pendant around each logo */
+.medallion {
+  border: 9px solid transparent;
+  background:
+    radial-gradient(circle at 50% 30%, #222826 0%, #0c0e0d 62%, #050606 100%) padding-box,
+    conic-gradient(from 200deg, #ffffff, #8d938f, #e9ecea, #6f7572, #ffffff, #b9bfbc, #ffffff) border-box;
+  box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.08), inset 0 -12px 30px rgba(0, 0, 0, 0.7);
+}
+
+.medallion::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.medallion::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
+  background-size: 300% 100%;
+  background-position: 120% 0;
+  animation: sheen 8s ease-in-out var(--sheen-delay, 1.4s) infinite;
+  pointer-events: none;
+}
+
+@keyframes sheen {
+  0% { background-position: 120% 0; }
+  22%, 100% { background-position: -20% 0; }
+}
+
+.sparkle {
+  position: absolute;
+  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  background: #fff;
+  filter: drop-shadow(0 0 6px rgba(63, 191, 143, 0.9));
+  opacity: 0;
+  transform: scale(0);
+  animation: sparkle 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sparkle {
+  0% { opacity: 0; transform: scale(0) rotate(0deg); }
+  6% { opacity: 1; transform: scale(1) rotate(45deg); }
+  14%, 100% { opacity: 0; transform: scale(0) rotate(90deg); }
+}
+
+/* ---------------------------------------------------------------
+   Map pins (MapLibre markers)
+   --------------------------------------------------------------- */
+.pin span {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-green-bright);
+  border: 3px solid var(--color-ink);
+  box-shadow: 0 0 0 2px var(--color-green-bright);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.pin span::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid #3fbf8f;
+  opacity: 0;
+  animation: pin-pulse 2.6s ease-out infinite;
+}
+
+.pin-hq span {
+  background: #fff;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.pin:hover span,
+.pin:focus-visible span,
+.pin.is-active span {
+  transform: scale(1.3);
+  background: #3fbf8f;
+  box-shadow: 0 0 0 2px #3fbf8f;
+}
+
+.pin-label {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.6rem;
+  white-space: nowrap;
+  font-style: normal;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-ink);
+  border: 1px solid var(--color-green);
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.pin:hover .pin-label,
+.pin:focus-visible .pin-label,
+.pin.is-active .pin-label {
+  opacity: 1;
+}
+
+@keyframes pin-pulse {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.maplibregl-ctrl-group {
+  background: var(--color-coal) !important;
+  border: 1px solid #2a2f2d;
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top-color: #2a2f2d !important;
+}
+
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+
+.maplibregl-ctrl-group button:not(:disabled):hover {
+  background: var(--color-green) !important;
+}
+
+.maplibregl-ctrl-attrib,
+.maplibregl-ctrl-attrib-inner {
+  background: rgba(13, 15, 14, 0.8) !important;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: #8fd1b5;
+}
+
+.maplibregl-ctrl-attrib-button {
+  filter: invert(1);
+  background-color: transparent;
+}
+
+/* Reduced motion: keep fades, drop movement */
+@media (prefers-reduced-motion: reduce) {
+  .rise-in > * {
+    animation-name: fade-in;
+  }
+
+  .reveal {
+    transform: none;
+    transition: opacity 0.8s ease;
+  }
+
+  .hero-bg .player,
+  .star,
+  .sparkle,
+  .intro-glow,
+  .medallion::after,
+  .pin span::after {
+    animation: none;
+  }
+
+  .star {
+    opacity: 0.45;
+  }
+}
+
+/* Without JavaScript nothing waits to be revealed */
+html:not(.js) .reveal {
+  opacity: 1;
+  transform: none;
+}
