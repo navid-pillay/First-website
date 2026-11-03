@@ -1,0 +1,61 @@
+1:"$Sreact.fragment"
+2:"/First-website/_next/static/chunks/1cddul8misaih.js"
+3:I[79520,["$2"],""]
+4:I[20032,["$2"],"default"]
+5:I[39756,["$2"],"default"]
+6:I[37457,["$2"],"default"]
+a:"/First-website/_next/static/chunks/0ai3k95rqjv27.js"
+b:I[2971,["$2","$a"],"default"]
+2b:"ViewportBoundary"
+2c:I[97367,["$2"],"$2b"]
+2d:"MetadataBoundary"
+2e:I[97367,["$2"],"$2d"]
+2f:"$Sreact.suspense"
+:HL["/First-website/_next/static/chunks/1ya9sgzh74r42.css","style"]
+8:X
+f:X
+f:C
+10:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$1","c",{"children":[[["$","main",null,{"children":[["$","section",null,{"className":"relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-14 text-center text-white","children":[["$","svg",null,{"className":"hero-bg","aria-hidden":"true","focusable":"false","viewBox":"0 0 1200 340","preserveAspectRatio":"xMaxYMid slice","fill":"none","stroke":"#fff","strokeLinecap":"round","strokeLinejoin":"round","children":[["$","g",null,{"className":"pitch","children":[["$","line",null,{"x1":"0","y1":"270","x2":"1200","y2":"270"}],["$","path",null,{"d":"M700 270V60H1080V270"}]]}],["$","g",null,{"className":"net","children":[["$","line",null,{"x1":"738","y1":"60","x2":"738","y2":"270"}],["$","line",null,{"x1":"776","y1":"60","x2":"776","y2":"270"}],["$","line",null,{"x1":"814","y1":"60","x2":"814","y2":"270"}],"$L11","$L12","$L13","$L14","$L15","$L16","$L17","$L18","$L19","$L1a","$L1b"]}],"$L1c","$L1d","$L1e","$L1f","$L20","$L21","$L22","$L23","$L24"]}],"$L25"]}],"$L26"]}],"$L27"],["$L28"],"$L29"]}],"p":"$@2a","v":null,"s":"$8"}}]]
+d:[["children",{"s":"contact","h":96,"d":{"r":["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@e","v":"$f","s":"$8"},"c":"$Q10"}]]
+9:[["children",{"s":"(site)","h":96,"d":{"r":["$","$1","c",{"children":[[["$","script","script-0",{"src":"/First-website/_next/static/chunks/0ai3k95rqjv27.js","async":true}]],["$","div",null,{"className":"flex min-h-dvh flex-col has-[[data-map-page]]:h-dvh","children":[["$","$Lb",null,{}],["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:t:t:d:r:props:children:1:props:children:props:children:1:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:t:t:d:r:props:children:1:props:children:props:children:1:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:t:t:d:r:props:children:1:props:children:props:children:1:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:t:t:d:r:props:children:1:props:children:props:children:1:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]]}]]}],"p":"$@c","v":null,"s":"$8"},"c":"$Qd"}]]
+0:{"t":{"t":{"s":"","h":80,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/First-website/_next/static/chunks/1ya9sgzh74r42.css","precedence":"next"}],["$","script","script-0",{"src":"/First-website/_next/static/chunks/1cddul8misaih.js","async":true}]],["$","html",null,{"lang":"en","className":"N9aryW_variable","suppressHydrationWarning":true,"children":["$","body",null,{"children":[["$","$L3",null,{"id":"boot","strategy":"beforeInteractive","dangerouslySetInnerHTML":{"__html":"(function () {\n  document.documentElement.classList.add(\"js\");\n  if (!true) return;\n  var base = \"/First-website\";\n  var path = location.pathname.slice(base.length) || \"/\";\n  if (path === \"/\" || path === \"/index.html\") return;\n  var nav = performance.getEntriesByType && performance.getEntriesByType(\"navigation\")[0];\n  var type = nav ? nav.type : \"navigate\";\n  var fromSite = false;\n  try { fromSite = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (e) {}\n  if (type === \"reload\" || (type === \"navigate\" && !fromSite)) location.replace(base + \"/\");\n})();"}}],["$","$L4",null,{"children":["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}]]}]}]]}],"p":"$@7","v":null,"s":"$8"},"c":"$Q9"},"h":{"r":["$","$1","h",{"children":[null,["$","$L2c",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#0d0f0e"}]]}],["$","$L2e",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$2f",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Contact | Power FC"}],["$","meta","1",{"name":"description","content":"Contact Power Soccer Inc. and Power FC about the academy, soccer schools, summer camps, or private training in Toronto."}]]}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":"$@30","v":null,"s":"$8"}},"a":"$@31","u":"$@32","b":"oBhVQPfAU6z1RmQPn09MJ"}
+33:"/First-website/_next/static/chunks/1x2igbfxkg27n.js"
+34:I[96199,["$2","$a","$33"],"default"]
+35:I[22016,["$2","$a","$33"],""]
+36:I[65254,["$2","$a","$33"],"default"]
+37:I[97367,["$2"],"OutletBoundary"]
+11:["$","line",null,{"x1":"852","y1":"60","x2":"852","y2":"270"}]
+12:["$","line",null,{"x1":"890","y1":"60","x2":"890","y2":"270"}]
+13:["$","line",null,{"x1":"928","y1":"60","x2":"928","y2":"270"}]
+14:["$","line",null,{"x1":"966","y1":"60","x2":"966","y2":"270"}]
+15:["$","line",null,{"x1":"1004","y1":"60","x2":"1004","y2":"270"}]
+16:["$","line",null,{"x1":"1042","y1":"60","x2":"1042","y2":"270"}]
+17:["$","line",null,{"x1":"700","y1":"95","x2":"1080","y2":"95"}]
+18:["$","line",null,{"x1":"700","y1":"130","x2":"1080","y2":"130"}]
+19:["$","line",null,{"x1":"700","y1":"165","x2":"1080","y2":"165"}]
+1a:["$","line",null,{"x1":"700","y1":"200","x2":"1080","y2":"200"}]
+1b:["$","line",null,{"x1":"700","y1":"235","x2":"1080","y2":"235"}]
+1c:["$","path",null,{"className":"mark","style":{"--d":"7s","--delay":"0.0s"},"d":"M445 235L465 255M465 235L445 255"}]
+1d:["$","path",null,{"className":"mark","style":{"--d":"8s","--delay":"-1.6s"},"d":"M480 235L500 255M500 235L480 255"}]
+1e:["$","path",null,{"className":"mark","style":{"--d":"9s","--delay":"-3.2s"},"d":"M515 235L535 255M535 235L515 255"}]
+1f:["$","path",null,{"className":"mark","style":{"--d":"10s","--delay":"-4.8s"},"d":"M550 235L570 255M570 235L550 255"}]
+20:["$","circle",null,{"className":"mark","style":{"--d":"6s"},"cx":"170","cy":"300","r":"12"}]
+21:["$","g",null,{"className":"kick goal","style":{"--delay":"0s"},"children":[["$","path",null,{"className":"line","pathLength":"1","d":"M182 292Q330 -60 728 88"}],["$","circle",null,{"className":"end","cx":"728","cy":"88","r":"12"}]]}]
+22:["$","g",null,{"className":"kick goal","style":{"--delay":"5s"},"children":[["$","path",null,{"className":"line","pathLength":"1","d":"M182 292Q720 360 1052 246"}],["$","circle",null,{"className":"end","cx":"1052","cy":"246","r":"12"}]]}]
+23:["$","g",null,{"className":"kick miss","style":{"--delay":"10s"},"children":[["$","path",null,{"className":"line","pathLength":"1","d":"M182 292Q720 -40 1140 150"}],["$","circle",null,{"className":"end","cx":"1140","cy":"150","r":"12"}]]}]
+24:["$","g",null,{"className":"kick goal","style":{"--delay":"15s"},"children":[["$","path",null,{"className":"line","pathLength":"1","d":"M182 292Q560 -70 1052 88"}],["$","circle",null,{"className":"end","cx":"1052","cy":"88","r":"12"}]]}]
+25:["$","div",null,{"className":"mx-auto w-full max-w-[1100px] px-4 rise-in relative z-10","children":[["$","span",null,{"className":"mb-3 inline-block text-[0.85rem] font-bold uppercase tracking-[0.15em] text-mint-soft ","children":"Contact"}],["$","h1",null,{"className":"mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]","children":"Get in Touch"}],["$","p",null,{"className":"mx-auto max-w-[680px] text-xl opacity-90","children":"Questions about the academy, camps, or training? Send us a message and we'll get back to you."}]]}]
+26:["$","section",null,{"className":"bg-mist py-16 max-sm:py-12","children":["$","div",null,{"className":"mx-auto w-full max-w-[1100px] px-4 grid grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start gap-12 max-[860px]:grid-cols-1 max-[860px]:gap-8","children":[["$","$L34",null,{"as":"aside","children":[["$","h2",null,{"className":"mb-4 text-[2rem] font-bold leading-tight text-ink","children":"Power Soccer Inc."}],["$","p",null,{"className":"max-w-[720px] text-[1.1rem] mb-7 text-muted","children":"Home of the Power FC Academy, developing players in Toronto since 1996."}],["$","dl",null,{"className":"mb-8 [&_dd]:mt-1 [&_dd]:mb-5 [&_dd]:text-[1.05rem] [&_dt]:text-[0.8rem] [&_dt]:font-bold [&_dt]:uppercase [&_dt]:tracking-[0.12em] [&_dt]:text-green","children":[["$","dt",null,{"children":"Office"}],["$","dd",null,{"children":["201 Wicksteed Ave, Suite 8",["$","br",null,{}],"Toronto, ON M4G 0B1"]}],["$","dt",null,{"children":"Phone"}],["$","dd",null,{"children":["$","a",null,{"href":"tel:+14164256062","children":"416.425.6062"}]}],["$","dt",null,{"children":"Email"}],["$","dd",null,{"children":["$","a",null,{"href":"mailto:info@powersoccer.ca","children":"info@powersoccer.ca"}]}]]}],["$","$L35",null,{"href":"/locations/","className":"inline-block rounded-md border-2 px-6 py-3 font-bold no-underline transition-colors border-green bg-transparent text-green hover:bg-green hover:text-white ","children":"View Our Locations"}]]}],["$","$L34",null,{"className":"rounded-xl border-t-4 border-green bg-white p-9 shadow-[0_10px_40px_rgba(13,15,14,0.1)] max-sm:p-6","children":["$","$L36",null,{}]}]]}]}]
+27:["$","footer",null,{"className":"py-8 text-center text-[0.95rem] text-white/75 border-t-[3px] border-green bg-ink","children":["$","div",null,{"className":"mx-auto max-w-[1100px] space-y-1 px-4 [&_a]:text-mint-soft","children":[["$","p",null,{"children":["201 Wicksteed Ave, Suite 8, Toronto, ON M4G 0B1"," · ",["$","a",null,{"href":"tel:+14164256062","children":"416.425.6062"}]," ·"," ",["$","a",null,{"href":"mailto:info@powersoccer.ca","children":"info@powersoccer.ca"}]]}],["$","p",null,{"className":"text-xs font-bold uppercase tracking-[0.25em] text-mint-soft","children":"Learn. Develop. Grow."}],["$","p",null,{"children":["© ",2026," Power Soccer Inc. · Power FC. All rights reserved."]}]]}]}]
+28:["$","script","script-0",{"src":"/First-website/_next/static/chunks/1x2igbfxkg27n.js","async":true}]
+29:["$","$L37",null,{"children":["$","$2f",null,{"name":"Next.MetadataOutlet","children":"$@38"}]}]
+8:300
+38:null
+32:true
+8:C
+31:0
+e:"$undefined"
+c:"$undefined"
+7:"$undefined"
+30:"$undefined"
+2a:"$undefined"
