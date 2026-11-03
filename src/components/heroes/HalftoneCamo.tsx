@@ -7,6 +7,13 @@ import { useEffect, useRef } from "react";
 const SPACING = 9; // px between dot centres
 const CELL = 2; // dots per camo "pixel" block, for the jersey's stepped edges
 
+// Dot colours from darkest (#232625) to lightest (#4c504e), in 24 steps.
+const SHADES = Array.from({ length: 24 }, (_, i) => {
+  const t = i / 23;
+  const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
+  return `rgb(${mix(0x23, 0x4c)},${mix(0x26, 0x50)},${mix(0x25, 0x4e)})`;
+});
+
 function hash(x: number, y: number) {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
   return s - Math.floor(s);
@@ -58,14 +65,13 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
           const x = c * SPACING;
           // Sample per block for stepped edges, blend a little per dot for softness.
           const n = camo(Math.floor(c / CELL), Math.floor(r / CELL), t) * 0.6 + camo(c / CELL, r / CELL, t) * 0.4;
-          let size: number, shade: string;
-          if (n > 0.6) { size = 0.9; shade = "#4c504e"; }
-          else if (n > 0.52) { size = 0.68; shade = "#3a3e3c"; }
-          else if (n > 0.44) { size = 0.45; shade = "#2c2f2e"; }
-          else { size = 0.3; shade = "#232625"; }
-          ctx.fillStyle = shade;
+          // Continuous size and shade, so dots grow and shrink smoothly as the
+          // patches drift instead of snapping between sizes.
+          let k = Math.min(1, Math.max(0, (n - 0.4) / 0.24));
+          k = k * k * (3 - 2 * k);
+          ctx.fillStyle = SHADES[Math.round(k * (SHADES.length - 1))];
           ctx.beginPath();
-          ctx.arc(x, y, max * size, 0, Math.PI * 2);
+          ctx.arc(x, y, max * (0.28 + 0.64 * k), 0, Math.PI * 2);
           ctx.fill();
         }
       }
