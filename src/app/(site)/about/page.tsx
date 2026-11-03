@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Footer from "@/components/Footer";
-import ThreeVThree from "@/components/heroes/ThreeVThree";
 import Reveal from "@/components/Reveal";
 import { Button, Card, Container, Eyebrow, H2, Lead, Section } from "@/components/ui";
 import { CONTACT } from "@/lib/site";
@@ -40,7 +39,6 @@ export default function AboutPage() {
     <>
       <main>
         <section className="relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-14 text-center text-white">
-          <ThreeVThree />
           <Container className="rise-in relative z-10">
             <Eyebrow>About Us</Eyebrow>
             <h1 className="mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]">About Power Soccer &amp; Power FC</h1>

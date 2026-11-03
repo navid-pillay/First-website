@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
-import FreeKicks from "@/components/heroes/FreeKicks";
 import Reveal from "@/components/Reveal";
 import { Button, Container, Eyebrow, H2, Lead } from "@/components/ui";
 import { CONTACT } from "@/lib/site";
@@ -16,7 +15,6 @@ export default function ContactPage() {
     <>
       <main>
         <section className="relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-14 text-center text-white">
-          <FreeKicks />
           <Container className="rise-in relative z-10">
             <Eyebrow>Contact</Eyebrow>
             <h1 className="mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]">Get in Touch</h1>

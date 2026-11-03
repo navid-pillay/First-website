@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import TacticsBoard from "@/components/heroes/TacticsBoard";
 import Orbit from "@/components/Orbit";
 import Reveal from "@/components/Reveal";
 import Stars from "@/components/Stars";
@@ -31,7 +30,6 @@ export default function PowerSoccerPage() {
     <>
       <main>
         <section className="relative overflow-hidden bg-[linear-gradient(135deg,var(--color-ink)_0%,var(--color-coal)_45%,var(--color-green)_100%)] py-20 text-center text-white max-sm:py-14">
-          <TacticsBoard />
           <Stars />
           <Container className="rise-in relative z-10">
             <Eyebrow>Power Soccer Inc. &middot; Toronto since 1996</Eyebrow>

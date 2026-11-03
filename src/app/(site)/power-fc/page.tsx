@@ -3,7 +3,6 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import fcCrest from "@/assets/power-fc-crest.png";
 import Footer from "@/components/Footer";
-import Formation from "@/components/heroes/Formation";
 import HalftoneCamo from "@/components/heroes/HalftoneCamo";
 import Reveal from "@/components/Reveal";
 import Stars from "@/components/Stars";
@@ -72,7 +71,6 @@ export default function PowerFcPage() {
         <section className="relative overflow-hidden bg-[#151716]">
           <HalftoneCamo />
           <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_50%,rgba(26,122,90,0.3),transparent_55%),linear-gradient(90deg,rgba(7,8,8,0.75)_0%,rgba(7,8,8,0.2)_60%,transparent_100%)]" />
-          <div className="opacity-35"><Formation /></div>
           <Stars />
           <Container className="relative z-10 grid min-h-[min(calc(100vh-80px),760px)] grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-center gap-12 py-16 max-[860px]:min-h-0 max-[860px]:grid-cols-1 max-[860px]:gap-8 max-[860px]:text-center">
             <div className="rise-in">
