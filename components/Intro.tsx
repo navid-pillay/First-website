@@ -105,7 +105,7 @@ export default function Intro() {
             >
               <span className="relative block w-[clamp(150px,22vw,260px)] drop-shadow-[0_18px_40px_rgba(0,0,0,0.8)] transition-transform duration-400 group-hover:-translate-y-1.5 group-focus-visible:-translate-y-1.5 max-sm:w-[170px]">
                 <span
-                  className="medallion relative grid aspect-square place-items-center overflow-hidden rounded-full shadow-[0_0_22px_rgba(66,226,2,0.25)] transition-shadow duration-400 group-hover:shadow-[0_0_34px_rgba(66,226,2,0.45)]"
+                  className="medallion relative grid aspect-square place-items-center overflow-hidden rounded-full shadow-[0_0_22px_rgba(0,0,0,0.6)] transition-shadow duration-400 group-hover:shadow-[0_0_34px_rgba(255,255,255,0.12)]"
                   style={{ "--sheen-delay": `${1.4 + i * 0.4}s` } as CSSProperties}
                 >
                   {p.logo === "crest" ? (
