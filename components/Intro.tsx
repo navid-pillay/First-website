@@ -3,7 +3,7 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
 import Stars from "@/components/Stars";
@@ -19,8 +19,8 @@ type Pendant = {
 };
 
 const PENDANTS: Pendant[] = [
-  { href: "/power-soccer/", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "92%", delay: 0.5 },
-  { href: "/power-fc/", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "54%", delay: 0.85 },
+  { href: "/power-soccer/", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "100%", delay: 0.5 },
+  { href: "/power-fc/", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "68%", delay: 0.85 },
 ];
 
 const SPARKLES = [
@@ -103,11 +103,8 @@ export default function Intro() {
               className="group flex flex-col items-center gap-5 text-white no-underline opacity-0 outline-none max-sm:gap-3"
               style={{ animation: `pendant-in 1.6s cubic-bezier(0.2,0.7,0.2,1) ${p.delay}s forwards` }}
             >
-              <span className="relative block w-[clamp(150px,22vw,260px)] drop-shadow-[0_18px_40px_rgba(0,0,0,0.8)] transition-transform duration-400 group-hover:-translate-y-1.5 group-focus-visible:-translate-y-1.5 max-sm:w-[170px]">
-                <span
-                  className="medallion relative grid aspect-square place-items-center overflow-hidden rounded-full shadow-[0_0_22px_rgba(0,0,0,0.6)] transition-shadow duration-400 group-hover:shadow-[0_0_34px_rgba(255,255,255,0.12)]"
-                  style={{ "--sheen-delay": `${1.4 + i * 0.4}s` } as CSSProperties}
-                >
+              <span className="relative block w-[clamp(150px,22vw,260px)] transition-transform duration-400 group-hover:-translate-y-1.5 group-focus-visible:-translate-y-1.5 max-sm:w-[170px]">
+                <span className="relative grid aspect-square place-items-center">
                   {p.logo === "crest" ? (
                     <span className="relative block drop-shadow-[0_6px_14px_rgba(0,0,0,0.6)]" style={{ width: p.logoWidth }}>
                       <FcCrest title={p.alt} className="block h-auto w-full" />
