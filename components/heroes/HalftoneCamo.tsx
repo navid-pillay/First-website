@@ -5,13 +5,30 @@ import { useEffect, useRef } from "react";
 // Live version of the Power FC training top pattern: a grid of halftone dots
 // whose size forms blocky camo patches that slowly drift and morph.
 const SPACING = 9; // px between dot centres
-const CELL = 2; // dots per camo "pixel" block, for the jersey's stepped edges
+const CELL = 2;
+const RIPPLE_SPEED = 260; // px per second the ring spreads
+const RIPPLE_WIDTH = 11; // px thickness of each ring
+const RIPPLE_GAP = 34; // px between the lead ring and the one behind it
+const RIPPLE_LIFE = 1.6; // seconds until a ripple has faded
+const MAX_RIPPLES = 8; // dots per camo "pixel" block, for the jersey's stepped edges
 
 // Dot colours from darkest (#232625) to lightest (#4c504e), in 24 steps.
 const SHADES = Array.from({ length: 24 }, (_, i) => {
   const t = i / 23;
   const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
   return `rgb(${mix(0x23, 0x4c)},${mix(0x26, 0x50)},${mix(0x25, 0x4e)})`;
+});
+
+// The same shades lit up by a ripple: 12 steps from the normal colour toward
+// a bright grey (#a3a9a6), like light catching the crest of a wave.
+const LIT = SHADES.map((_, i) => {
+  const t = i / 23;
+  const base = [0x23 + (0x4c - 0x23) * t, 0x26 + (0x50 - 0x26) * t, 0x25 + (0x4e - 0x25) * t];
+  return Array.from({ length: 12 }, (_, j) => {
+    const u = j / 11;
+    const c = base.map((v, k) => Math.round(v + ([0xa3, 0xa9, 0xa6][k] - v) * u));
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  });
 });
 
 function hash(x: number, y: number) {
@@ -44,6 +61,10 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
     if (!canvas || !ctx) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w = 0, h = 0, raf = 0, last = 0, visible = true;
+    // Water-style ripples left by the cursor: rings of swollen dots that
+    // spread out and fade.
+    const ripples: { x: number; y: number; born: number }[] = [];
+    let lastDrop = { x: -1e4, y: -1e4, at: 0 };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -69,9 +90,20 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
           // patches drift instead of snapping between sizes.
           let k = Math.min(1, Math.max(0, (n - 0.4) / 0.24));
           k = k * k * (3 - 2 * k);
-          ctx.fillStyle = SHADES[Math.round(k * (SHADES.length - 1))];
+          let wave = 0;
+          for (const rp of ripples) {
+            const age = t - rp.born;
+            const d = Math.hypot(x - rp.x, y - rp.y) - age * RIPPLE_SPEED;
+            if (d > -RIPPLE_GAP - RIPPLE_WIDTH * 3 && d < RIPPLE_WIDTH * 3) {
+              const fade = 1 - age / RIPPLE_LIFE;
+              const d2 = d + RIPPLE_GAP;
+              wave += (Math.exp(-(d * d) / (RIPPLE_WIDTH * RIPPLE_WIDTH)) + 0.5 * Math.exp(-(d2 * d2) / (RIPPLE_WIDTH * RIPPLE_WIDTH))) * fade * fade;
+            }
+          }
+          wave = Math.min(1, wave);
+          ctx.fillStyle = LIT[Math.round(k * (SHADES.length - 1))][Math.round(wave * 11)];
           ctx.beginPath();
-          ctx.arc(x, y, max * (0.28 + 0.64 * k), 0, Math.PI * 2);
+          ctx.arc(x, y, max * Math.min(1.2, 0.28 + 0.64 * k + 0.95 * wave), 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -79,9 +111,24 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
 
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      if (!visible || now - last < 33) return; // ~30fps is plenty for slow drift
+      const t = now / 1000;
+      while (ripples.length && t - ripples[0].born > RIPPLE_LIFE) ripples.shift();
+      // ~30fps is plenty for the slow drift; go smooth while ripples spread.
+      if (!visible || now - last < (ripples.length ? 15 : 33)) return;
       last = now;
-      draw(now / 1000);
+      draw(t);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+      const now = performance.now();
+      // Drop a new ripple every so often as the cursor travels.
+      if (Math.hypot(x - lastDrop.x, y - lastDrop.y) < 110 && now - lastDrop.at < 450) return;
+      lastDrop = { x, y, at: now };
+      ripples.push({ x, y, born: now / 1000 });
+      if (ripples.length > MAX_RIPPLES) ripples.shift();
     };
 
     resize();
@@ -90,10 +137,14 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
     ro.observe(canvas);
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
     io.observe(canvas);
-    if (!reduce) raf = requestAnimationFrame(loop);
+    if (!reduce) {
+      raf = requestAnimationFrame(loop);
+      window.addEventListener("pointermove", onMove, { passive: true });
+    }
 
     return () => {
       cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
       ro.disconnect();
       io.disconnect();
     };
