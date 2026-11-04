@@ -26,6 +26,8 @@ export const viewport: Viewport = {
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const gateEnabled = process.env.NODE_ENV === "production";
+// Set by scripts/publish.sh; the same value is written to out/version.txt.
+const buildId = process.env.NEXT_PUBLIC_BUILD_ID || "";
 
 // Runs before the page shows. Marks that JavaScript is on, and (in the built
 // site) sends visitors to the intro when they refresh an inner page or arrive
@@ -41,6 +43,26 @@ const bootScript = `(function () {
   var fromSite = false;
   try { fromSite = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (e) {}
   if (type === "reload" || (type === "navigate" && !fromSite)) location.replace(base + "/");
+})();
+(function () {
+  // Browsers may show a saved copy of the site for a few minutes after a new
+  // version is published. Ask the server which version is live and, if this
+  // page is older, load the new one (once, so it can never loop).
+  var id = ${JSON.stringify(buildId)};
+  if (!id || !window.fetch) return;
+  var base = ${JSON.stringify(base)};
+  fetch(base + "/version.txt?t=" + Date.now(), { cache: "no-store" })
+    .then(function (r) { return r.ok ? r.text() : ""; })
+    .then(function (live) {
+      live = live.trim();
+      if (!live || live === id) return;
+      var key = "pfc-updated-" + live;
+      try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, "1"); } catch (e) { return; }
+      var url = new URL(location.href);
+      url.searchParams.set("v", live);
+      location.replace(url.toString());
+    })
+    .catch(function () {});
 })();`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
