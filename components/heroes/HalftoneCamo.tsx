@@ -57,8 +57,8 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
     if (!canvas || !ctx) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w = 0, h = 0, raf = 0, last = 0, visible = true;
-    // Dots swell only around the cursor. The lens eases towards the pointer
-    // and fades in and out, so it glides instead of jumping.
+    // Dots swell only right where the cursor is: the spot sits exactly on the
+    // pointer (no trail), and simply appears or disappears.
     const pointer = { x: 0, y: 0, inside: false };
     const lens = { x: 0, y: 0, strength: 0 };
 
@@ -87,7 +87,7 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
           let k = Math.min(1, Math.max(0, (n - 0.4) / 0.24));
           k = k * k * (3 - 2 * k);
           let wave = 0;
-          if (lens.strength > 0.01) {
+          if (lens.strength > 0) {
             const dx = x - lens.x, dy = y - lens.y;
             const d2 = dx * dx + dy * dy;
             if (d2 < LENS_RADIUS * LENS_RADIUS * 4) wave = Math.exp(-d2 / (LENS_RADIUS * LENS_RADIUS)) * lens.strength;
@@ -103,15 +103,13 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
       const t = now / 1000;
-      const active = pointer.inside || lens.strength > 0.01;
+      const active = pointer.inside || lens.strength > 0;
       // ~30fps is plenty for the slow drift; go smooth while the cursor is over it.
       if (!visible || now - last < (active ? 15 : 33)) return;
-      const ease = Math.min(1, (now - last) / 80);
       last = now;
-      if (pointer.inside && lens.strength < 0.02) { lens.x = pointer.x; lens.y = pointer.y; }
-      lens.x += (pointer.x - lens.x) * ease;
-      lens.y += (pointer.y - lens.y) * ease;
-      lens.strength += ((pointer.inside ? 1 : 0) - lens.strength) * ease * 0.6;
+      lens.x = pointer.x;
+      lens.y = pointer.y;
+      lens.strength = pointer.inside ? 1 : 0;
       draw(t);
     };
 
