@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 // whose size forms blocky camo patches that slowly drift and morph.
 const SPACING = 9; // px between dot centres
 const CELL = 2; // dots per camo "pixel" block, for the jersey's stepped edges
-const LENS_RADIUS = 70; // px: how far from the cursor dots swell
+const LENS_RADIUS = 110; // px: how far from the cursor dots swell
 
 // Dot colours from darkest (#232625) to lightest (#4c504e), in 24 steps.
 const SHADES = Array.from({ length: 24 }, (_, i) => {
@@ -16,13 +16,13 @@ const SHADES = Array.from({ length: 24 }, (_, i) => {
 });
 
 // The same shades lit up under the cursor: 12 steps from the normal colour
-// toward a bright grey (#a3a9a6).
+// toward a bright grey (#c8cdca).
 const LIT = SHADES.map((_, i) => {
   const t = i / 23;
   const base = [0x23 + (0x4c - 0x23) * t, 0x26 + (0x50 - 0x26) * t, 0x25 + (0x4e - 0x25) * t];
   return Array.from({ length: 12 }, (_, j) => {
     const u = j / 11;
-    const c = base.map((v, k) => Math.round(v + ([0xa3, 0xa9, 0xa6][k] - v) * u));
+    const c = base.map((v, k) => Math.round(v + ([0xc8, 0xcd, 0xca][k] - v) * u));
     return `rgb(${c[0]},${c[1]},${c[2]})`;
   });
 });
@@ -94,7 +94,7 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
           }
           ctx.fillStyle = LIT[Math.round(k * (SHADES.length - 1))][Math.round(wave * 11)];
           ctx.beginPath();
-          ctx.arc(x, y, max * Math.min(1.2, 0.28 + 0.64 * k + 0.9 * wave), 0, Math.PI * 2);
+          ctx.arc(x, y, max * Math.min(1.3, 0.28 + 0.64 * k + 1.1 * wave), 0, Math.PI * 2);
           ctx.fill();
         }
       }
