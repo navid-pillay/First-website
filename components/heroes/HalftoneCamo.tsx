@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 // whose size forms blocky camo patches that slowly drift and morph.
 const SPACING = 9; // px between dot centres
 const CELL = 2; // dots per camo "pixel" block, for the jersey's stepped edges
-const LENS_RADIUS = 110; // px: how far from the cursor dots swell
+const LENS_RADIUS = 45; // px: how far from the cursor dots swell
 
 // Dot colours from darkest (#232625) to lightest (#4c504e), in 24 steps.
 const SHADES = Array.from({ length: 24 }, (_, i) => {
