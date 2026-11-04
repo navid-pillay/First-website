@@ -155,7 +155,9 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
           let k = Math.min(1, Math.max(0, (n - 0.4) / 0.24));
           k = k * k * (3 - 2 * k);
           const grow = g[i];
-          const lit = Math.min(1, Math.max(0, grow));
+          // Dots under the cursor turn one even colour: they reach the full light
+          // grey quickly, so only a thin rim blends into the camo around it.
+          const lit = Math.min(1, Math.max(0, grow / 0.3));
           ctx.fillStyle = LIT[Math.round(k * (SHADES.length - 1))][Math.round(lit * 11)];
           ctx.beginPath();
           ctx.arc(x + ox[i], y + oy[i], Math.max(0.4, max * Math.min(1.45, 0.28 + 0.64 * k + 1.1 * grow)), 0, Math.PI * 2);
