@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { useId } from "react";
 import floodlight from "@/assets/floodlight.webp";
 
 // Pieces of the Power FC hero collage: a black-and-white floodlight "photo",
-// thin sweeping arcs, a star, a crosshair and soft green blobs, all printed on paper.
+// thin sweeping arcs, a star and a crosshair, all printed on paper. The green
+// blobs are in Blobs.tsx.
 
 /** Black-and-white photo of a stadium floodlight over the goal net, with grain. */
 export function FloodlightPhoto({ className = "" }: { className?: string }) {
@@ -42,39 +42,6 @@ export function Crosshair({ className = "" }: { className?: string }) {
     <svg aria-hidden="true" viewBox="0 0 120 70" className={className} fill="none" stroke="currentColor" strokeWidth="1.4">
       <path d="M86 4 V66 M56 35 H118" />
       <path d="M0 35 H52" strokeDasharray="10 4" opacity="0.5" />
-    </svg>
-  );
-}
-
-type Dot = [cx: number, cy: number, r: number];
-
-/**
- * Soft green blobs, like fluorescent ink blotted onto the poster: circles and
- * thick rounded strokes are blurred together and then cut back to a hard edge,
- * so neighbours melt into one rounded, bubbly shape.
- */
-export function Blobs({ viewBox, dots, trails = [], width = 40, className = "" }: {
-  viewBox: string;
-  dots: Dot[];
-  /** Polylines ("x,y x,y ...") drawn as thick rounded strokes between dots. */
-  trails?: string[];
-  /** Stroke width of the trails, in viewBox units. */
-  width?: number;
-  className?: string;
-}) {
-  const id = useId().replace(/:/g, "");
-  return (
-    <svg aria-hidden="true" viewBox={viewBox} className={`pointer-events-none overflow-visible ${className}`}>
-      <defs>
-        <filter id={`${id}-goo`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b" />
-          <feColorMatrix in="b" values="0 0 0 0 0.259  0 0 0 0 0.886  0 0 0 0 0.008  0 0 0 24 -11" />
-        </filter>
-      </defs>
-      <g filter={`url(#${id}-goo)`} fill="#000" stroke="#000" strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
-        {trails.map((t) => <polyline key={t} points={t} fill="none" />)}
-        {dots.map(([cx, cy, r], i) => <circle key={i} cx={cx} cy={cy} r={r} stroke="none" />)}
-      </g>
     </svg>
   );
 }

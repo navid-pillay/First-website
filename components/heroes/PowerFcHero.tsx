@@ -1,5 +1,6 @@
 import HalftonePortrait from "@/components/heroes/HalftonePortrait";
-import { Blobs, FloodlightPhoto, Crosshair, HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
+import Blobs, { type Dot } from "@/components/heroes/Blobs";
+import { FloodlightPhoto, Crosshair, HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,7 @@ import { cn } from "@/lib/utils";
 // The headline blob, in units of 1/100 em from the start of the text: it
 // starts over the end of Learn., wanders down through Develop. and trails off
 // to the right under Grow. (Lines are 98 units tall.)
-const HEADLINE_DOTS: [number, number, number][] = [
+const HEADLINE_DOTS: Dot[] = [
   [235, 40, 39], [305, 26, 29], [372, 52, 49], [446, 30, 26], [470, 78, 21],
   [392, 128, 36], [322, 156, 57], [262, 120, 21], [246, 186, 34], [182, 212, 44],
   [236, 262, 52], [322, 244, 36], [398, 268, 47], [470, 240, 29], [548, 258, 39], [628, 232, 23],
@@ -28,10 +29,25 @@ const HEADLINE_TRAILS = [
 ];
 
 // Beside the photo: a chain of blobs running down to the player.
-const COLUMN_DOTS: [number, number, number][] = [
+const COLUMN_DOTS: Dot[] = [
   [60, 30, 39], [42, 92, 28], [70, 150, 46], [52, 226, 32], [78, 290, 41], [50, 360, 25], [66, 420, 34], [44, 490, 21], [96, 520, 14], [18, 200, 12],
 ];
 const COLUMN_TRAILS = ["60,30 42,92 70,150 52,226 78,290 50,360 66,420 44,490"];
+
+// A small pair over the photo's top-left corner.
+const CORNER_PAIR = { viewBox: "0 0 200 70", dots: [[40, 35, 26], [100, 30, 18], [150, 40, 22], [188, 22, 8]] as Dot[], trails: ["40,35 100,30 150,40"], width: 22 };
+
+// Wide screens: loose blobs floating in the corners, some bleeding off the edge.
+const FLOATERS: { className: string; viewBox: string; dots: Dot[]; trails: string[]; width: number }[] = [
+  // Top left, under the caption band
+  { className: "top-[11%] left-[11%] w-[13%]", viewBox: "0 0 260 150", dots: [[60, 60, 34], [122, 44, 22], [170, 74, 30], [222, 50, 12], [96, 112, 14], [20, 116, 8]], trails: ["60,60 122,44 170,74"], width: 26 },
+  // Bottom left, running off the bottom edge
+  { className: "bottom-[0.5%] left-[2%] w-[19%]", viewBox: "0 0 380 160", dots: [[40, 120, 40], [110, 96, 28], [176, 126, 46], [250, 104, 26], [306, 128, 34], [356, 70, 12], [214, 40, 14], [124, 30, 8]], trails: ["40,120 110,96 176,126 250,104 306,128"], width: 34 },
+  // Top right, running off the right edge
+  { className: "top-[9%] right-[-1.2%] w-[11%]", viewBox: "0 0 220 220", dots: [[170, 50, 42], [118, 96, 26], [160, 150, 36], [196, 196, 18], [70, 60, 14], [84, 172, 10]], trails: ["170,50 118,96 160,150 196,196"], width: 30 },
+  // Right edge, droplets around the crosshair
+  { className: "top-[57%] right-[1%] w-[6%]", viewBox: "0 0 120 140", dots: [[70, 40, 24], [44, 84, 16], [84, 108, 12], [20, 30, 8]], trails: ["70,40 44,84"], width: 18 },
+];
 
 const mono = "font-mono text-[0.68rem] font-semibold uppercase leading-none tracking-[0.14em]";
 
@@ -67,7 +83,10 @@ export default function PowerFcHero({ fullScreen = false }: { fullScreen?: boole
         <FloodlightPhoto className="absolute top-[19%] left-[30%] h-[28.5%] w-[22.4%] max-[860px]:hidden" />
         {/* Blobs running down beside the photo, and a pair over its corner */}
         <Blobs viewBox="0 0 120 540" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={38} className="absolute top-[15%] left-[51.6%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />
-        <Blobs viewBox="0 0 200 70" dots={[[40, 35, 26], [100, 30, 18], [150, 40, 22], [188, 22, 8]]} trails={["40,35 100,30 150,40"]} width={22} className="absolute top-[26.5%] left-[26%] w-[13%] mix-blend-multiply max-[860px]:hidden" />
+        <Blobs {...CORNER_PAIR} className="absolute top-[26.5%] left-[26%] w-[13%] mix-blend-multiply max-[860px]:hidden" />
+        {FLOATERS.map(({ className, ...blob }) => (
+          <Blobs key={className} {...blob} className={cn("absolute mix-blend-multiply max-[860px]:hidden", className)} />
+        ))}
         <span aria-hidden="true" className="absolute right-[0.8%] bottom-0 h-[25%] w-[10%] bg-[#9fa29f] max-[860px]:hidden" />
         <Sparkle className="absolute top-[34%] left-[8%] w-[3.4%] min-w-6 text-ink" />
         <Crosshair className="absolute top-[48%] right-[4%] w-[6%] min-w-12 text-ink/70 max-[860px]:hidden" />
