@@ -27,11 +27,12 @@ const POP_DAMPING = 14;
 const INTRO_SHIFT = "5%";
 const INTRO_MS = 1400;
 
-// With `scrollAway`: as the page scrolls, the dots drift down with the reader
-// (moving at this share of the scroll speed) and shrink away, unevenly, until
-// none are left once the page has scrolled SCROLL_GONE x the hero's height.
-const SCROLL_FOLLOW = 0.8;
+// With `scrollAway`: the player stays in place, and as the page scrolls his
+// dots gradually get smaller and fainter, until none are left once the page
+// has scrolled SCROLL_GONE x the hero's height. The dots also taper away
+// toward the bottom of the photo, so he dissolves instead of being cut off.
 const SCROLL_GONE = 0.9;
+const TAPER = 0.16; // share of the photo's height that tapers at its bottom
 
 // Black ink for the player, green for the stadium light streaks and his rim light.
 const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
@@ -249,8 +250,9 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
     // A dot's size: its printed size rb, plus the cursor swell. The swell is
     // scaled by how big the dot already is, so bare paper never grows dots
     // and the faint dots at the edge of a cluster or streak only swell a little.
-    // Scrolling away: how far through (0..1), and each dot's share of size left.
-    // Dots vanish at different moments (by a fixed random threshold per dot).
+    // Scrolling away: how far through (0..1), and each dot's share of size
+    // left. Dots shrink gradually, a little unevenly (a fixed random amount
+    // per dot), and all are gone at the end.
     let scrollP = 0, scrollY = -1;
     const followScroll = () => {
       if (!scrollAway) return false;
@@ -258,11 +260,16 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       if (y === scrollY) return false;
       scrollY = y;
       scrollP = Math.min(1, y / (h * SCROLL_GONE || 1));
-      canvas.style.transform = y ? `translate3d(0, ${(y * SCROLL_FOLLOW).toFixed(1)}px, 0)` : "";
       return true;
     };
     const left = (x: number, y: number) =>
-      scrollP === 0 ? 1 : Math.min(1, Math.max(0, (1 - scrollP) * 1.7 - hash(x * 0.37, y * 0.29) * 0.7));
+      scrollP === 0 ? 1 : Math.min(1, Math.max(0, (1 - scrollP) * 1.3 - hash(x * 0.37, y * 0.29) * 0.3));
+    // Taper toward the bottom of the photo (scrollAway only).
+    const taper = (y: number) => {
+      if (!scrollAway) return 1;
+      const bottom = fit.y + PHOTO.height * fit.s, range = PHOTO.height * fit.s * TAPER;
+      return Math.min(1, Math.max(0, (bottom - y) / range));
+    };
 
     const dotRadius = (rb: number, grow: number, max: number) =>
       rb < 0.35 ? 0 : Math.min(max * 1.2, rb + max * 1.1 * grow * Math.min(1, rb / (max * 0.25)));
@@ -279,7 +286,9 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       const max = sp * 0.5;
       // Ink clusters and light streaks fade in during the opening sequence.
       const late = reduce || !lateAt ? 1 : Math.min(1, Math.max(0, (performance.now() - lateAt) / 700));
-      ctx.globalAlpha = late;
+      // Fainter as the page scrolls away.
+      const fade = 1 - scrollP * 0.75;
+      ctx.globalAlpha = late * fade;
       // The ink clusters first, as they sit behind the player.
       const grid = cols * rows;
       for (let j = 0; j < clusterR.length; j++) {
@@ -288,7 +297,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
         const radius = dotRadius(rb, g[i], max);
         if (radius > 0) dot(X[i] + ox[i], Y[i] + oy[i], radius, COLORS[0]);
       }
-      ctx.globalAlpha = 1;
+      ctx.globalAlpha = fade;
       for (let r = 0; r < rows; r++) {
         const y = r * sp;
         for (let c = 0; c < cols; c++) {
@@ -302,7 +311,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
           }
           if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
-          const radius = dotRadius(max * k * left(x, y), grow, max);
+          const radius = dotRadius(max * k * left(x, y) * taper(y), grow, max);
           if (radius === 0) continue;
           // Dots keep their own colour as they swell.
           dot(x + ox[i], y + oy[i], radius, COLORS[type]);

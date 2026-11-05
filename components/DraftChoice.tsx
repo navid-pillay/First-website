@@ -10,16 +10,16 @@ import { cn } from "@/lib/utils";
 
 // Below the draft hero: the hero's left rule keeps drawing down the page as
 // the reader scrolls (only then), small captions appear as the line reaches
-// them, and it ends at the two programs to choose from.
+// them, and it passes the two programs to choose from, which sit mid-page.
 
 // The line's tip sits this far down the window, so it is drawn as you scroll.
 const TIP = 0.72;
 
 const CAPTIONS: { top: string; lines: [string, string] }[] = [
-  { top: "10%", lines: ["02 — Two programs", "Learn. Develop. Grow."] },
-  { top: "32%", lines: ["Power Soccer Inc.", "Training & soccer schools since 1996"] },
-  { top: "54%", lines: ["Power FC", "High performance academy since 2005"] },
-  { top: "76%", lines: ["Toronto, ON", "Choose where to start"] },
+  { top: "8%", lines: ["02 — Two programs", "Learn. Develop. Grow."] },
+  { top: "30%", lines: ["Power Soccer Inc.", "Training & soccer schools since 1996"] },
+  { top: "52%", lines: ["Power FC", "High performance academy since 2005"] },
+  { top: "74%", lines: ["Toronto, ON", "Choose where to start"] },
 ];
 
 // Blobs behind each logo (viewBox 0 0 300 300; the logo sits in the middle).
@@ -72,14 +72,14 @@ export default function DraftChoice() {
 
   return (
     <section className="relative">
-      <div className="relative mx-auto w-full max-w-[1440px] pb-[12svh]">
+      <div className="relative mx-auto w-full max-w-[1440px] pb-[45svh]">
         {/* The hero's left rule, carrying on down the page */}
-        <span aria-hidden="true" className="absolute top-0 bottom-[12svh] left-[6%] w-px max-[860px]:left-3">
+        <span aria-hidden="true" className="absolute top-0 bottom-[30svh] left-[6%] w-px max-[860px]:left-3">
           <span ref={lineRef} style={{ transform: "scaleY(0)" }} className="block h-full w-full origin-top bg-ink" />
         </span>
 
-        {/* Captions along the line, one screen tall */}
-        <div className="relative h-svh">
+        {/* Captions along the line */}
+        <div className="relative h-[50svh] min-h-[340px]">
         {CAPTIONS.map(({ top, lines }, i) => (
           <div
             key={lines[0]}
