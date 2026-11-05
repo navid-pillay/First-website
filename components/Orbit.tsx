@@ -260,11 +260,11 @@ export default function Orbit() {
         className="absolute top-1/2 left-1/2 w-[46%] -translate-x-1/2 -translate-y-1/2 cursor-auto select-text max-[640px]:relative max-[640px]:top-auto max-[640px]:left-auto max-[640px]:w-auto max-[640px]:translate-x-0 max-[640px]:translate-y-0"
       >
         <div key={p.id} className="[&>*]:[animation:orbit-in_0.6s_ease_both]">
-          <span className="block text-xs font-bold uppercase tracking-[0.18em] text-mint-soft">{p.when}</span>
-          <h3 className="mt-1.5 mb-2 text-2xl font-bold text-white">{p.title}</h3>
-          <p className="mb-3 text-[0.95rem] text-white/75">{p.text}</p>
-          {p.where.length > 0 && <p className="mb-3 text-[0.82rem] text-white/55">{p.where.join(" · ")}</p>}
-          <Button href="/contact/" className="mt-1 px-5 py-2.5 text-[0.9rem]">Ask About This Program</Button>
+          <span className="tape inline-block font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">{p.when}</span>
+          <h3 className="mt-3 mb-2 text-2xl uppercase text-ink">{p.title}</h3>
+          <p className="mb-3 text-[0.95rem] text-ink/75">{p.text}</p>
+          {p.where.length > 0 && <p className="mb-3 font-mono text-[0.75rem] uppercase tracking-[0.08em] text-ink/60">{p.where.join(" · ")}</p>}
+          <Button href="/contact/" className="mt-1 px-5 py-2.5 text-[0.78rem]">Ask About This Program</Button>
         </div>
       </div>
 
@@ -278,12 +278,12 @@ export default function Orbit() {
               aria-pressed={i === active}
               onClick={() => select(i, true)}
               onMouseEnter={() => { if (!state.current.dragging) select(i, true); }}
-              className={`absolute top-0 left-0 touch-none whitespace-nowrap rounded-full border px-4 py-2.5 text-[0.92rem] font-semibold shadow-[0_0_0_4px_rgba(13,15,14,0.6)] outline-none transition-[background,border-color,box-shadow] duration-300 focus-visible:border-mint before:absolute before:-inset-y-2 before:inset-x-0 before:content-[''] max-[640px]:px-2.5 max-[640px]:py-1.5 max-[640px]:text-[0.72rem] ${
+              className={`absolute top-0 left-0 touch-none whitespace-nowrap border border-ink px-4 py-2.5 font-mono text-[0.78rem] font-bold uppercase tracking-[0.08em] outline-none transition-[background,color,box-shadow] duration-300 before:absolute before:-inset-y-2 before:inset-x-0 before:content-[''] max-[640px]:px-2.5 max-[640px]:py-1.5 max-[640px]:text-[0.66rem] ${
                 dragging ? "cursor-grabbing" : "cursor-pointer"
               } ${
                 i === active
-                  ? "border-mint bg-green text-ink shadow-[0_0_0_4px_rgba(13,15,14,0.6),0_0_24px_rgba(66,226,2,0.45)]"
-                  : "border-mint/45 bg-ink/90 text-white hover:border-mint"
+                  ? "bg-green text-ink shadow-[4px_4px_0_var(--color-ink)]"
+                  : "bg-paper text-ink hover:bg-ink hover:text-white"
               }`}
             >
               {prog.label}

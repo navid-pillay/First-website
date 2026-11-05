@@ -22,20 +22,20 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-ink/95 text-white backdrop-blur-md ${onFc ? "" : "border-b-[3px] border-green"}`}
+      className="sticky top-0 z-50 border-b border-ink bg-paper/92 text-ink backdrop-blur-md"
     >
       <div className="mx-auto flex w-full max-w-[1100px] flex-wrap items-center justify-between gap-3 px-4 py-4 max-sm:justify-center max-sm:gap-y-1 max-sm:py-2">
         <div className="flex items-center gap-5 italic uppercase max-sm:gap-4">
           <Link href="/power-soccer/" aria-label="Power Soccer home" className={`flex min-h-11 items-center transition-opacity ${dim(onPs)}`}>
             <Image src={psLogo} alt="Power Soccer" priority className="h-12 w-auto max-sm:h-10" />
           </Link>
-          <Link href="/power-fc/" aria-label="Power FC home" className={`flex min-h-11 items-center gap-2.5 text-white no-underline transition-opacity ${dim(onFc)}`}>
+          <Link href="/power-fc/" aria-label="Power FC home" className={`flex min-h-11 items-center gap-2.5 text-ink no-underline transition-opacity ${dim(onFc)}`}>
             <FcCrest className="h-11 w-auto max-sm:h-[38px]" />
             <span className="flex flex-col gap-1">
               <span className="font-display text-[1.25rem] leading-none tracking-[0.02em] not-italic">
-                Power <em className="text-mint not-italic">FC</em>
+                Power <em className="tape not-italic">FC</em>
               </span>
-              <span className="text-[0.7rem] font-semibold not-italic tracking-[0.12em] text-white/65 max-md:hidden">
+              <span className="font-mono text-[0.68rem] font-semibold not-italic tracking-[0.14em] text-ink/70 max-md:hidden">
                 High Performance Academy
               </span>
             </span>
@@ -52,8 +52,8 @@ export default function Header() {
                     aria-current={current ? "page" : undefined}
                     className={
                       item.cta
-                        ? "inline-flex min-h-11 items-center rounded-md border-2 border-green bg-green px-4 font-semibold text-ink no-underline transition-colors duration-200 hover:border-green-bright hover:bg-green-bright aria-[current=page]:border-mint"
-                        : "relative inline-flex min-h-11 items-center font-semibold text-white no-underline after:absolute after:inset-x-0 after:bottom-2 after:h-0.5 after:bg-transparent after:transition-colors after:duration-200 after:content-[''] hover:after:bg-green-bright aria-[current=page]:after:bg-green-bright"
+                        ? "inline-flex min-h-11 items-center border-2 border-ink bg-ink px-4 font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-white no-underline transition-colors duration-200 hover:bg-green hover:text-ink aria-[current=page]:bg-green aria-[current=page]:text-ink"
+                        : "relative inline-flex min-h-11 items-center font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-ink no-underline after:absolute after:inset-x-0 after:bottom-2 after:h-1 after:origin-left after:scale-x-0 after:bg-green after:transition-transform after:duration-200 after:content-[''] hover:after:scale-x-100 aria-[current=page]:after:scale-x-100"
                     }
                   >
                     {item.label}

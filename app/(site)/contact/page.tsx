@@ -3,6 +3,7 @@ import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import { Button, Container, Eyebrow, H2, Lead } from "@/components/ui";
+import { CropMarks, Halftone, Meta, Slash, Tape } from "@/components/zine";
 import { CONTACT } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,22 +15,28 @@ export default function ContactPage() {
   return (
     <>
       <main>
-        <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_100%,rgba(66,226,2,0.32),transparent_60%),linear-gradient(135deg,var(--color-ink),var(--color-coal))] py-14 text-center text-white">
-          <Container className="rise-in relative z-10">
-            <Eyebrow>Contact</Eyebrow>
-            <h1 className="mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]">Get in Touch</h1>
-            <p className="mx-auto max-w-[680px] text-xl opacity-90">
+        <section className="relative overflow-hidden bg-paper">
+          <Halftone from="top right" />
+          <Slash seed={14} className="slash-in absolute top-[46%] -right-[5%] h-20 w-[44%] rotate-[7deg] max-sm:h-12 max-sm:w-[75%]" />
+          <CropMarks />
+          <Container className="rise-in relative z-10 py-16 max-sm:py-12">
+            <Meta className="mb-10" lines={["Contact", "Power Soccer Inc.", "Toronto, ON"]} />
+            <h1 className="m-0 text-[clamp(3rem,8.4vw,6.6rem)] uppercase leading-[0.88] tracking-[-0.02em]">
+              Get in <Tape>Touch</Tape>
+            </h1>
+            <p className="mt-8 mb-0 max-w-[560px] text-[1.15rem] text-ink/80">
               Questions about the academy, camps, or training? Send us a message and we&apos;ll get back to you.
             </p>
           </Container>
         </section>
 
-        <section className="bg-mist py-16 max-sm:py-12">
-          <Container className="grid grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start gap-12 max-[860px]:grid-cols-1 max-[860px]:gap-8">
+        <section className="border-t border-ink bg-white py-20 max-sm:py-14">
+          <Container className="grid grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-start gap-12 max-[860px]:grid-cols-1 max-[860px]:gap-10">
             <Reveal as="aside">
-              <H2 className="text-ink">Power Soccer Inc.</H2>
-              <Lead className="mb-7 text-muted">Home of the Power FC Academy, developing players in Toronto since 1996.</Lead>
-              <dl className="mb-8 [&_dd]:mt-1 [&_dd]:mb-5 [&_dd]:text-[1.05rem] [&_dt]:text-[0.8rem] [&_dt]:font-bold [&_dt]:uppercase [&_dt]:tracking-[0.12em] [&_dt]:text-ink">
+              <Eyebrow index="01">Office</Eyebrow>
+              <H2>Power Soccer Inc.</H2>
+              <Lead className="mb-8 text-ink/75">Home of the Power FC Academy, developing players in Toronto since 1996.</Lead>
+              <dl className="mb-9 border-t border-ink [&_dd]:m-0 [&_dd]:pb-4 [&_dd]:text-[1.05rem] [&_dt]:pt-4 [&_dt]:font-mono [&_dt]:text-[0.75rem] [&_dt]:font-bold [&_dt]:uppercase [&_dt]:tracking-[0.16em] [&_dt]:text-ink/60 [&>dd]:border-b [&>dd]:border-ink">
                 <dt>Office</dt>
                 <dd>{CONTACT.addressLines[0]}<br />{CONTACT.addressLines[1]}</dd>
                 <dt>Phone</dt>
@@ -39,7 +46,8 @@ export default function ContactPage() {
               </dl>
               <Button href="/locations/" variant="outline">View Our Locations</Button>
             </Reveal>
-            <Reveal className="rounded-xl border-t-4 border-green bg-white p-9 shadow-[0_10px_40px_rgba(13,15,14,0.1)] max-sm:p-6">
+            <Reveal className="relative border border-ink bg-paper p-9 shadow-[10px_10px_0_var(--color-ink)] max-sm:p-6 max-sm:shadow-[6px_6px_0_var(--color-ink)]">
+              <span aria-hidden="true" className="absolute top-0 right-0 h-2 w-20 bg-green" />
               <ContactForm />
             </Reveal>
           </Container>

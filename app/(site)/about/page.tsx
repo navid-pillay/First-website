@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import { Button, Card, Container, Eyebrow, H2, Lead, Section } from "@/components/ui";
+import { CropMarks, Halftone, Meta, Slash, Tape } from "@/components/zine";
 import { CONTACT } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ const PILLARS = [
 ];
 
 const icon = (children: ReactNode) => (
-  <svg viewBox="0 0 32 32" aria-hidden="true" className="size-9 flex-none fill-none stroke-mint-soft [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:2]">
+  <svg viewBox="0 0 32 32" aria-hidden="true" className="size-9 flex-none fill-none stroke-ink [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:2]">
     {children}
   </svg>
 );
@@ -38,93 +39,113 @@ export default function AboutPage() {
   return (
     <>
       <main>
-        <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_100%,rgba(66,226,2,0.32),transparent_60%),linear-gradient(135deg,var(--color-ink),var(--color-coal))] py-14 text-center text-white">
-          <Container className="rise-in relative z-10">
-            <Eyebrow>About Us</Eyebrow>
-            <h1 className="mb-3 text-[clamp(2.2rem,6vw,3.5rem)] font-bold leading-[1.15]">About Power Soccer &amp; Power FC</h1>
-            <p className="mx-auto max-w-[680px] text-xl opacity-90">A soccer coaching resource for Canadian players and coaches since 1996.</p>
+        <section className="relative overflow-hidden bg-paper">
+          <Halftone from="bottom right" />
+          <Slash seed={9} className="slash-in absolute bottom-[22%] -right-[6%] h-20 w-[48%] -rotate-[6deg] max-sm:h-12 max-sm:w-[80%]" />
+          <CropMarks />
+          <Container className="rise-in relative z-10 py-16 max-sm:py-12">
+            <Meta className="mb-10" lines={["About us", "Since 1996", "Toronto, ON"]} />
+            <h1 className="m-0 max-w-[950px] text-[clamp(2.8rem,7.6vw,6rem)] uppercase leading-[0.9] tracking-[-0.02em]">
+              About Power Soccer &amp; <Tape>Power FC</Tape>
+            </h1>
+            <p className="mt-8 mb-0 max-w-[560px] text-[1.15rem] text-ink/80">A soccer coaching resource for Canadian players and coaches since 1996.</p>
           </Container>
         </section>
 
-        <Section>
-          <Container className="text-muted">
-            <Reveal><H2 className="text-ink">Our Story</H2></Reveal>
-            <Reveal>
-              <Lead className="mb-4">
-                Power Soccer was formed in 1996 to create a soccer coaching resource for the growing population of Canadian players and coaches. Since then, it has grown to become one of the most respected player development programs in Canada.
-              </Lead>
-            </Reveal>
-            <Reveal>
-              <Lead>
-                That growth is a direct result of our exceptional coaching staff, who run dynamic and enjoyable training programs that are completely focused on player development. Today we offer year-round soccer schools, summer camps, team training, private training and more, all in Toronto and the GTA.
-              </Lead>
-            </Reveal>
+        <Section tone="alt">
+          <Container className="grid grid-cols-[minmax(0,4fr)_minmax(0,7fr)] gap-10 max-[860px]:grid-cols-1 max-[860px]:gap-4">
+            <div>
+              <Reveal><Eyebrow index="01">Our Story</Eyebrow></Reveal>
+              <Reveal><H2>Since<br />1996</H2></Reveal>
+            </div>
+            <div className="text-ink/80">
+              <Reveal>
+                <Lead className="mb-5">
+                  Power Soccer was formed in 1996 to create a soccer coaching resource for the growing population of Canadian players and coaches. Since then, it has grown to become one of the most respected player development programs in Canada.
+                </Lead>
+              </Reveal>
+              <Reveal>
+                <Lead>
+                  That growth is a direct result of our exceptional coaching staff, who run dynamic and enjoyable training programs that are completely focused on player development. Today we offer year-round soccer schools, summer camps, team training, private training and more, all in Toronto and the GTA.
+                </Lead>
+              </Reveal>
+            </div>
           </Container>
         </Section>
 
-        <Section tone="alt">
-          <Container>
-            <Reveal><H2 className="text-ink">What We Stand For</H2></Reveal>
-            <div className="mt-8 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
-              <Reveal><Card title="We Emphasize">Skill, tactical development and the maximization of game enjoyment, through a training process that emphasizes fair play and respect.</Card></Reveal>
-              <Reveal delay={120}><Card title="We Believe">In nurturing and developing the mental, physical and technical characteristics of the youth player, through a dynamic and creative soccer training model.</Card></Reveal>
-              <Reveal delay={240}><Card title="We Encourage">Players to use their imagination and creativity while playing. Our innovative skills program gives every player the opportunity for total involvement.</Card></Reveal>
+        <Section>
+          <Halftone from="top left" />
+          <Container className="relative">
+            <Reveal><Eyebrow index="02">Values</Eyebrow></Reveal>
+            <Reveal><H2>What We Stand For</H2></Reveal>
+            <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+              <Reveal><Card index="01" title="We Emphasize">Skill, tactical development and the maximization of game enjoyment, through a training process that emphasizes fair play and respect.</Card></Reveal>
+              <Reveal delay={120}><Card index="02" title="We Believe">In nurturing and developing the mental, physical and technical characteristics of the youth player, through a dynamic and creative soccer training model.</Card></Reveal>
+              <Reveal delay={240}><Card index="03" title="We Encourage">Players to use their imagination and creativity while playing. Our innovative skills program gives every player the opportunity for total involvement.</Card></Reveal>
             </div>
           </Container>
         </Section>
 
         <Section tone="dark">
-          <Container>
-            <Reveal><H2>Our Mission</H2></Reveal>
+          <Halftone light from="bottom left" />
+          <Slash seed={19} className="absolute -left-20 bottom-12 h-10 w-[400px] rotate-[5deg] max-sm:w-[240px]" />
+          <Container className="relative">
+            <Reveal><Eyebrow index="03" light>Our Mission</Eyebrow></Reveal>
             <Reveal>
-              <blockquote className="mb-8 max-w-[820px] border-l-4 border-green-bright py-1 pl-6 text-[clamp(1.35rem,3vw,1.9rem)] font-semibold leading-snug">
-                Players who are enjoying soccer and are comfortable to make mistakes without criticism will develop best.
+              <blockquote className="mx-0 mt-2 mb-12 max-w-[920px] font-display text-[clamp(1.7rem,4vw,2.9rem)] uppercase leading-[1.08]">
+                Players who are enjoying soccer and are comfortable to make mistakes without criticism{" "}
+                <span className="tape text-ink">will develop best.</span>
               </blockquote>
             </Reveal>
-            <Reveal>
-              <Lead className="mb-4 text-white/75">
-                At Power Soccer we focus on allowing players to express their individuality while giving them concise feedback on how they can improve their game. Players follow an age- and skill-specific program that fosters development and greater enjoyment of soccer.
-              </Lead>
-            </Reveal>
-            <Reveal>
-              <Lead className="text-white/75">
-                Proper player development is a long-term project that produces incredible results. Players receive informative, positive feedback through detailed Player Profile reports and constant communication with their coaches.
-              </Lead>
-            </Reveal>
+            <div className="grid grid-cols-2 gap-10 border-t border-white/40 pt-8 max-[860px]:grid-cols-1 max-[860px]:gap-4">
+              <Reveal>
+                <p className="m-0 text-white/75">
+                  At Power Soccer we focus on allowing players to express their individuality while giving them concise feedback on how they can improve their game. Players follow an age- and skill-specific program that fosters development and greater enjoyment of soccer.
+                </p>
+              </Reveal>
+              <Reveal delay={120}>
+                <p className="m-0 text-white/75">
+                  Proper player development is a long-term project that produces incredible results. Players receive informative, positive feedback through detailed Player Profile reports and constant communication with their coaches.
+                </p>
+              </Reveal>
+            </div>
           </Container>
         </Section>
 
-        <Section>
+        <Section tone="alt">
           <Container>
-            <Reveal><H2 className="text-ink">How We Train</H2></Reveal>
-            <Reveal><Lead className="text-muted">Three ideas shape every Power Soccer session.</Lead></Reveal>
-            <div className="mt-10 border-t border-[#e1e6e3]">
+            <Reveal><Eyebrow index="04">Training</Eyebrow></Reveal>
+            <Reveal><H2>How We <Tape>Train</Tape></H2></Reveal>
+            <Reveal><Lead className="text-ink/75">Three ideas shape every Power Soccer session.</Lead></Reveal>
+            <div className="mt-10 border-t border-ink">
               {PILLARS.map(([num, title, text]) => (
                 <Reveal
                   as="article"
                   key={num}
-                  className="grid grid-cols-[90px_minmax(0,260px)_minmax(0,1fr)] items-baseline gap-6 border-b border-[#e1e6e3] py-8 max-md:grid-cols-1 max-md:gap-2 max-md:py-6"
+                  className="group grid grid-cols-[110px_minmax(0,260px)_minmax(0,1fr)] items-baseline gap-6 border-b border-ink py-9 max-md:grid-cols-1 max-md:gap-2 max-md:py-7"
                 >
-                  <span className="border-l-4 border-green pl-3 text-[2.25rem] font-extrabold leading-none text-ink">{num}</span>
-                  <h3 className="m-0 text-2xl font-bold text-ink">{title}</h3>
-                  <p className="m-0 text-muted">{text}</p>
+                  <span className="font-display text-[3rem] leading-none text-ink transition-colors group-hover:text-green">{num}</span>
+                  <h3 className="m-0 text-2xl uppercase text-ink">{title}</h3>
+                  <p className="m-0 text-ink/75">{text}</p>
                 </Reveal>
               ))}
             </div>
           </Container>
         </Section>
 
-        <Section tone="dark">
-          <Container>
+        <Section>
+          <Halftone from="top right" />
+          <Container className="relative">
+            <Reveal><Eyebrow index="05">Methodology</Eyebrow></Reveal>
             <Reveal><H2>Coaching Methodology</H2></Reveal>
-            <Reveal><Lead className="text-white/75">What you&apos;ll see at every Power Soccer session.</Lead></Reveal>
-            <ul className="mt-8 grid list-none grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 p-0">
+            <Reveal><Lead className="text-ink/75">What you&apos;ll see at every Power Soccer session.</Lead></Reveal>
+            <ul className="mt-10 grid list-none grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 p-0">
               {METHOD.map(([svg, text], i) => (
                 <Reveal
                   as="li"
                   key={text}
                   delay={(i % 3) * 120}
-                  className="flex items-center gap-4 rounded-[10px] border border-[#262b29] bg-coal p-5 font-medium text-white/90"
+                  className="flex items-center gap-4 border border-ink bg-white p-5 font-medium text-ink transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--color-green)]"
                 >
                   {svg}
                   {text}
@@ -136,23 +157,29 @@ export default function AboutPage() {
 
         <Section tone="alt">
           <Container>
-            <Reveal><H2 className="text-ink">The Power FC Academy</H2></Reveal>
+            <Reveal><Eyebrow index="06">Academy</Eyebrow></Reveal>
+            <Reveal><H2>The Power FC Academy</H2></Reveal>
             <Reveal>
-              <Lead className="text-muted">Power FC is our academy team program, formed in 2005 to give players a competitive pathway and elite-level opportunities to advance their game.</Lead>
+              <Lead className="text-ink/75">Power FC is our academy team program, formed in 2005 to give players a competitive pathway and elite-level opportunities to advance their game.</Lead>
             </Reveal>
-            <div className="mt-8 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
-              <Reveal><Card title="Boys Academy">Teams from U8 through U18.</Card></Reveal>
-              <Reveal delay={120}><Card title="Girls Academy">Teams currently from U8 through U14.</Card></Reveal>
-              <Reveal delay={240}><Card title="Academy Season">Runs January to November. Players can join squads during the year after an assessment.</Card></Reveal>
+            <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+              <Reveal><Card index="U8–U18" title="Boys Academy">Teams from U8 through U18.</Card></Reveal>
+              <Reveal delay={120}><Card index="U8–U14" title="Girls Academy">Teams currently from U8 through U14.</Card></Reveal>
+              <Reveal delay={240}><Card index="Jan–Nov" title="Academy Season">Runs January to November. Players can join squads during the year after an assessment.</Card></Reveal>
             </div>
           </Container>
         </Section>
 
-        <Section tone="dark" className="text-center">
-          <Container>
-            <Reveal><H2>Contact Us</H2></Reveal>
+        <Section className="text-center">
+          <Halftone from="center" />
+          <Container className="relative">
+            <Reveal><Eyebrow index="07">Contact</Eyebrow></Reveal>
+            <Reveal className="relative mx-auto w-fit">
+              <Slash seed={27} className="slash-in absolute top-[30%] -left-[8%] h-[46%] w-[116%] -rotate-2" />
+              <H2 className="relative mb-6 text-[clamp(2.6rem,7vw,5rem)]">Contact Us</H2>
+            </Reveal>
             <Reveal>
-              <ul className="mb-6 list-none space-y-1.5 p-0 text-lg [&_a]:text-mint-soft">
+              <ul className="mb-9 list-none space-y-1.5 p-0 font-mono text-[0.95rem] uppercase tracking-[0.06em]">
                 <li>{CONTACT.address}</li>
                 <li><a href={CONTACT.phoneHref}>{CONTACT.phone}</a></li>
                 <li><a href={CONTACT.emailHref}>{CONTACT.email}</a></li>

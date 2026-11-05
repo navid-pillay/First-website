@@ -17,21 +17,22 @@ const LENS_DAMPING = 48; // ...with only a touch of follow-through
 const POP_STIFFNESS = 260; // the spot pops in and out with a little bounce
 const POP_DAMPING = 14;
 
-// Dot colours from darkest (#232625) to lightest (#4c504e), in 24 steps.
+// Printed on paper: small dots are pale grey (#cfd0cb), big dots dark grey
+// (#5e625f), in 24 steps.
+const PALE = [0xcf, 0xd0, 0xcb], DARK = [0x5e, 0x62, 0x5f], INK = [0x0d, 0x0f, 0x0e];
 const SHADES = Array.from({ length: 24 }, (_, i) => {
   const t = i / 23;
-  const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
-  return `rgb(${mix(0x23, 0x4c)},${mix(0x26, 0x50)},${mix(0x25, 0x4e)})`;
+  const c = PALE.map((v, k) => Math.round(v + (DARK[k] - v) * t));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
 });
 
-// The same shades lit up under the cursor: 12 steps from the normal colour
-// toward a bright grey (#c8cdca).
+// The same shades inked in under the cursor: 12 steps toward solid black.
 const LIT = SHADES.map((_, i) => {
   const t = i / 23;
-  const base = [0x23 + (0x4c - 0x23) * t, 0x26 + (0x50 - 0x26) * t, 0x25 + (0x4e - 0x25) * t];
+  const base = PALE.map((v, k) => v + (DARK[k] - v) * t);
   return Array.from({ length: 12 }, (_, j) => {
     const u = j / 11;
-    const c = base.map((v, k) => Math.round(v + ([0xc8, 0xcd, 0xca][k] - v) * u));
+    const c = base.map((v, k) => Math.round(v + (INK[k] - v) * u));
     return `rgb(${c[0]},${c[1]},${c[2]})`;
   });
 });
@@ -155,8 +156,8 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
           let k = Math.min(1, Math.max(0, (n - 0.4) / 0.24));
           k = k * k * (3 - 2 * k);
           const grow = g[i];
-          // Dots under the cursor turn one even colour: they reach the full light
-          // grey quickly, so only a thin rim blends into the camo around it.
+          // Dots under the cursor turn one even colour: they reach solid black
+          // quickly, so only a thin rim blends into the camo around it.
           const lit = Math.min(1, Math.max(0, grow / 0.3));
           ctx.fillStyle = LIT[Math.round(k * (SHADES.length - 1))][Math.round(lit * 11)];
           ctx.beginPath();

@@ -3,145 +3,106 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
-import Stars from "@/components/Stars";
+import { CropMarks, Halftone, Meta, Slash, Tape } from "@/components/zine";
 
-type Pendant = {
+type Program = {
   href: string;
+  index: string;
   name: string;
   tagline: string;
   logo: StaticImageData | "crest";
   alt: string;
   logoWidth: string;
+  seed: number;
+  tilt: string;
   delay: number;
 };
 
-const PENDANTS: Pendant[] = [
-  { href: "/power-soccer/", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "100%", delay: 0.5 },
-  { href: "/power-fc/", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "68%", delay: 0.85 },
+const PROGRAMS: Program[] = [
+  { href: "/power-soccer/", index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "100%", seed: 4, tilt: "-rotate-[8deg]", delay: 0.35 },
+  { href: "/power-fc/", index: "02", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "66%", seed: 11, tilt: "rotate-[7deg]", delay: 0.6 },
 ];
 
-const SPARKLES = [
-  { className: "top-[6%] right-[12%] size-7", offset: 0.6 },
-  { className: "top-[42%] -left-[2%] size-[18px]", offset: 1.0 },
-  { className: "bottom-[18%] right-[4%] size-5", offset: 1.4 },
-];
-
-// The first screen: both programs as metal pendants on black, with green
-// light drifting behind fluted glass, twinkling stars, and flutes that glow
-// under the cursor. Choosing a pendant fades out into that program's page.
+// The first screen, printed like a poster: both programs on white paper with
+// halftone dots and torn green strokes. Choosing one fades into its page.
 export default function Intro() {
   const router = useRouter();
-  const bgRef = useRef<HTMLDivElement>(null);
   const [leaving, setLeaving] = useState(false);
-  const [lit, setLit] = useState(false);
-
-  useEffect(() => {
-    const bg = bgRef.current;
-    if (!bg) return;
-    let x = 0, y = 0, queued = false;
-    const place = () => {
-      queued = false;
-      bg.style.setProperty("--mx", `${x}px`);
-      bg.style.setProperty("--my", `${y}px`);
-    };
-    const onMove = (e: PointerEvent) => {
-      x = e.clientX;
-      y = e.clientY;
-      setLit(true);
-      if (!queued) {
-        queued = true;
-        requestAnimationFrame(place);
-      }
-    };
-    const off = () => setLit(false);
-    window.addEventListener("pointermove", onMove);
-    document.documentElement.addEventListener("pointerleave", off);
-    window.addEventListener("blur", off);
-    return () => {
-      window.removeEventListener("pointermove", onMove);
-      document.documentElement.removeEventListener("pointerleave", off);
-      window.removeEventListener("blur", off);
-    };
-  }, []);
 
   const enter = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     setLeaving(true);
-    setTimeout(() => router.push(href), 500);
+    setTimeout(() => router.push(href), 450);
   };
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-black text-white">
-      <div ref={bgRef} aria-hidden="true" className="fixed inset-0 overflow-hidden opacity-0 [animation:fade-in_2.4s_ease-out_0.2s_forwards]">
-        <span className="intro-glow -left-[30vmax] -top-[20vmax] [animation:glow-a_18s_ease-in-out_infinite]" />
-        <span className="intro-glow -right-[30vmax] top-0 [animation:glow-b_22s_ease-in-out_4s_infinite]" />
-        <span className="intro-glow -bottom-[45vmax] left-[15vw] [animation:glow-c_20s_ease-in-out_9s_infinite]" />
-        <span className="flutes absolute inset-0" />
-        <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0.1)_40%,#000_90%)]" />
-        <span className={`flute-glow absolute inset-0 transition-opacity duration-600 ${lit ? "opacity-100" : "opacity-0"}`} />
-        <Stars density={30000} min={18} max={32} />
-      </div>
+    <div className="fixed inset-0 overflow-hidden bg-paper text-ink">
+      <Halftone from="top right" />
+      <Halftone from="bottom left" />
+      <CropMarks />
 
       <main
-        className={`relative z-10 flex min-h-dvh flex-col items-center justify-center gap-10 px-4 py-8 transition-[opacity,transform] duration-500 max-sm:gap-6 ${
-          leaving ? "scale-[1.03] opacity-0" : ""
+        className={`relative z-10 flex h-full flex-col px-8 py-7 transition-[opacity,transform] duration-450 max-sm:px-5 max-sm:py-5 ${
+          leaving ? "scale-[1.02] opacity-0" : ""
         }`}
       >
+        <div className="flex items-start justify-between gap-4 opacity-0 [animation:fade-in_0.8s_ease-out_0.1s_forwards]">
+          <Meta lines={["Power Soccer Inc.", "Est. 1996", "Toronto, ON"]} />
+          <Meta className="text-right" lines={["Power FC Academy", "Est. 2005", "Boys & Girls"]} />
+        </div>
+
         <h1 className="sr-only">Power Soccer and Power FC</h1>
 
-        <div className="flex items-start justify-center gap-[clamp(2rem,8vw,7rem)] max-sm:flex-col max-sm:items-center max-sm:gap-7">
-          {PENDANTS.map((p, i) => (
+        <div className="flex flex-1 items-center justify-center gap-[clamp(2rem,9vw,8rem)] max-sm:flex-col max-sm:gap-6">
+          {PROGRAMS.map((p) => (
             <Link
               key={p.href}
               href={p.href}
               onClick={enter(p.href)}
-              className="group flex flex-col items-center gap-5 text-white no-underline opacity-0 outline-none max-sm:gap-3"
-              style={{ animation: `pendant-in 1.6s cubic-bezier(0.2,0.7,0.2,1) ${p.delay}s forwards` }}
+              className="group flex flex-col items-center gap-5 text-ink no-underline opacity-0 max-sm:gap-2"
+              style={{ animation: `pendant-in 1.1s cubic-bezier(0.2,0.7,0.2,1) ${p.delay}s forwards` }}
             >
-              <span className="relative block w-[clamp(150px,22vw,260px)] transition-transform duration-400 group-hover:-translate-y-1.5 group-focus-visible:-translate-y-1.5 max-sm:w-[170px]">
-                <span className="relative grid aspect-square place-items-center">
-                  {p.logo === "crest" ? (
-                    <span className="relative block drop-shadow-[0_6px_14px_rgba(0,0,0,0.6)]" style={{ width: p.logoWidth }}>
-                      <FcCrest title={p.alt} className="block h-auto w-full" />
-                    </span>
-                  ) : (
-                    <Image
-                      src={p.logo}
-                      alt={p.alt}
-                      priority
-                      className="relative h-auto drop-shadow-[0_6px_14px_rgba(0,0,0,0.6)]"
-                      style={{ width: p.logoWidth }}
-                    />
-                  )}
-                </span>
-                {SPARKLES.map((s) => (
-                  <span key={s.className} className={`sparkle ${s.className}`} style={{ animationDelay: `${p.delay + s.offset}s` }} />
-                ))}
+              <span className="relative grid aspect-square w-[clamp(150px,22vw,260px)] place-items-center max-sm:w-[150px]">
+                <Slash
+                  seed={p.seed}
+                  className={`slash-in absolute top-[38%] -left-[12%] h-[30%] w-[124%] ${p.tilt} transition-transform duration-300 group-hover:scale-x-110`}
+                />
+                {p.logo === "crest" ? (
+                  <span className="relative block transition-transform duration-300 group-hover:-translate-y-1.5" style={{ width: p.logoWidth }}>
+                    <FcCrest title={p.alt} className="block h-auto w-full drop-shadow-[8px_10px_0_rgba(13,15,14,0.9)]" />
+                  </span>
+                ) : (
+                  <Image
+                    src={p.logo}
+                    alt={p.alt}
+                    priority
+                    className="relative h-auto transition-transform duration-300 group-hover:-translate-y-1.5"
+                    style={{ width: p.logoWidth }}
+                  />
+                )}
               </span>
-              <span
-                className="flex flex-col items-center gap-0.5 text-center opacity-0"
-                style={{ animation: `fade-in 1s ease-out ${1.6 + i * 0.3}s forwards` }}
-              >
-                <strong className="font-display text-[1.1rem] font-normal uppercase tracking-[0.06em] group-focus-visible:underline group-focus-visible:underline-offset-[6px]">
+              <span className="flex flex-col items-center gap-1 text-center">
+                <span className="font-mono text-[0.72rem] font-bold tracking-[0.16em] text-ink/60">[{p.index}]</span>
+                <strong className="font-display text-[clamp(1.2rem,2.2vw,1.6rem)] font-normal uppercase leading-none group-hover:underline group-hover:decoration-green group-hover:decoration-4 group-hover:underline-offset-[6px] group-focus-visible:underline">
                   {p.name}
                 </strong>
-                <span className="text-[0.85rem] text-white/60">{p.tagline}</span>
+                <span className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink/70">{p.tagline}</span>
               </span>
             </Link>
           ))}
         </div>
 
-        <p className="m-0 text-[0.9rem] font-bold uppercase tracking-[0.35em] text-mint-soft/85 opacity-0 [animation:fade-in_1.2s_ease-out_2.2s_forwards]">
-          Learn &middot; Develop &middot; Grow
-        </p>
-        <p className="m-0 text-[0.8rem] uppercase tracking-[0.25em] text-white/55 opacity-0 [animation:fade-in_1.2s_ease-out_2.4s_forwards]">
-          Select a program to enter
-        </p>
+        <div className="flex items-end justify-between gap-4 border-t border-ink pt-4 opacity-0 [animation:fade-in_0.8s_ease-out_1.2s_forwards] max-sm:flex-col max-sm:items-start max-sm:gap-2">
+          <p className="m-0 font-display text-[clamp(1.1rem,2.4vw,1.6rem)] uppercase leading-none">
+            Learn. Develop. <Tape>Grow.</Tape>
+          </p>
+          <p className="m-0 font-mono text-[0.75rem] font-bold uppercase tracking-[0.2em] text-ink/70">Select a program to enter &rarr;</p>
+        </div>
       </main>
     </div>
   );

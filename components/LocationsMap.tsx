@@ -127,24 +127,24 @@ export default function LocationsMap() {
         ref={panelEl}
         aria-live="polite"
         data-lenis-prevent
-        className="absolute top-5 right-5 bottom-5 z-[2] w-[360px] overflow-y-auto rounded-xl border border-t-[3px] border-[#2a2f2d] border-t-green bg-coal/90 p-7 text-white shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-md max-[760px]:top-auto max-[760px]:right-3 max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:max-h-[46%] max-[760px]:w-auto max-[760px]:p-5 [&_a:not(.btn)]:text-mint-soft"
+        className="absolute top-5 right-5 bottom-5 z-[2] w-[360px] overflow-y-auto border border-ink bg-paper p-7 text-ink shadow-[8px_8px_0_var(--color-green)] max-[760px]:top-auto max-[760px]:right-3 max-[760px]:bottom-3 max-[760px]:left-3 max-[760px]:max-h-[46%] max-[760px]:w-auto max-[760px]:p-5"
       >
         {selected ? (
           <>
             <button
               type="button"
               onClick={showAll}
-              className="mb-5 block cursor-pointer rounded border-0 bg-transparent p-0 font-semibold text-white/70 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mint-soft/60"
+              className="mb-5 block cursor-pointer border-0 bg-transparent p-0 font-mono text-[0.78rem] font-bold uppercase tracking-[0.12em] text-ink/70 hover:text-ink"
             >
               &larr; All locations
             </button>
-            <span className="mb-1.5 inline-block text-[0.85rem] font-bold uppercase tracking-[0.15em] text-mint-soft">{selected.type}</span>
-            <h1 className="mb-2 text-[1.7rem] font-bold leading-tight max-[760px]:text-[1.4rem]">{selected.name}</h1>
-            {selected.venue && <p className="mb-1 text-[1.1rem] font-semibold text-mint-soft">{selected.venue}</p>}
+            <span className="tape mb-3 inline-block font-mono text-[0.75rem] font-bold uppercase tracking-[0.16em] text-ink">{selected.type}</span>
+            <h1 className="mb-2 text-[1.8rem] uppercase leading-none max-[760px]:text-[1.4rem]">{selected.name}</h1>
+            {selected.venue && <p className="mb-1 text-[1.1rem] font-semibold text-ink">{selected.venue}</p>}
             {selected.address ? (
-              <p className="mb-6 text-white/80">{selected.address}</p>
+              <p className="mb-6 font-mono text-[0.85rem] uppercase tracking-[0.04em] text-ink/75">{selected.address}</p>
             ) : (
-              <p className="mb-6 text-white/80">
+              <p className="mb-6 text-ink/75">
                 Venue details coming soon. Contact us at <a href={CONTACT.phoneHref}>{CONTACT.phone}</a> or{" "}
                 <a href={CONTACT.emailHref}>{CONTACT.email}</a> for the exact location.
               </p>
@@ -153,41 +153,41 @@ export default function LocationsMap() {
               href={mapsUrl(selected)}
               target="_blank"
               rel="noopener"
-              className="btn inline-block rounded-md border-2 border-green bg-green px-6 py-3 font-bold text-ink no-underline hover:border-green-bright hover:bg-green-bright"
+              className="btn inline-flex min-h-12 items-center border-2 border-ink bg-ink px-6 py-3 font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-white no-underline transition-colors hover:bg-green hover:text-ink"
             >
               Open in Google Maps
             </a>
           </>
         ) : (
           <>
-            <span className="mb-1.5 inline-block text-[0.85rem] font-bold uppercase tracking-[0.15em] text-mint-soft">
+            <span className="mb-3 inline-flex items-center gap-2 font-mono text-[0.75rem] font-bold uppercase tracking-[0.16em] text-ink/75"><span aria-hidden="true" className="size-2 bg-green" />
               {LOCATIONS.length} Locations
             </span>
-            <h1 className="mb-2 text-[1.7rem] font-bold leading-tight max-[760px]:text-[1.4rem]">Where We Play</h1>
-            <p className="mb-5 text-white/65">Select a pin or a location below.</p>
+            <h1 className="mb-2 text-[1.8rem] uppercase leading-none max-[760px]:text-[1.4rem]">Where We Play</h1>
+            <p className="mb-5 text-ink/70">Select a pin or a location below.</p>
             <ul className="m-0 list-none p-0">
               {LOCATIONS.map((loc) => (
                 <li key={loc.id}>
                   <button
                     type="button"
                     onClick={() => select(loc)}
-                    className="mb-1.5 flex w-full cursor-pointer items-center gap-3.5 rounded-lg border border-transparent bg-transparent px-3 py-2.5 text-left text-white transition-colors hover:border-mint-soft/35 hover:bg-white/5 focus-visible:border-mint-soft/35 focus-visible:bg-white/5 focus-visible:outline-none"
+                    className="flex w-full cursor-pointer items-center gap-3.5 border-0 border-b border-ink/25 bg-transparent px-2 py-3 text-left text-ink transition-colors hover:bg-green focus-visible:bg-green focus-visible:outline-none"
                   >
                     <span
                       aria-hidden="true"
                       className={`size-3 flex-none rounded-full ${
-                        loc.type === "Head Office" ? "bg-white shadow-[0_0_0_3px_rgba(255,255,255,0.25)]" : "bg-green-bright shadow-[0_0_0_3px_rgba(66,226,2,0.35)]"
+                        loc.type === "Head Office" ? "border-2 border-ink bg-white" : "border-2 border-ink bg-green"
                       }`}
                     />
                     <span>
                       <strong className="block font-semibold">{loc.name}</strong>
-                      <small className="block text-[0.85rem] text-white/55">{loc.venue || loc.type}</small>
+                      <small className="block font-mono text-[0.72rem] uppercase tracking-[0.08em] text-ink/60">{loc.venue || loc.type}</small>
                     </span>
                   </button>
                 </li>
               ))}
             </ul>
-            <p className="mt-5 text-[0.9rem] text-white/55">
+            <p className="mt-5 text-[0.9rem] text-ink/70">
               Questions? Call <a href={CONTACT.phoneHref}>{CONTACT.phone}</a> or email <a href={CONTACT.emailHref}>{CONTACT.email}</a>.
             </p>
           </>
