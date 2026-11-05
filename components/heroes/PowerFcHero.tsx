@@ -106,8 +106,8 @@ export default function PowerFcHero({ fullScreen = false }: { fullScreen?: boole
               <span className="block origin-left -skew-x-[10deg]">Grow.</span>
             </Line>
             {/* The blob over the words: black letters stay black under it. It is drawn
-                larger than the others, so it jiggles less to match them on screen. */}
-            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={46} jiggle={0.65} className="absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
+                big and sits right behind the letters, so it jiggles much less than the others. */}
+            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={46} jiggle={0.25} className="absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
           </h1>
         </div>
       </div>
