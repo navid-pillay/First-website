@@ -17,10 +17,10 @@ import { cn } from "@/lib/utils";
 // starts over the end of Learn., wanders down through Develop. and trails off
 // to the right under Grow. (Lines are 98 units tall.)
 const HEADLINE_DOTS: Dot[] = [
-  [235, 40, 39], [305, 26, 29], [372, 52, 49], [446, 30, 26], [470, 78, 21],
-  [392, 128, 36], [322, 156, 57], [262, 120, 21], [246, 186, 34], [182, 212, 44],
-  [236, 262, 52], [322, 244, 36], [398, 268, 47], [470, 240, 29], [548, 258, 39], [628, 232, 23],
-  [532, 150, 23], [598, 104, 16], [118, 128, 16], [694, 262, 13],
+  [235, 40, 24], [305, 26, 18], [372, 52, 30], [446, 30, 16], [470, 78, 13],
+  [392, 128, 22], [322, 156, 35], [262, 120, 13], [246, 186, 21], [182, 212, 27],
+  [236, 262, 32], [322, 244, 22], [398, 268, 29], [470, 240, 18], [548, 258, 24], [628, 232, 14],
+  [532, 150, 14], [598, 104, 10], [118, 128, 10], [694, 262, 8],
 ];
 const HEADLINE_TRAILS = [
   "235,40 305,26 372,52 446,30",
@@ -106,8 +106,8 @@ export default function PowerFcHero({ fullScreen = false }: { fullScreen?: boole
               <span className="block origin-left -skew-x-[10deg]">Grow.</span>
             </Line>
             {/* The blob over the words: black letters stay black under it. It is drawn
-                big and sits right behind the letters, so it jiggles much less than the others. */}
-            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={46} jiggle={0.25} className="absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
+                at a larger scale than the others, so it jiggles less to match them on screen. */}
+            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={28} jiggle={0.65} className="absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
           </h1>
         </div>
       </div>
