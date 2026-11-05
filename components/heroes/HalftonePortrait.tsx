@@ -20,6 +20,11 @@ const LENS_DAMPING = 48; // ...with only a touch of follow-through
 const POP_STIFFNESS = 260; // the spot pops in and out with a little bounce
 const POP_DAMPING = 14;
 
+// Opening animation: once the photo has loaded, the player slides in from
+// slightly to the right (a share of the hero's width) and fades in.
+const INTRO_SHIFT = "5%";
+const INTRO_MS = 1400;
+
 // Black ink for the player, green for the stadium light streaks and his rim light.
 const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
 
@@ -305,7 +310,17 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     };
     const onLeave = () => { pointer.inside = false; };
 
-    photo.onload = () => { sample(); draw(last / 1000); };
+    let intro: Animation | null = null;
+    const reveal = () => {
+      canvas.style.opacity = "1";
+      if (reduce) return;
+      intro = canvas.animate(
+        [{ transform: `translateX(${INTRO_SHIFT})`, opacity: 0 }, { transform: "none", opacity: 1 }],
+        { duration: INTRO_MS, easing: "cubic-bezier(0.16, 1, 0.3, 1)" },
+      );
+    };
+    photo.onload = () => { sample(); draw(last / 1000); reveal(); };
+    photo.onerror = reveal;
     photo.src = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${PHOTO.src}`;
     resize();
     draw(0);
@@ -322,6 +337,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
 
     return () => {
       cancelAnimationFrame(raf);
+      intro?.cancel();
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("blur", onLeave);
@@ -330,5 +346,6 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     };
   }, []);
 
-  return <canvas ref={ref} aria-hidden="true" className={`absolute inset-0 h-full w-full ${className}`} />;
+  // Hidden until the photo is ready, then revealed by the opening animation.
+  return <canvas ref={ref} aria-hidden="true" style={{ opacity: 0 }} className={`absolute inset-0 h-full w-full ${className}`} />;
 }
