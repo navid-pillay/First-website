@@ -13,19 +13,25 @@ import { cn } from "@/lib/utils";
 // size). Black type stays black where green crosses it (multiply); inside the
 // outlined letters the green shows through.
 
-// The headline blob, in units of 1/100 em from the start of the text: it
-// starts over the end of Learn., wanders down through Develop. and trails off
-// to the right under Grow. (Lines are 98 units tall.)
+// The headline blobs, in units of 1/100 em from the start of the text: a few
+// small, separate clusters scattered over the words (not one connected shape),
+// with loose droplets between them. Lines are 98 units tall.
 const HEADLINE_DOTS: Dot[] = [
-  [235, 40, 24], [305, 26, 18], [372, 52, 30], [446, 30, 16], [470, 78, 13],
-  [392, 128, 22], [322, 156, 35], [262, 120, 13], [246, 186, 21], [182, 212, 27],
-  [236, 262, 32], [322, 244, 22], [398, 268, 29], [470, 240, 18], [548, 258, 24], [628, 232, 14],
-  [532, 150, 14], [598, 104, 10], [118, 128, 10], [694, 262, 8],
+  // over the end of Learn.
+  [344, 48, 17], [384, 58, 25], [426, 40, 17],
+  // in Develop.
+  [200, 150, 21], [240, 168, 15],
+  [524, 138, 20], [560, 118, 13],
+  // under the end of Grow.
+  [440, 262, 24], [492, 248, 17], [532, 270, 13],
+  // droplets
+  [130, 60, 12], [296, 116, 12], [316, 230, 13], [618, 236, 13], [604, 66, 11],
 ];
 const HEADLINE_TRAILS = [
-  "235,40 305,26 372,52 446,30",
-  "372,52 392,128 322,156 246,186 182,212 236,262",
-  "236,262 322,244 398,268 470,240 548,258 628,232",
+  "344,48 384,58 426,40",
+  "200,150 240,168",
+  "524,138 560,118",
+  "440,262 492,248 532,270",
 ];
 
 // Beside the photo: a chain of blobs running down to the player.
@@ -105,9 +111,9 @@ export default function PowerFcHero({ fullScreen = false }: { fullScreen?: boole
             <Line n="03">
               <span className="block origin-left -skew-x-[10deg]">Grow.</span>
             </Line>
-            {/* The blob over the words: black letters stay black under it. It is drawn
-                at a larger scale than the others, so it jiggles less to match them on screen. */}
-            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={28} jiggle={0.65} className="absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
+            {/* The blobs over the words: black letters stay black under them. They are drawn
+                at a larger scale than the others, so they jiggle less to match them on screen. */}
+            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={24} jiggle={0.65} className="absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
           </h1>
         </div>
       </div>
