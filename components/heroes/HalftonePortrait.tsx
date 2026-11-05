@@ -8,8 +8,9 @@ import { PORTRAIT } from "@/lib/portrait";
 // ink for the player, grey ink for the stadium lights, green for the rim
 // light. Dots breathe a little, and swell like jelly under the cursor.
 const SPACING = 8; // px between dot centres on screen
-const LENS_RADIUS = 45; // px: how far from the cursor dots swell
-const PUSH = 7; // px: how far dots bulge outward from the cursor
+const LENS_RADIUS = 34; // px: how far from the cursor dots swell
+const HOVER = 0.45; // how much dots swell under the cursor (1 = double size)
+const PUSH = 3; // px: how far dots bulge outward from the cursor
 
 // Spring tuning (per second). Low damping relative to stiffness = more wobble.
 const DOT_STIFFNESS = 170; // each dot's size and position spring
@@ -107,7 +108,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       const reach = along * 2.2;
       const c0 = Math.max(0, Math.floor((lens.x - reach) / SPACING)), c1 = Math.min(cols - 1, Math.ceil((lens.x + reach) / SPACING));
       const r0 = Math.max(0, Math.floor((lens.y - reach) / SPACING)), r1 = Math.min(rows - 1, Math.ceil((lens.y + reach) / SPACING));
-      const strength = Math.min(1.25, lens.s);
+      const strength = Math.min(1.25, lens.s) * HOVER;
 
       let energy = Math.abs(lens.vs) + Math.abs(lens.s - (pointer.inside ? 1 : 0)) + speed * 0.01;
       for (let i = 0, n = g.length; i < n; i++) {
@@ -158,10 +159,10 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
             if (k > 0) k *= 0.9 + 0.2 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           }
           const grow = g[i];
-          const radius = max * Math.min(1.45, 1.05 * k + 1.1 * grow);
+          const radius = max * Math.min(1.2, 1.05 * k + 1.1 * grow);
           if (radius < 0.35) continue;
-          // Under the cursor every dot inks in solid black.
-          ctx.fillStyle = grow > 0.15 ? COLORS[0] : COLORS[type];
+          // Right at the cursor, dots ink in black.
+          ctx.fillStyle = grow > 0.3 ? COLORS[0] : COLORS[type];
           ctx.beginPath();
           ctx.arc(x + ox[i], y + oy[i], radius, 0, Math.PI * 2);
           ctx.fill();
