@@ -387,3 +387,31 @@ html:not(.js) .reveal {
   opacity: 1;
   transform: none;
 }
+
+/* Power FC hero opening sequence (only inside .hero-intro): the page starts
+   as bare paper, the ink lines trace in, the player slides in (on its canvas),
+   then everything else comes on. Each piece sets its start time in --d. */
+.hero-intro .intro-x,
+.hero-intro .intro-y,
+.hero-intro .intro-trace,
+.hero-intro .intro-in,
+.hero-intro .intro-pop {
+  animation-delay: var(--d, 0s);
+  animation-fill-mode: both;
+}
+
+.hero-intro .intro-x { transform-origin: left; animation-name: intro-x; animation-duration: 0.9s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+.hero-intro .intro-y { transform-origin: top; animation-name: intro-y; animation-duration: 1s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+.hero-intro .intro-trace { stroke-dasharray: 1; animation-name: intro-trace; animation-duration: 1.4s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+.hero-intro .intro-in { animation-name: intro-in; animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+.hero-intro .intro-pop { animation-name: intro-pop; animation-duration: 0.7s; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes intro-x { from { transform: scaleX(0); } }
+@keyframes intro-y { from { transform: scaleY(0); } }
+@keyframes intro-trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes intro-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes intro-pop { from { opacity: 0; transform: scale(0.4); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-intro * { animation: none !important; }
+}

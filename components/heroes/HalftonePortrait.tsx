@@ -21,7 +21,9 @@ const POP_STIFFNESS = 260; // the spot pops in and out with a little bounce
 const POP_DAMPING = 14;
 
 // Opening animation: once the photo has loaded, the player slides in from
-// slightly to the right (a share of the hero's width) and fades in.
+// slightly to the right (a share of the hero's width) and fades in. In the
+// hero's longer opening sequence, the slide waits until `introAt` and the ink
+// clusters and light streaks fade in from `lateAt` (ms after the page opened).
 const INTRO_SHIFT = "5%";
 const INTRO_MS = 1400;
 
@@ -59,7 +61,7 @@ function noise(x: number, y: number) {
   return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
 }
 
-export default function HalftonePortrait({ className = "" }: { className?: string }) {
+export default function HalftonePortrait({ className = "", introAt = 0, lateAt = 0 }: { className?: string; introAt?: number; lateAt?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -254,6 +256,9 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     const draw = (t: number) => {
       ctx.clearRect(0, 0, w, h);
       const max = sp * 0.5;
+      // Ink clusters and light streaks fade in during the opening sequence.
+      const late = reduce || !lateAt ? 1 : Math.min(1, Math.max(0, (performance.now() - lateAt) / 700));
+      ctx.globalAlpha = late;
       // The ink clusters first, as they sit behind the player.
       const grid = cols * rows;
       for (let j = 0; j < clusterR.length; j++) {
@@ -262,6 +267,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
         const radius = dotRadius(rb, g[i], max);
         if (radius > 0) dot(X[i] + ox[i], Y[i] + oy[i], radius, COLORS[0]);
       }
+      ctx.globalAlpha = 1;
       for (let r = 0; r < rows; r++) {
         const y = r * sp;
         for (let c = 0; c < cols; c++) {
@@ -271,7 +277,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
           let k = baseK[i], type = baseT[i];
           if (k < 0.04 && type === 0) {
             const sk = streak(x, y, t);
-            if (sk > 0) { k = sk * 0.8; type = 1; }
+            if (sk > 0) { k = sk * 0.8 * late; type = 1; }
           }
           if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
@@ -316,7 +322,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       if (reduce) return;
       intro = canvas.animate(
         [{ transform: `translateX(${INTRO_SHIFT})`, opacity: 0 }, { transform: "none", opacity: 1 }],
-        { duration: INTRO_MS, easing: "cubic-bezier(0.16, 1, 0.3, 1)" },
+        { duration: INTRO_MS, delay: Math.max(0, introAt - performance.now()), easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" },
       );
     };
     photo.onload = () => { sample(); draw(last / 1000); reveal(); };
@@ -344,7 +350,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       ro.disconnect();
       io.disconnect();
     };
-  }, []);
+  }, [introAt, lateAt]);
 
   // Hidden until the photo is ready, then revealed by the opening animation.
   return <canvas ref={ref} aria-hidden="true" style={{ opacity: 0 }} className={`absolute inset-0 h-full w-full ${className}`} />;

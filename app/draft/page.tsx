@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function DraftPage() {
   return (
     <main className="flex min-h-svh flex-col justify-center bg-paper">
-      <PowerFcHero fullScreen />
+      <PowerFcHero fullScreen intro />
     </main>
   );
 }

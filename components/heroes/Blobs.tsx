@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { type CSSProperties, useEffect, useId, useRef } from "react";
 
 export type Dot = [cx: number, cy: number, r: number];
 
@@ -20,7 +20,7 @@ const MAX_SPEED = 260; // viewBox units per second
  * through them nudges each blob it touches; the blobs bounce back like jelly,
  * and the strokes between them stretch along.
  */
-export default function Blobs({ viewBox, dots, trails = [], width = 40, jiggle = 1, className = "" }: {
+export default function Blobs({ viewBox, dots, trails = [], width = 40, jiggle = 1, className = "", style }: {
   viewBox: string;
   dots: Dot[];
   /** Polylines ("x,y x,y ...") drawn as thick rounded strokes; a point on a dot's centre moves with that dot. */
@@ -30,6 +30,7 @@ export default function Blobs({ viewBox, dots, trails = [], width = 40, jiggle =
   /** How strongly the cursor moves the blobs (1 = normal). */
   jiggle?: number;
   className?: string;
+  style?: CSSProperties;
 }) {
   const id = useId().replace(/:/g, "");
   const svgRef = useRef<SVGSVGElement>(null);
@@ -125,7 +126,7 @@ export default function Blobs({ viewBox, dots, trails = [], width = 40, jiggle =
   }, [dots, trails, jiggle]);
 
   return (
-    <svg ref={svgRef} aria-hidden="true" viewBox={viewBox} className={`pointer-events-none overflow-visible ${className}`}>
+    <svg ref={svgRef} aria-hidden="true" viewBox={viewBox} style={style} className={`pointer-events-none overflow-visible ${className}`}>
       <defs>
         <filter id={`${id}-goo`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
           <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b" />
