@@ -177,6 +177,46 @@ html:not(.js) .slash-in {
   100% { opacity: 1; transform: none; filter: blur(0); }
 }
 
+/* Intro badges: paint that reaches out in arms on hover (components/Splat.tsx) */
+.splat-core,
+.splat-arm,
+.splat-drop {
+  transform-box: view-box;
+  transform-origin: 200px 200px;
+}
+
+.splat-core {
+  transform: rotate(var(--tilt, 0deg)) scale(0.92);
+  transition: transform 0.7s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+.splat-arm {
+  transform: rotate(var(--a)) scale(0.28, 0.7);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.splat-drop {
+  transform: rotate(var(--a)) translateX(30px) scale(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.group:hover .splat-core,
+.group:focus-visible .splat-core {
+  transform: rotate(var(--tilt, 0deg)) scale(1.04);
+}
+
+.group:hover .splat-arm,
+.group:focus-visible .splat-arm {
+  transform: rotate(var(--a)) scale(1, 1);
+  transition: transform 0.8s cubic-bezier(0.16, 1.45, 0.35, 1) var(--d, 0ms);
+}
+
+.group:hover .splat-drop,
+.group:focus-visible .splat-drop {
+  transform: rotate(var(--a)) translateX(var(--dist)) scale(1);
+  transition: transform 0.9s cubic-bezier(0.16, 1.3, 0.35, 1) var(--d, 0ms);
+}
+
 /* Visible keyboard focus everywhere (components can still restyle it) */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-ink);
@@ -324,6 +364,12 @@ html:not(.js) .slash-in {
   .slash-in {
     animation: none;
     clip-path: none;
+  }
+
+  .splat-core,
+  .splat-arm,
+  .splat-drop {
+    transition: none !important;
   }
 
 }

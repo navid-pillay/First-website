@@ -8,9 +8,9 @@ import { PORTRAIT } from "@/lib/portrait";
 // ink for the player, grey ink for the stadium lights, green for the rim
 // light. Dots breathe a little, and swell like jelly under the cursor.
 const SPACING = 8; // px between dot centres on screen
-const LENS_RADIUS = 34; // px: how far from the cursor dots swell
-const HOVER = 0.45; // how much dots swell under the cursor (1 = double size)
-const PUSH = 3; // px: how far dots bulge outward from the cursor
+const LENS_RADIUS = 38; // px: how far from the cursor dots swell
+const HOVER = 0.6; // how much dots swell under the cursor (1 = double size)
+const PUSH = 4; // px: how far dots bulge outward from the cursor
 
 // Spring tuning (per second). Low damping relative to stiffness = more wobble.
 const DOT_STIFFNESS = 170; // each dot's size and position spring

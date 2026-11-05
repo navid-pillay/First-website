@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useState, type MouseEvent } from "react";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
-import { CropMarks, Halftone, Meta, Slash, Tape } from "@/components/zine";
+import Splat from "@/components/Splat";
+import { CropMarks, Halftone, Meta, Tape } from "@/components/zine";
 
 type Program = {
   href: string;
@@ -17,13 +18,13 @@ type Program = {
   alt: string;
   logoWidth: string;
   seed: number;
-  tilt: string;
+  tilt: number;
   delay: number;
 };
 
 const PROGRAMS: Program[] = [
-  { href: "/power-soccer/", index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "100%", seed: 4, tilt: "-rotate-[8deg]", delay: 0.35 },
-  { href: "/power-fc/", index: "02", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "66%", seed: 11, tilt: "rotate-[7deg]", delay: 0.6 },
+  { href: "/power-soccer/", index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", logo: psLogo, alt: "Power Soccer Inc.", logoWidth: "100%", seed: 4, tilt: -8, delay: 0.35 },
+  { href: "/power-fc/", index: "02", name: "Power FC", tagline: "High Performance Academy", logo: "crest", alt: "Power FC", logoWidth: "66%", seed: 11, tilt: 7, delay: 0.6 },
 ];
 
 // The first screen, printed like a poster: both programs on white paper with
@@ -68,10 +69,7 @@ export default function Intro() {
               style={{ animation: `pendant-in 1.1s cubic-bezier(0.2,0.7,0.2,1) ${p.delay}s forwards` }}
             >
               <span className="relative grid aspect-square w-[clamp(150px,22vw,260px)] place-items-center max-sm:w-[150px]">
-                <Slash
-                  seed={p.seed}
-                  className={`slash-in absolute top-[38%] -left-[12%] h-[30%] w-[124%] ${p.tilt} transition-transform duration-300 group-hover:scale-x-110`}
-                />
+                <Splat seed={p.seed} tilt={p.tilt} className="absolute -inset-[22%] h-[144%] w-[144%] opacity-0 [animation:fade-in_0.6s_ease-out_forwards]" />
                 {p.logo === "crest" ? (
                   <span className="relative block transition-transform duration-300 group-hover:-translate-y-1.5" style={{ width: p.logoWidth }}>
                     <FcCrest title={p.alt} className="block h-auto w-full drop-shadow-[8px_10px_0_rgba(13,15,14,0.9)]" />

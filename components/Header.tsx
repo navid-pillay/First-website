@@ -22,7 +22,7 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-ink bg-paper/92 text-ink backdrop-blur-md"
+      className="sticky top-0 z-50 bg-paper/92 text-ink backdrop-blur-md"
     >
       <div className="mx-auto flex w-full max-w-[1100px] flex-wrap items-center justify-between gap-3 px-4 py-4 max-sm:justify-center max-sm:gap-y-1 max-sm:py-2">
         <div className="flex items-center gap-5 italic uppercase max-sm:gap-4">
