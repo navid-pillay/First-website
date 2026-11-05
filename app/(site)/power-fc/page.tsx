@@ -70,7 +70,7 @@ export default function PowerFcPage() {
 
             <HalftonePortrait />
 
-            <div className="pointer-events-none relative z-10 flex h-full flex-col justify-end px-[6%] pb-[9%] max-[860px]:px-5 max-[860px]:pt-[50vh] max-[860px]:pb-12">
+            <div className="pointer-events-none relative z-10 flex h-full flex-col justify-end px-[6%] pb-[9%] max-[860px]:px-5 max-[860px]:pt-[min(106vw,560px)] max-[860px]:pb-12">
               <h1 className="rise-in m-0 text-[clamp(3rem,7.4vw,7.4rem)] uppercase leading-[0.98] tracking-[-0.01em]">
                 <span className="sr-only">Power FC Academy: </span>
                 <span className="block text-transparent [-webkit-text-stroke:2px_var(--color-ink)]">Learn.</span>

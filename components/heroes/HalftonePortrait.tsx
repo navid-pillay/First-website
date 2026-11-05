@@ -2,11 +2,10 @@
 
 import { useEffect, useRef } from "react";
 
-import { PORTRAIT } from "@/lib/portrait";
-
-// The Power FC hero: the player printed as live halftone dots on paper. Black
-// ink for the player, grey ink for the stadium lights, green for the rim
-// light. Dots breathe a little, and swell like jelly under the cursor.
+// The Power FC hero: the player photo printed as live halftone dots on paper.
+// Black ink for the player (dot size follows the photo's tones), green rim
+// light around his outline, and soft green light streaks behind him. Dots
+// breathe a little, and swell like jelly under the cursor.
 const LENS_RADIUS = 38; // px: how far from the cursor dots swell
 const HOVER = 0.6; // how much dots swell under the cursor (1 = double size)
 const PUSH = 4; // px: how far dots bulge outward from the cursor
@@ -22,15 +21,9 @@ const POP_DAMPING = 14;
 // Black ink for the player, green for the stadium light streaks and his rim light.
 const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
 
-// Decode the picture once: dot type and size (0..1) per source cell.
-const SRC_TYPE = new Uint8Array(PORTRAIT.cols * PORTRAIT.rows);
-const SRC_SIZE = new Float32Array(PORTRAIT.cols * PORTRAIT.rows);
-for (let i = 0; i < SRC_TYPE.length; i++) {
-  const v = PORTRAIT.alphabet.indexOf(PORTRAIT.data[i]);
-  SRC_TYPE[i] = Math.floor(v / PORTRAIT.levels);
-  SRC_SIZE[i] = (v % PORTRAIT.levels) / (PORTRAIT.levels - 1);
-}
-const SRC_CELL = PORTRAIT.width / PORTRAIT.cols;
+// The player photo: greyscale with a transparent background (public/hero),
+// in a 2000 x 1778 coordinate space. His head is centred at x 850, top at y 40.
+const PHOTO = { src: "/hero/player-tone.webp", width: 2000, height: 1778, headX: 850, headTop: 40, shoulders: 1640 };
 
 function hash(x: number, y: number) {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
@@ -67,6 +60,63 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     // How the picture covers the canvas: scale, and offset so the player sits
     // to the right of the text on wide screens and in the middle on phones.
     let fit = { s: 1, x: 0, y: 0 };
+    // Per dot: the photo's ink (0..1) and kind (0 ink, 2 rim light), rebuilt on resize.
+    let baseK = new Float32Array(0), baseT = new Uint8Array(0);
+    const photo = new Image();
+    photo.decoding = "async";
+
+    // Sample the photo onto the dot grid: draw it into a canvas with one pixel
+    // per dot (the browser averages each dot's area), then read the tones.
+    const sample = () => {
+      baseK = new Float32Array(cols * rows);
+      baseT = new Uint8Array(cols * rows);
+      if (!photo.complete || !photo.naturalWidth) return;
+      const off = document.createElement("canvas");
+      off.width = cols;
+      off.height = rows;
+      const o = off.getContext("2d", { willReadFrequently: true });
+      if (!o) return;
+      o.imageSmoothingEnabled = true;
+      o.imageSmoothingQuality = "high";
+      o.drawImage(photo, fit.x / sp + 0.5, fit.y / sp + 0.5, (PHOTO.width * fit.s) / sp, (PHOTO.height * fit.s) / sp);
+      const px = o.getImageData(0, 0, cols, rows).data;
+      const alpha = new Float32Array(cols * rows);
+      for (let i = 0; i < alpha.length; i++) {
+        const a = px[i * 4 + 3] / 255;
+        alpha[i] = a;
+        if (a < 0.02) continue;
+        const L = px[i * 4] / 255;
+        // Lift the dark tones so his curls and shirt folds show as dot sizes.
+        baseK[i] = a * Math.min(1, Math.max(0, 1.08 - Math.pow(L, 0.7) * 1.1));
+      }
+      // Rim light: a green line just inside the outline and a softer halo outside.
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const i = r * cols + c;
+          let near = 1, far = 0;
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              const rr = r + dr, cc = c + dc;
+              if (rr < 0 || cc < 0 || rr >= rows || cc >= cols) continue;
+              const v = alpha[rr * cols + cc];
+              near = Math.min(near, v);
+              far = Math.max(far, v);
+            }
+          }
+          if (alpha[i] > 0.45 && near < 0.3) { baseT[i] = 2; baseK[i] = 0.72; }
+          else if (alpha[i] <= 0.45 && far > 0.6) { baseT[i] = 2; baseK[i] = 0.42; }
+        }
+      }
+    };
+
+    // Soft diagonal streaks of green light behind the player, slowly drifting.
+    const streak = (x: number, y: number, t: number) => {
+      if (w >= 860 && x < w * 0.4) return 0;
+      const u = x * 0.87 - y * 0.5 + t * 14, v = x * 0.5 + y * 0.87;
+      const n = noise(u * 0.0032, v * 0.016) * 0.75 + noise(u * 0.009, v * 0.04 + 50) * 0.25;
+      const edge = w >= 860 ? Math.min(1, (x / w - 0.4) / 0.2) : 1;
+      return Math.max(0, (n - 0.6) / 0.4) * edge;
+    };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -75,22 +125,23 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      sp = w < 860 ? 7 : 10;
+      sp = w < 860 ? 5 : 7;
       if (w < 860) {
         // Phones: the player fills the width, standing above the slogan.
-        const sc = w / 1150;
-        fit = { s: sc, x: w * 0.5 - PORTRAIT.focusX * sc, y: h * 0.54 - PORTRAIT.height * sc };
+        const sc = (w * 0.9) / PHOTO.shoulders;
+        fit = { s: sc, x: w * 0.5 - PHOTO.headX * sc, y: 16 - PHOTO.headTop * sc };
       } else {
         // Wide screens: a big player on the right, head near the top and
         // shoulders cropped by the bottom edge like a poster.
-        const sc = Math.max(w / 2100, (h * 1.02) / PORTRAIT.height);
-        fit = { s: sc, x: w * 0.68 - PORTRAIT.focusX * sc, y: h * 0.11 - 45 * sc };
+        const sc = Math.max(w * 0.000288, (h * 0.9) / PHOTO.height);
+        fit = { s: sc, x: w * 0.68 - PHOTO.headX * sc, y: h * 0.12 - PHOTO.headTop * sc };
       }
       cols = Math.ceil(w / sp) + 1;
       rows = Math.ceil(h / sp) + 1;
       const n = cols * rows;
       g = new Float32Array(n); vg = new Float32Array(n);
       ox = new Float32Array(n); oy = new Float32Array(n); vox = new Float32Array(n); voy = new Float32Array(n);
+      sample();
     };
 
     // Advance every spring by dt seconds (semi-implicit Euler).
@@ -152,17 +203,15 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
         for (let c = 0; c < cols; c++) {
           const x = c * sp;
           const i = r * cols + c;
-          // The picture's dot at this spot, breathing slightly over time.
-          const sc = Math.floor((x - fit.x) / fit.s / SRC_CELL), sr = Math.floor((y - fit.y) / fit.s / SRC_CELL);
-          let k = 0, type = 0;
-          if (sc >= 0 && sr >= 0 && sc < PORTRAIT.cols && sr < PORTRAIT.rows) {
-            const j = sr * PORTRAIT.cols + sc;
-            k = SRC_SIZE[j];
-            type = SRC_TYPE[j];
-            if (k > 0) k *= 0.9 + 0.2 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
+          // The photo's dot here (or a light streak behind him), breathing slightly.
+          let k = baseK[i], type = baseT[i];
+          if (k < 0.04 && type === 0) {
+            const sk = streak(x, y, t);
+            if (sk > 0) { k = sk * 0.8; type = 1; }
           }
+          if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
-          const radius = max * Math.min(1.2, 1.05 * k + 1.1 * grow);
+          const radius = max * Math.min(1.2, 1.0 * k + 1.1 * grow);
           if (radius < 0.35) continue;
           // Right at the cursor, dots ink in black.
           ctx.fillStyle = grow > 0.3 ? COLORS[0] : COLORS[type];
@@ -200,6 +249,8 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     };
     const onLeave = () => { pointer.inside = false; };
 
+    photo.onload = () => { sample(); draw(last / 1000); };
+    photo.src = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${PHOTO.src}`;
     resize();
     draw(0);
     const ro = new ResizeObserver(() => { resize(); draw(last / 1000); });

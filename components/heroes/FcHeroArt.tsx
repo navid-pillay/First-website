@@ -1,53 +1,17 @@
+import Image from "next/image";
 import { useId } from "react";
+import floodlight from "@/assets/floodlight.webp";
 
 // Pieces of the Power FC hero collage: a black-and-white floodlight "photo",
 // green bars, thin sweeping arcs, a star and a crosshair, all printed on paper.
 
 /** Black-and-white photo of a stadium floodlight over the goal net, with grain. */
 export function FloodlightPhoto({ className = "" }: { className?: string }) {
-  const id = useId().replace(/:/g, "");
-  const lamps = [];
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 5; c++) {
-      if ((r === 0 && (c === 0 || c === 4)) || (r === 3 && c === 4)) continue;
-      lamps.push({ x: 296 + c * 17 + r * 3, y: 160 + r * 15 - c * 2 });
-    }
-  }
-  const net = [];
-  for (let i = -10; i < 22; i++) net.push(`M${i * 18} 186 L${i * 18 + 120} 330`);
-  for (let i = 0; i < 10; i++) net.push(`M0 ${200 + i * 14} L320 ${330 + i * 14 - 40}`);
   return (
-    <svg aria-hidden="true" viewBox="0 0 450 310" preserveAspectRatio="xMidYMid slice" className={className}>
-      <defs>
-        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0.3" y2="1">
-          <stop offset="0" stopColor="#8f928f" />
-          <stop offset="0.55" stopColor="#c9cbc8" />
-          <stop offset="1" stopColor="#e2e3e0" />
-        </linearGradient>
-        <filter id={`${id}-grain`} x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="n" />
-          <feColorMatrix in="n" type="saturate" values="0" result="g" />
-          <feComponentTransfer in="g" result="g2">
-            <feFuncA type="linear" slope="0.55" />
-          </feComponentTransfer>
-          <feBlend in="SourceGraphic" in2="g2" mode="multiply" />
-        </filter>
-        <clipPath id={`${id}-clip`}><rect width="450" height="310" /></clipPath>
-      </defs>
-      <g clipPath={`url(#${id}-clip)`} filter={`url(#${id}-grain)`}>
-        <rect width="450" height="310" fill={`url(#${id}-sky)`} />
-        {/* goal net and crossbar */}
-        <path d={net.join(" ")} stroke="#3c3f3d" strokeWidth="1.1" fill="none" opacity="0.8" />
-        <path d="M-10 168 L330 322" stroke="#7d807d" strokeWidth="13" strokeLinecap="round" />
-        <path d="M-10 160 L330 314" stroke="#d9dad7" strokeWidth="4" strokeLinecap="round" />
-        {/* floodlight tower */}
-        <path d="M331 214 L329 312 M337 214 L340 312" stroke="#2a2c2b" strokeWidth="5" />
-        <rect x="290" y="150" width="96" height="66" rx="4" fill="#2a2c2b" transform="rotate(-6 338 183)" />
-        {lamps.map((l, i) => (
-          <circle key={i} cx={l.x} cy={l.y} r="6.2" fill="#e9eae7" stroke="#111" strokeWidth="1.6" />
-        ))}
-      </g>
-    </svg>
+    <span className={`overflow-hidden ${className}`}>
+      <Image src={floodlight} alt="" fill sizes="(min-width: 860px) 24vw, 0px" className="object-cover object-[70%_60%] contrast-[1.15] grayscale" />
+      <span aria-hidden="true" className="photo-grain absolute inset-0" />
+    </span>
   );
 }
 
