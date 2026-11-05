@@ -27,6 +27,12 @@ const POP_DAMPING = 14;
 const INTRO_SHIFT = "5%";
 const INTRO_MS = 1400;
 
+// With `scrollAway`: as the page scrolls, the dots drift down with the reader
+// (moving at this share of the scroll speed) and shrink away, unevenly, until
+// none are left once the page has scrolled SCROLL_GONE x the hero's height.
+const SCROLL_FOLLOW = 0.8;
+const SCROLL_GONE = 0.9;
+
 // Black ink for the player, green for the stadium light streaks and his rim light.
 const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
 
@@ -61,7 +67,7 @@ function noise(x: number, y: number) {
   return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
 }
 
-export default function HalftonePortrait({ className = "", introAt = 0, lateAt = 0 }: { className?: string; introAt?: number; lateAt?: number }) {
+export default function HalftonePortrait({ className = "", introAt = 0, lateAt = 0, scrollAway = false }: { className?: string; introAt?: number; lateAt?: number; scrollAway?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -243,6 +249,21 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
     // A dot's size: its printed size rb, plus the cursor swell. The swell is
     // scaled by how big the dot already is, so bare paper never grows dots
     // and the faint dots at the edge of a cluster or streak only swell a little.
+    // Scrolling away: how far through (0..1), and each dot's share of size left.
+    // Dots vanish at different moments (by a fixed random threshold per dot).
+    let scrollP = 0, scrollY = -1;
+    const followScroll = () => {
+      if (!scrollAway) return false;
+      const y = Math.max(0, window.scrollY);
+      if (y === scrollY) return false;
+      scrollY = y;
+      scrollP = Math.min(1, y / (h * SCROLL_GONE || 1));
+      canvas.style.transform = y ? `translate3d(0, ${(y * SCROLL_FOLLOW).toFixed(1)}px, 0)` : "";
+      return true;
+    };
+    const left = (x: number, y: number) =>
+      scrollP === 0 ? 1 : Math.min(1, Math.max(0, (1 - scrollP) * 1.7 - hash(x * 0.37, y * 0.29) * 0.7));
+
     const dotRadius = (rb: number, grow: number, max: number) =>
       rb < 0.35 ? 0 : Math.min(max * 1.2, rb + max * 1.1 * grow * Math.min(1, rb / (max * 0.25)));
 
@@ -263,7 +284,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       const grid = cols * rows;
       for (let j = 0; j < clusterR.length; j++) {
         const i = grid + j;
-        const rb = clusterR[j] * (0.93 + 0.14 * noise(X[i] * 0.013 + t * 0.35, Y[i] * 0.013 - t * 0.2));
+        const rb = left(X[i], Y[i]) * clusterR[j] * (0.93 + 0.14 * noise(X[i] * 0.013 + t * 0.35, Y[i] * 0.013 - t * 0.2));
         const radius = dotRadius(rb, g[i], max);
         if (radius > 0) dot(X[i] + ox[i], Y[i] + oy[i], radius, COLORS[0]);
       }
@@ -281,7 +302,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
           }
           if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
-          const radius = dotRadius(max * k, grow, max);
+          const radius = dotRadius(max * k * left(x, y), grow, max);
           if (radius === 0) continue;
           // Dots keep their own colour as they swell.
           dot(x + ox[i], y + oy[i], radius, COLORS[type]);
@@ -291,8 +312,10 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
 
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      // ~30fps is plenty for the slow drift; run every frame while springs move.
-      if (!visible || now - last < (settled ? 33 : 0)) return;
+      // ~30fps is plenty for the slow drift; run every frame while springs
+      // move or the page scrolls.
+      const scrolled = followScroll();
+      if (!visible || (!scrolled && now - last < (settled ? 33 : 0))) return;
       let dt = last ? (now - last) / 1000 : 1 / 60;
       last = now;
       dt = Math.min(dt, 1 / 20);
@@ -350,7 +373,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       ro.disconnect();
       io.disconnect();
     };
-  }, [introAt, lateAt]);
+  }, [introAt, lateAt, scrollAway]);
 
   // Hidden until the photo is ready, then revealed by the opening animation.
   return <canvas ref={ref} aria-hidden="true" style={{ opacity: 0 }} className={`absolute inset-0 h-full w-full ${className}`} />;

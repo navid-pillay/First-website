@@ -75,9 +75,11 @@ function Line({ n, rule, text, children }: { n: string; rule: number; text: numb
   );
 }
 
-export default function PowerFcHero({ fullScreen = false, intro = false }: { fullScreen?: boolean; intro?: boolean }) {
+// With `scrollAway`, the player's dots drift down and shrink away as the page
+// scrolls, so they spill below the hero (it clips only sideways).
+export default function PowerFcHero({ fullScreen = false, intro = false, scrollAway = false }: { fullScreen?: boolean; intro?: boolean; scrollAway?: boolean }) {
   return (
-    <section className={cn("relative overflow-hidden bg-paper", intro && "hero-intro")}>
+    <section className={cn("relative bg-paper", scrollAway ? "overflow-x-clip" : "overflow-hidden", intro && "hero-intro")}>
       <div className={cn(
           "relative mx-auto h-[min(calc(100svh-76px),860px)] min-h-[560px] w-full max-w-[1440px] max-[860px]:h-auto max-[860px]:min-h-[min(calc(100svh-110px),780px)]",
           fullScreen && "h-svh",
@@ -105,7 +107,7 @@ export default function PowerFcHero({ fullScreen = false, intro = false }: { ful
         <Sparkle style={at(LATE_AT + 0.4)} className="intro-pop absolute top-[34%] left-[8%] w-[3.4%] min-w-6 text-ink" />
         <Crosshair className="absolute top-[48%] right-[4%] w-[6%] min-w-12 text-ink/70 max-[860px]:hidden" />
 
-        <HalftonePortrait introAt={intro ? PLAYER_AT * 1000 : 0} lateAt={intro ? LATE_AT * 1000 : 0} />
+        <HalftonePortrait introAt={intro ? PLAYER_AT * 1000 : 0} lateAt={intro ? LATE_AT * 1000 : 0} scrollAway={scrollAway} />
 
         <div className="pointer-events-none relative z-10 flex h-full flex-col justify-end px-[6%] pb-[9%] max-[860px]:px-5 max-[860px]:pt-[min(106vw,560px)] max-[860px]:pb-12">
           <h1 className={cn(!intro && "rise-in", "relative m-0 w-fit pl-[3.2rem] text-[clamp(3rem,7.4vw,7.4rem)] uppercase leading-[0.98] tracking-[-0.01em] max-[860px]:pl-0")}>

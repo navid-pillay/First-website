@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import DraftChoice from "@/components/DraftChoice";
 import PowerFcHero from "@/components/heroes/PowerFcHero";
 
-// Draft: the Power FC hero on its own, with no header, footer or intro.
+// Draft: the Power FC hero with its opening sequence, then (as you scroll) the
+// choice between the two programs. No header, footer or intro screen.
 export const metadata: Metadata = {
   title: "Draft: Power FC hero",
   robots: { index: false, follow: false },
@@ -9,8 +11,9 @@ export const metadata: Metadata = {
 
 export default function DraftPage() {
   return (
-    <main className="flex min-h-svh flex-col justify-center bg-paper">
-      <PowerFcHero fullScreen intro />
+    <main className="bg-paper">
+      <PowerFcHero fullScreen intro scrollAway />
+      <DraftChoice />
     </main>
   );
 }
