@@ -1,4 +1,4 @@
 :HL["/First-website/_next/static/chunks/1aste7e0rtxz3.css","style"]
 :HL["/First-website/_next/static/media/audiowide_latin_400-s.p.0o_bu-5778xpa.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 1:[["children",{"s":"__PAGE__","h":160}]]
-0:{"b":"VNWGWEu40ooBT8TETxIhJ","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"oia6gZ_NRYAM65rSxtYG9","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
