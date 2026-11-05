@@ -5,7 +5,9 @@ import { useEffect, useRef } from "react";
 // The Power FC hero: the player photo printed as live halftone dots on paper.
 // Black ink for the player (dot size follows the photo's tones), green rim
 // light around his outline, and soft green light streaks behind him. Dots
-// breathe a little, and swell like jelly under the cursor.
+// breathe a little, and swell like jelly under the cursor. Only dots that are
+// already printed react: the player, his rim light, the light streaks and the
+// small ink clusters by the floodlight photo. Bare paper stays still.
 const LENS_RADIUS = 38; // px: how far from the cursor dots swell
 const HOVER = 0.6; // how much dots swell under the cursor (1 = double size)
 const PUSH = 4; // px: how far dots bulge outward from the cursor
@@ -24,6 +26,24 @@ const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
 // The player photo: greyscale with a transparent background (public/hero),
 // in a 2000 x 1778 coordinate space. His head is centred at x 850, top at y 40.
 const PHOTO = { src: "/hero/player-tone.webp", width: 2000, height: 1778, headX: 850, headTop: 40, shoulders: 1640 };
+
+// Wide screens only: small clusters of ink dots in the collage, as fractions of
+// the hero (left, top, width, height). Dots on an 11px grid fade out toward the
+// edge of each cluster.
+const CLUSTERS = [
+  [0.29, 0.13, 0.12, 0.1],
+  [0.23, 0.34, 0.08, 0.09],
+  [0.35, 0.46, 0.1, 0.05],
+];
+const CLUSTER_SPACING = 11;
+const CLUSTER_DOT = 1.8; // px radius at the cluster's centre
+// Collage pieces that sit in front of the clusters (same units), so no cluster
+// dot is drawn over them: the floodlight photo and the two green bars.
+const COVERS = [
+  [0.3, 0.19, 0.224, 0.285],
+  [0.523, 0.15, 0.062, 0.58],
+  [0.26, 0.284, 0.13, 0.038],
+];
 
 function hash(x: number, y: number) {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
@@ -56,6 +76,9 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     // Every dot is its own spring: extra size (g) and bulge offset (ox, oy).
     let g = new Float32Array(0), vg = new Float32Array(0);
     let ox = new Float32Array(0), oy = new Float32Array(0), vox = new Float32Array(0), voy = new Float32Array(0);
+    // Every dot's resting position. The first cols * rows are the photo grid;
+    // after them come the ink cluster dots, with their size in clusterR.
+    let X = new Float32Array(0), Y = new Float32Array(0), clusterR = new Float32Array(0);
     let settled = true;
     // How the picture covers the canvas: scale, and offset so the player sits
     // to the right of the text on wide screens and in the middle on phones.
@@ -138,7 +161,29 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       }
       cols = Math.ceil(w / sp) + 1;
       rows = Math.ceil(h / sp) + 1;
-      const n = cols * rows;
+      const cx: number[] = [], cy: number[] = [], cr: number[] = [];
+      if (w >= 860) {
+        for (const [l, t, cw, ch] of CLUSTERS) {
+          const x0 = l * w, y0 = t * h, bw = cw * w, bh = ch * h;
+          for (let y = CLUSTER_SPACING / 2; y < bh; y += CLUSTER_SPACING) {
+            for (let x = CLUSTER_SPACING / 2; x < bw; x += CLUSTER_SPACING) {
+              const px = x0 + x, py = y0 + y;
+              if (COVERS.some(([a, b, c, d]) => px >= a * w && px <= (a + c) * w && py >= b * h && py <= (b + d) * h)) continue;
+              // Elliptical fade: full size to 30% of the way out, gone by 75%.
+              const e = Math.hypot(x / bw - 0.5, y / bh - 0.5) * Math.SQRT2;
+              const a = Math.min(1, Math.max(0, (0.75 - e) / 0.45));
+              if (a < 0.08) continue;
+              cx.push(px); cy.push(py); cr.push(CLUSTER_DOT * Math.sqrt(a));
+            }
+          }
+        }
+      }
+      const grid = cols * rows;
+      const n = grid + cr.length;
+      X = new Float32Array(n); Y = new Float32Array(n);
+      for (let i = 0; i < grid; i++) { const r = (i / cols) | 0; X[i] = (i - r * cols) * sp; Y[i] = r * sp; }
+      X.set(cx, grid); Y.set(cy, grid);
+      clusterR = Float32Array.from(cr);
       g = new Float32Array(n); vg = new Float32Array(n);
       ox = new Float32Array(n); oy = new Float32Array(n); vox = new Float32Array(n); voy = new Float32Array(n);
       sample();
@@ -160,16 +205,13 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       const ux = speed > 1 ? lens.vx / speed : 1, uy = speed > 1 ? lens.vy / speed : 0;
       const along = LENS_RADIUS * (1 + stretch), across = LENS_RADIUS / (1 + stretch * 0.6);
       const reach = along * 2.2;
-      const c0 = Math.max(0, Math.floor((lens.x - reach) / sp)), c1 = Math.min(cols - 1, Math.ceil((lens.x + reach) / sp));
-      const r0 = Math.max(0, Math.floor((lens.y - reach) / sp)), r1 = Math.min(rows - 1, Math.ceil((lens.y + reach) / sp));
       const strength = Math.min(1.25, lens.s) * HOVER;
 
       let energy = Math.abs(lens.vs) + Math.abs(lens.s - (pointer.inside ? 1 : 0)) + speed * 0.01;
       for (let i = 0, n = g.length; i < n; i++) {
-        const r = (i / cols) | 0, c = i - r * cols;
         let tg = 0, tx = 0, ty = 0;
-        if (strength > 0.001 && c >= c0 && c <= c1 && r >= r0 && r <= r1) {
-          const dx = c * sp - lens.x, dy = r * sp - lens.y;
+        const dx = X[i] - lens.x, dy = Y[i] - lens.y;
+        if (strength > 0.001 && Math.abs(dx) <= reach && Math.abs(dy) <= reach) {
           const pa = (dx * ux + dy * uy) / along, pc = (-dx * uy + dy * ux) / across;
           const f = Math.exp(-(pa * pa + pc * pc));
           tg = f * strength;
@@ -195,9 +237,30 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       settled = !pointer.inside && energy < 0.01;
     };
 
+    // A dot's size: its printed size rb, plus the cursor swell. The swell is
+    // scaled by how big the dot already is, so bare paper never grows dots
+    // and the faint dots at the edge of a cluster or streak only swell a little.
+    const dotRadius = (rb: number, grow: number, max: number) =>
+      rb < 0.35 ? 0 : Math.min(max * 1.2, rb + max * 1.1 * grow * Math.min(1, rb / (max * 0.25)));
+
+    const dot = (x: number, y: number, radius: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
     const draw = (t: number) => {
       ctx.clearRect(0, 0, w, h);
       const max = sp * 0.5;
+      // The ink clusters first, as they sit behind the player.
+      const grid = cols * rows;
+      for (let j = 0; j < clusterR.length; j++) {
+        const i = grid + j;
+        const rb = clusterR[j] * (0.93 + 0.14 * noise(X[i] * 0.013 + t * 0.35, Y[i] * 0.013 - t * 0.2));
+        const radius = dotRadius(rb, g[i], max);
+        if (radius > 0) dot(X[i] + ox[i], Y[i] + oy[i], radius, COLORS[0]);
+      }
       for (let r = 0; r < rows; r++) {
         const y = r * sp;
         for (let c = 0; c < cols; c++) {
@@ -211,13 +274,10 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
           }
           if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
-          const radius = max * Math.min(1.2, 1.0 * k + 1.1 * grow);
-          if (radius < 0.35) continue;
+          const radius = dotRadius(max * k, grow, max);
+          if (radius === 0) continue;
           // Right at the cursor, dots ink in black.
-          ctx.fillStyle = grow > 0.3 ? COLORS[0] : COLORS[type];
-          ctx.beginPath();
-          ctx.arc(x + ox[i], y + oy[i], radius, 0, Math.PI * 2);
-          ctx.fill();
+          dot(x + ox[i], y + oy[i], radius, grow > 0.3 ? COLORS[0] : COLORS[type]);
         }
       }
     };

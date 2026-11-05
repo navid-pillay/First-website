@@ -14,9 +14,6 @@ export default function PowerFcHero({ fullScreen = false }: { fullScreen?: boole
         )}>
         {/* Collage behind the player */}
         <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
-        <span aria-hidden="true" className="dots-patch absolute top-[13%] left-[29%] h-[10%] w-[12%] max-[860px]:hidden" />
-        <span aria-hidden="true" className="dots-patch absolute top-[34%] left-[23%] h-[9%] w-[8%] max-[860px]:hidden" />
-        <span aria-hidden="true" className="dots-patch absolute top-[46%] left-[35%] h-[5%] w-[10%] max-[860px]:hidden" />
         <FloodlightPhoto className="absolute top-[19%] left-[30%] h-[28.5%] w-[22.4%] max-[860px]:hidden" />
         <span aria-hidden="true" className="green-bar absolute top-[15%] left-[52.3%] h-[58%] w-[6.2%] max-[860px]:hidden" />
         <span aria-hidden="true" className="absolute top-[28.4%] left-[26%] h-[3.8%] w-[13%] bg-green max-[860px]:hidden" />

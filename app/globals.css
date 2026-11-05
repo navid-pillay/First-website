@@ -73,15 +73,8 @@ body::after {
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.3px, transparent 1.7px);
 }
 
-/* Power FC hero collage: small black dot patches, and the tall green bar that
+/* Power FC hero collage: the tall green bar that
    dissolves into halftone dots at the bottom */
-.dots-patch {
-  background-image: radial-gradient(circle, var(--color-ink) 1.6px, transparent 2px);
-  background-size: 11px 11px;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-}
-
 .green-bar {
   background:
     linear-gradient(var(--color-green), var(--color-green)) top / 100% 62% no-repeat,
