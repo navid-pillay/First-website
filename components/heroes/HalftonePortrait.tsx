@@ -276,8 +276,8 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
           const grow = g[i];
           const radius = dotRadius(max * k, grow, max);
           if (radius === 0) continue;
-          // Right at the cursor, dots ink in black.
-          dot(x + ox[i], y + oy[i], radius, grow > 0.3 ? COLORS[0] : COLORS[type]);
+          // Dots keep their own colour as they swell.
+          dot(x + ox[i], y + oy[i], radius, COLORS[type]);
         }
       }
     };
