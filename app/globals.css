@@ -73,16 +73,6 @@ body::after {
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.3px, transparent 1.7px);
 }
 
-/* Power FC hero collage: the tall green bar that
-   dissolves into halftone dots at the bottom */
-.green-bar {
-  background:
-    linear-gradient(var(--color-green), var(--color-green)) top / 100% 62% no-repeat,
-    radial-gradient(circle, var(--color-green) 3.4px, transparent 3.8px) 0 0 / 9px 9px;
-  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
-}
-
 /* Film grain over the hero photo */
 .photo-grain {
   pointer-events: none;

@@ -38,12 +38,8 @@ const CLUSTERS = [
 const CLUSTER_SPACING = 11;
 const CLUSTER_DOT = 1.8; // px radius at the cluster's centre
 // Collage pieces that sit in front of the clusters (same units), so no cluster
-// dot is drawn over them: the floodlight photo and the two green bars.
-const COVERS = [
-  [0.3, 0.19, 0.224, 0.285],
-  [0.523, 0.15, 0.062, 0.58],
-  [0.26, 0.284, 0.13, 0.038],
-];
+// dot is drawn over them: the floodlight photo.
+const COVERS = [[0.3, 0.19, 0.224, 0.285]];
 
 function hash(x: number, y: number) {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
