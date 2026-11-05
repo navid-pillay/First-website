@@ -7,7 +7,6 @@ import { PORTRAIT } from "@/lib/portrait";
 // The Power FC hero: the player printed as live halftone dots on paper. Black
 // ink for the player, grey ink for the stadium lights, green for the rim
 // light. Dots breathe a little, and swell like jelly under the cursor.
-const SPACING = 8; // px between dot centres on screen
 const LENS_RADIUS = 38; // px: how far from the cursor dots swell
 const HOVER = 0.6; // how much dots swell under the cursor (1 = double size)
 const PUSH = 4; // px: how far dots bulge outward from the cursor
@@ -20,7 +19,8 @@ const LENS_DAMPING = 48; // ...with only a touch of follow-through
 const POP_STIFFNESS = 260; // the spot pops in and out with a little bounce
 const POP_DAMPING = 14;
 
-const COLORS = ["#0d0f0e", "#8d918e", "#42e202"];
+// Black ink for the player, green for the stadium light streaks and his rim light.
+const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
 
 // Decode the picture once: dot type and size (0..1) per source cell.
 const SRC_TYPE = new Uint8Array(PORTRAIT.cols * PORTRAIT.rows);
@@ -53,6 +53,8 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Dot spacing on screen: coarse like a printed poster on wide screens.
+    let sp = 10;
     let w = 0, h = 0, cols = 0, rows = 0, raf = 0, last = 0, visible = true;
     const pointer = { x: 0, y: 0, inside: false };
     // The spot under the cursor: a stiff spring on position (tiny follow-through),
@@ -73,18 +75,19 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      sp = w < 860 ? 7 : 10;
       if (w < 860) {
         // Phones: the player fills the width, standing above the slogan.
         const sc = w / 1150;
         fit = { s: sc, x: w * 0.5 - PORTRAIT.focusX * sc, y: h * 0.54 - PORTRAIT.height * sc };
       } else {
-        // Wide screens: the player stands to the right of the slogan, feet
-        // cropped by the bottom edge like a poster.
-        const sc = Math.max((h * 0.92) / PORTRAIT.height, (w * 0.62) / PORTRAIT.width);
-        fit = { s: sc, x: w * 0.72 - PORTRAIT.focusX * sc, y: h - PORTRAIT.height * sc };
+        // Wide screens: a big player on the right, head near the top and
+        // shoulders cropped by the bottom edge like a poster.
+        const sc = Math.max(w / 2100, (h * 1.02) / PORTRAIT.height);
+        fit = { s: sc, x: w * 0.68 - PORTRAIT.focusX * sc, y: h * 0.11 - 45 * sc };
       }
-      cols = Math.ceil(w / SPACING) + 1;
-      rows = Math.ceil(h / SPACING) + 1;
+      cols = Math.ceil(w / sp) + 1;
+      rows = Math.ceil(h / sp) + 1;
       const n = cols * rows;
       g = new Float32Array(n); vg = new Float32Array(n);
       ox = new Float32Array(n); oy = new Float32Array(n); vox = new Float32Array(n); voy = new Float32Array(n);
@@ -106,8 +109,8 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
       const ux = speed > 1 ? lens.vx / speed : 1, uy = speed > 1 ? lens.vy / speed : 0;
       const along = LENS_RADIUS * (1 + stretch), across = LENS_RADIUS / (1 + stretch * 0.6);
       const reach = along * 2.2;
-      const c0 = Math.max(0, Math.floor((lens.x - reach) / SPACING)), c1 = Math.min(cols - 1, Math.ceil((lens.x + reach) / SPACING));
-      const r0 = Math.max(0, Math.floor((lens.y - reach) / SPACING)), r1 = Math.min(rows - 1, Math.ceil((lens.y + reach) / SPACING));
+      const c0 = Math.max(0, Math.floor((lens.x - reach) / sp)), c1 = Math.min(cols - 1, Math.ceil((lens.x + reach) / sp));
+      const r0 = Math.max(0, Math.floor((lens.y - reach) / sp)), r1 = Math.min(rows - 1, Math.ceil((lens.y + reach) / sp));
       const strength = Math.min(1.25, lens.s) * HOVER;
 
       let energy = Math.abs(lens.vs) + Math.abs(lens.s - (pointer.inside ? 1 : 0)) + speed * 0.01;
@@ -115,7 +118,7 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
         const r = (i / cols) | 0, c = i - r * cols;
         let tg = 0, tx = 0, ty = 0;
         if (strength > 0.001 && c >= c0 && c <= c1 && r >= r0 && r <= r1) {
-          const dx = c * SPACING - lens.x, dy = r * SPACING - lens.y;
+          const dx = c * sp - lens.x, dy = r * sp - lens.y;
           const pa = (dx * ux + dy * uy) / along, pc = (-dx * uy + dy * ux) / across;
           const f = Math.exp(-(pa * pa + pc * pc));
           tg = f * strength;
@@ -143,11 +146,11 @@ export default function HalftonePortrait({ className = "" }: { className?: strin
 
     const draw = (t: number) => {
       ctx.clearRect(0, 0, w, h);
-      const max = SPACING * 0.5;
+      const max = sp * 0.5;
       for (let r = 0; r < rows; r++) {
-        const y = r * SPACING;
+        const y = r * sp;
         for (let c = 0; c < cols; c++) {
-          const x = c * SPACING;
+          const x = c * sp;
           const i = r * cols + c;
           // The picture's dot at this spot, breathing slightly over time.
           const sc = Math.floor((x - fit.x) / fit.s / SRC_CELL), sr = Math.floor((y - fit.y) / fit.s / SRC_CELL);

@@ -3,7 +3,8 @@ import Footer from "@/components/Footer";
 import HalftonePortrait from "@/components/heroes/HalftonePortrait";
 import Reveal from "@/components/Reveal";
 import { Button, Card, Container, Eyebrow, H2, Lead, Section } from "@/components/ui";
-import { CropMarks, Halftone, Meta, Slash, Tape } from "@/components/zine";
+import { FloodlightPhoto, Crosshair, DryBrush, HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
+import { Halftone, Slash, Tape } from "@/components/zine";
 
 export const metadata: Metadata = {
   title: "Power FC | High Performance Academy in Toronto",
@@ -54,36 +55,33 @@ export default function PowerFcPage() {
     <>
       <main>
         <section className="relative overflow-hidden bg-paper">
-          <HalftonePortrait />
-          {/* Fade the dots out behind the text so the slogan reads cleanly */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--color-paper)_0%,rgba(242,242,238,0.8)_34%,rgba(242,242,238,0)_58%)] max-[860px]:bg-[linear-gradient(180deg,rgba(242,242,238,0)_45%,rgba(242,242,238,0.9)_64%,var(--color-paper)_100%)]" />
-          <CropMarks />
-          <Container className="pointer-events-none relative z-10 flex min-h-[min(calc(100vh-80px),800px)] flex-col py-10 max-[860px]:min-h-[min(calc(100svh-110px),760px)] [&_a]:pointer-events-auto">
-            <div className="flex items-start justify-between gap-6">
-              <Meta lines={["Power FC Academy", "Est. 2005", "Toronto, ON"]} />
-              <Meta className="text-right max-sm:hidden" lines={["Boys U8–U18", "Girls U8–U14", "Season Jan–Nov"]} />
-            </div>
+          <div className="relative mx-auto h-[min(calc(100svh-76px),860px)] min-h-[560px] w-full max-w-[1440px] max-[860px]:h-auto max-[860px]:min-h-[min(calc(100svh-110px),780px)]">
+            {/* Collage behind the player */}
+            <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
+            <span aria-hidden="true" className="dots-patch absolute top-[13%] left-[29%] h-[10%] w-[12%] max-[860px]:hidden" />
+            <span aria-hidden="true" className="dots-patch absolute top-[34%] left-[23%] h-[9%] w-[8%] max-[860px]:hidden" />
+            <span aria-hidden="true" className="dots-patch absolute top-[46%] left-[35%] h-[5%] w-[10%] max-[860px]:hidden" />
+            <FloodlightPhoto className="absolute top-[19%] left-[30%] h-[28.5%] w-[22.4%] max-[860px]:hidden" />
+            <span aria-hidden="true" className="green-bar absolute top-[15%] left-[52.3%] h-[58%] w-[6.2%] max-[860px]:hidden" />
+            <span aria-hidden="true" className="absolute top-[28.4%] left-[26%] h-[3.8%] w-[13%] bg-green max-[860px]:hidden" />
+            <span aria-hidden="true" className="absolute right-[0.8%] bottom-0 h-[25%] w-[10%] bg-[#9fa29f] max-[860px]:hidden" />
+            <Sparkle className="absolute top-[34%] left-[8%] w-[3.4%] min-w-6 text-ink" />
+            <Crosshair className="absolute top-[48%] right-[4%] w-[6%] min-w-12 text-ink/70 max-[860px]:hidden" />
 
-            <div className="rise-in flex flex-1 flex-col justify-end pt-16 pb-10 max-[860px]:pt-[52vh]">
-              <h1 className="m-0 text-[clamp(3.2rem,9vw,7rem)] uppercase leading-[0.9] tracking-[-0.02em]">
+            <HalftonePortrait />
+
+            <div className="pointer-events-none relative z-10 flex h-full flex-col justify-end px-[6%] pb-[9%] max-[860px]:px-5 max-[860px]:pt-[50vh] max-[860px]:pb-12">
+              <h1 className="rise-in m-0 text-[clamp(3rem,7.4vw,7.4rem)] uppercase leading-[0.98] tracking-[-0.01em]">
                 <span className="sr-only">Power FC Academy: </span>
                 <span className="block text-transparent [-webkit-text-stroke:2px_var(--color-ink)]">Learn.</span>
-                <span className="block">Develop.</span>
-                <span className="block"><Tape>Grow.</Tape></span>
+                <span className="block"><span className="block origin-left -skew-x-[10deg]">Develop.</span></span>
+                <span className="relative block w-fit">
+                  <DryBrush className="absolute top-[4%] -left-[7%] h-[108%] w-[118%]" />
+                  <span className="relative block origin-left -skew-x-[10deg]">Grow.</span>
+                </span>
               </h1>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Button href="/contact/">Book an Assessment</Button>
-                <Button href="#pathway" variant="outline">The Pathway</Button>
-              </div>
             </div>
-
-            <div className="flex items-end justify-between gap-6 border-t border-ink pt-4">
-              <Meta lines={["Power FC — High performance academy of Power Soccer Inc."]} />
-              <a href="#pathway" aria-label="Scroll to the pathway" className="scroll-cue grid size-11 flex-none place-items-center border border-ink bg-paper text-ink no-underline transition-colors hover:bg-green">
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square"><path d="M6 9l6 6 6-6" /></svg>
-              </a>
-            </div>
-          </Container>
+          </div>
         </section>
 
         <section className="border-t border-ink bg-white">
