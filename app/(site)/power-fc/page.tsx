@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import FcCrest from "@/components/FcCrest";
 import Footer from "@/components/Footer";
-import HalftoneCamo from "@/components/heroes/HalftoneCamo";
+import HalftonePortrait from "@/components/heroes/HalftonePortrait";
 import Reveal from "@/components/Reveal";
 import { Button, Card, Container, Eyebrow, H2, Lead, Section } from "@/components/ui";
 import { CropMarks, Halftone, Meta, Slash, Tape } from "@/components/zine";
@@ -55,43 +54,32 @@ export default function PowerFcPage() {
     <>
       <main>
         <section className="relative overflow-hidden bg-paper">
-          <HalftoneCamo />
-          {/* Fade the dots out behind the text so the heading reads cleanly */}
-          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,var(--color-paper)_0%,rgba(242,242,238,0.85)_38%,rgba(242,242,238,0)_70%)] max-[860px]:bg-[linear-gradient(180deg,rgba(242,242,238,0)_0%,rgba(242,242,238,0.9)_45%,var(--color-paper)_100%)]" />
+          <HalftonePortrait />
+          {/* Fade the dots out behind the text so the slogan reads cleanly */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--color-paper)_0%,rgba(242,242,238,0.8)_34%,rgba(242,242,238,0)_58%)] max-[860px]:bg-[linear-gradient(180deg,rgba(242,242,238,0)_45%,rgba(242,242,238,0.9)_64%,var(--color-paper)_100%)]" />
           <CropMarks />
-          <Container className="relative z-10 flex min-h-[min(calc(100vh-80px),780px)] flex-col py-10 max-[860px]:min-h-0">
+          <Container className="pointer-events-none relative z-10 flex min-h-[min(calc(100vh-80px),800px)] flex-col py-10 max-[860px]:min-h-[min(calc(100svh-110px),760px)] [&_a]:pointer-events-auto">
             <div className="flex items-start justify-between gap-6">
               <Meta lines={["Power FC Academy", "Est. 2005", "Toronto, ON"]} />
               <Meta className="text-right max-sm:hidden" lines={["Boys U8–U18", "Girls U8–U14", "Season Jan–Nov"]} />
             </div>
 
-            <div className="grid flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] items-center gap-10 py-10 max-[860px]:grid-cols-1 max-[860px]:gap-6">
-              <div className="rise-in">
-                <h1 className="m-0 text-[clamp(3.4rem,9.5vw,7.2rem)] uppercase leading-[0.86] tracking-[-0.02em]">
-                  <span className="block whitespace-nowrap">Power FC</span>
-                  <span className="block"><Tape>Academy</Tape></span>
-                </h1>
-                <p className="mt-7 mb-9 font-display text-[clamp(1.1rem,2.3vw,1.45rem)] uppercase tracking-[0.06em]">
-                  Learn. Develop. <Tape>Grow.</Tape>
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <Button href="/contact/">Book an Assessment</Button>
-                  <Button href="#pathway" variant="outline">The Pathway</Button>
-                </div>
-              </div>
-
-              <div className="relative justify-self-center max-[860px]:order-first">
-                <Slash seed={3} className="slash-in absolute top-[42%] -left-[30%] h-[34%] w-[160%] -rotate-[14deg]" />
-                <Slash seed={8} ragged={20} className="slash-in absolute top-[70%] -left-[10%] h-[9%] w-[110%] rotate-[8deg] [animation-delay:0.4s]" />
-                <div className="relative w-[min(300px,70vw)] [animation:crest-float_9s_ease-in-out_infinite] max-[860px]:w-[180px]">
-                  <FcCrest title="Power FC crest" className="block h-auto w-full drop-shadow-[10px_14px_0_rgba(13,15,14,0.9)]" />
-                </div>
+            <div className="rise-in flex flex-1 flex-col justify-end pt-16 pb-10 max-[860px]:pt-[52vh]">
+              <h1 className="m-0 text-[clamp(3.2rem,9vw,7rem)] uppercase leading-[0.9] tracking-[-0.02em]">
+                <span className="sr-only">Power FC Academy: </span>
+                <span className="block text-transparent [-webkit-text-stroke:2px_var(--color-ink)]">Learn.</span>
+                <span className="block">Develop.</span>
+                <span className="block"><Tape>Grow.</Tape></span>
+              </h1>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Button href="/contact/">Book an Assessment</Button>
+                <Button href="#pathway" variant="outline">The Pathway</Button>
               </div>
             </div>
 
             <div className="flex items-end justify-between gap-6 border-t border-ink pt-4">
-              <Meta lines={["High performance academy program of Power Soccer Inc."]} />
-              <a href="#pathway" aria-label="Scroll to the pathway" className="scroll-cue grid size-11 flex-none place-items-center border border-ink text-ink no-underline transition-colors hover:bg-green">
+              <Meta lines={["Power FC — High performance academy of Power Soccer Inc."]} />
+              <a href="#pathway" aria-label="Scroll to the pathway" className="scroll-cue grid size-11 flex-none place-items-center border border-ink bg-paper text-ink no-underline transition-colors hover:bg-green">
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square"><path d="M6 9l6 6 6-6" /></svg>
               </a>
             </div>

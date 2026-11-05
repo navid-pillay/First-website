@@ -2,10 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-// Live version of the Power FC training top pattern: a grid of halftone dots
-// whose size forms blocky camo patches that slowly drift and morph.
-const SPACING = 9; // px between dot centres
-const CELL = 2; // dots per camo "pixel" block, for the jersey's stepped edges
+import { PORTRAIT } from "@/lib/portrait";
+
+// The Power FC hero: the player printed as live halftone dots on paper. Black
+// ink for the player, grey ink for the stadium lights, green for the rim
+// light. Dots breathe a little, and swell like jelly under the cursor.
+const SPACING = 8; // px between dot centres on screen
 const LENS_RADIUS = 45; // px: how far from the cursor dots swell
 const PUSH = 7; // px: how far dots bulge outward from the cursor
 
@@ -17,25 +19,17 @@ const LENS_DAMPING = 48; // ...with only a touch of follow-through
 const POP_STIFFNESS = 260; // the spot pops in and out with a little bounce
 const POP_DAMPING = 14;
 
-// Printed on paper: small dots are pale grey (#cfd0cb), big dots dark grey
-// (#5e625f), in 24 steps.
-const PALE = [0xcf, 0xd0, 0xcb], DARK = [0x5e, 0x62, 0x5f], INK = [0x0d, 0x0f, 0x0e];
-const SHADES = Array.from({ length: 24 }, (_, i) => {
-  const t = i / 23;
-  const c = PALE.map((v, k) => Math.round(v + (DARK[k] - v) * t));
-  return `rgb(${c[0]},${c[1]},${c[2]})`;
-});
+const COLORS = ["#0d0f0e", "#8d918e", "#42e202"];
 
-// The same shades inked in under the cursor: 12 steps toward solid black.
-const LIT = SHADES.map((_, i) => {
-  const t = i / 23;
-  const base = PALE.map((v, k) => v + (DARK[k] - v) * t);
-  return Array.from({ length: 12 }, (_, j) => {
-    const u = j / 11;
-    const c = base.map((v, k) => Math.round(v + (INK[k] - v) * u));
-    return `rgb(${c[0]},${c[1]},${c[2]})`;
-  });
-});
+// Decode the picture once: dot type and size (0..1) per source cell.
+const SRC_TYPE = new Uint8Array(PORTRAIT.cols * PORTRAIT.rows);
+const SRC_SIZE = new Float32Array(PORTRAIT.cols * PORTRAIT.rows);
+for (let i = 0; i < SRC_TYPE.length; i++) {
+  const v = PORTRAIT.alphabet.indexOf(PORTRAIT.data[i]);
+  SRC_TYPE[i] = Math.floor(v / PORTRAIT.levels);
+  SRC_SIZE[i] = (v % PORTRAIT.levels) / (PORTRAIT.levels - 1);
+}
+const SRC_CELL = PORTRAIT.width / PORTRAIT.cols;
 
 function hash(x: number, y: number) {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
@@ -50,15 +44,7 @@ function noise(x: number, y: number) {
   return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
 }
 
-function camo(x: number, y: number, t: number) {
-  return (
-    noise(x * 0.11 + t * 0.06, y * 0.11 - t * 0.04) * 0.55 +
-    noise(x * 0.26 - t * 0.05, y * 0.26 + t * 0.07 + 40) * 0.3 +
-    noise(x * 0.7 + 90, y * 0.7 + t * 0.1) * 0.15
-  );
-}
-
-export default function HalftoneCamo({ className = "" }: { className?: string }) {
+export default function HalftonePortrait({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -75,6 +61,9 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
     let g = new Float32Array(0), vg = new Float32Array(0);
     let ox = new Float32Array(0), oy = new Float32Array(0), vox = new Float32Array(0), voy = new Float32Array(0);
     let settled = true;
+    // How the picture covers the canvas: scale, and offset so the player sits
+    // to the right of the text on wide screens and in the middle on phones.
+    let fit = { s: 1, x: 0, y: 0 };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -83,6 +72,16 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (w < 860) {
+        // Phones: the player fills the width, standing above the slogan.
+        const sc = w / 1150;
+        fit = { s: sc, x: w * 0.5 - PORTRAIT.focusX * sc, y: h * 0.54 - PORTRAIT.height * sc };
+      } else {
+        // Wide screens: the player stands to the right of the slogan, feet
+        // cropped by the bottom edge like a poster.
+        const sc = Math.max((h * 0.92) / PORTRAIT.height, (w * 0.62) / PORTRAIT.width);
+        fit = { s: sc, x: w * 0.72 - PORTRAIT.focusX * sc, y: h - PORTRAIT.height * sc };
+      }
       cols = Math.ceil(w / SPACING) + 1;
       rows = Math.ceil(h / SPACING) + 1;
       const n = cols * rows;
@@ -149,19 +148,22 @@ export default function HalftoneCamo({ className = "" }: { className?: string })
         for (let c = 0; c < cols; c++) {
           const x = c * SPACING;
           const i = r * cols + c;
-          // Sample per block for stepped edges, blend a little per dot for softness.
-          const n = camo(Math.floor(c / CELL), Math.floor(r / CELL), t) * 0.6 + camo(c / CELL, r / CELL, t) * 0.4;
-          // Continuous size and shade, so dots grow and shrink smoothly as the
-          // patches drift instead of snapping between sizes.
-          let k = Math.min(1, Math.max(0, (n - 0.4) / 0.24));
-          k = k * k * (3 - 2 * k);
+          // The picture's dot at this spot, breathing slightly over time.
+          const sc = Math.floor((x - fit.x) / fit.s / SRC_CELL), sr = Math.floor((y - fit.y) / fit.s / SRC_CELL);
+          let k = 0, type = 0;
+          if (sc >= 0 && sr >= 0 && sc < PORTRAIT.cols && sr < PORTRAIT.rows) {
+            const j = sr * PORTRAIT.cols + sc;
+            k = SRC_SIZE[j];
+            type = SRC_TYPE[j];
+            if (k > 0) k *= 0.9 + 0.2 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
+          }
           const grow = g[i];
-          // Dots under the cursor turn one even colour: they reach solid black
-          // quickly, so only a thin rim blends into the camo around it.
-          const lit = Math.min(1, Math.max(0, grow / 0.3));
-          ctx.fillStyle = LIT[Math.round(k * (SHADES.length - 1))][Math.round(lit * 11)];
+          const radius = max * Math.min(1.45, 1.05 * k + 1.1 * grow);
+          if (radius < 0.35) continue;
+          // Under the cursor every dot inks in solid black.
+          ctx.fillStyle = grow > 0.15 ? COLORS[0] : COLORS[type];
           ctx.beginPath();
-          ctx.arc(x + ox[i], y + oy[i], Math.max(0.4, max * Math.min(1.45, 0.28 + 0.64 * k + 1.1 * grow)), 0, Math.PI * 2);
+          ctx.arc(x + ox[i], y + oy[i], radius, 0, Math.PI * 2);
           ctx.fill();
         }
       }
