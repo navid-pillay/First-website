@@ -20,13 +20,15 @@ const MAX_SPEED = 260; // viewBox units per second
  * through them nudges each blob it touches; the blobs bounce back like jelly,
  * and the strokes between them stretch along.
  */
-export default function Blobs({ viewBox, dots, trails = [], width = 40, className = "" }: {
+export default function Blobs({ viewBox, dots, trails = [], width = 40, jiggle = 1, className = "" }: {
   viewBox: string;
   dots: Dot[];
   /** Polylines ("x,y x,y ...") drawn as thick rounded strokes; a point on a dot's centre moves with that dot. */
   trails?: string[];
   /** Stroke width of the trails, in viewBox units. */
   width?: number;
+  /** How strongly the cursor moves the blobs (1 = normal). */
+  jiggle?: number;
   className?: string;
 }) {
   const id = useId().replace(/:/g, "");
@@ -107,9 +109,9 @@ export default function Blobs({ viewBox, dots, trails = [], width = 40, classNam
         const range = r + REACH;
         if (d > range) continue;
         const f = 1 - d / range;
-        vx[i] += mx * f * DRAG * dt;
-        vy[i] += my * f * DRAG * dt;
-        vs[i] += Math.min(speed, MAX_SPEED) * f * SWELL;
+        vx[i] += mx * f * DRAG * jiggle * dt;
+        vy[i] += my * f * DRAG * jiggle * dt;
+        vs[i] += Math.min(speed, MAX_SPEED) * f * SWELL * jiggle;
         hit = true;
       }
       if (hit && !raf) raf = requestAnimationFrame(frame);
@@ -120,7 +122,7 @@ export default function Blobs({ viewBox, dots, trails = [], width = 40, classNam
       window.removeEventListener("pointermove", onMove);
       cancelAnimationFrame(raf);
     };
-  }, [dots, trails]);
+  }, [dots, trails, jiggle]);
 
   return (
     <svg ref={svgRef} aria-hidden="true" viewBox={viewBox} className={`pointer-events-none overflow-visible ${className}`}>
