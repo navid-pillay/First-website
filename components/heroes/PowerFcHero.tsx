@@ -55,7 +55,7 @@ const FLOATERS: { className: string; viewBox: string; dots: Dot[]; trails: strin
   // Top left, under the caption band
   { className: "top-[11%] left-[11%] w-[13%]", viewBox: "0 0 260 150", dots: [[60, 60, 34], [122, 44, 22], [170, 74, 30], [222, 50, 12], [96, 112, 14], [20, 116, 8]], trails: ["60,60 122,44 170,74"], width: 26 },
   // Bottom left, running off the bottom edge
-  { className: "bottom-[0.5%] left-[2%] w-[19%]", viewBox: "0 0 380 160", dots: [[40, 120, 40], [110, 96, 28], [176, 126, 46], [250, 104, 26], [306, 128, 34], [356, 70, 12], [214, 40, 14], [124, 30, 8]], trails: ["40,120 110,96 176,126 250,104 306,128"], width: 34 },
+  { className: "bottom-[4%] left-[2%] w-[19%]", viewBox: "0 0 380 160", dots: [[40, 120, 40], [110, 96, 28], [176, 126, 46], [250, 104, 26], [306, 128, 34], [356, 70, 12], [214, 40, 14], [124, 30, 8]], trails: ["40,120 110,96 176,126 250,104 306,128"], width: 34 },
   // Top right, running off the right edge
   { className: "top-[9%] right-[-1.2%] w-[11%]", viewBox: "0 0 220 220", dots: [[170, 50, 42], [118, 96, 26], [160, 150, 36], [196, 196, 18], [70, 60, 14], [84, 172, 10]], trails: ["170,50 118,96 160,150 196,196"], width: 30 },
   // Right edge, droplets around the crosshair
