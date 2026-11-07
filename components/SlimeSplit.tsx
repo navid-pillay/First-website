@@ -22,6 +22,7 @@ const STIFF_HEAD = 120, STIFF_TAIL = 48; // springs, per second², head to tail
 const DAMPING = 6.5; // low, so it overshoots and wobbles back
 const DRAG = 7; // how much of the cursor's movement a circle picks up
 const REACH = 14; // px past a circle's edge that still counts as touching
+const SPLAT_SIZE = 0.95; // a splat's size, relative to its logo slot
 
 const PROGRAMS = [
   { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools" },
@@ -87,8 +88,8 @@ export default function SlimeSplit() {
       const T = inner.top + sy + (phone ? 0.52 : TRAVELLER_SPOT.top) * inner.height;
       const S = { x: L + MID[0] * k, y: T + MID[1] * k };
 
-      // The two splats, centred on the logo slots.
-      const centres = slots.map((r) => ({ x: r!.left + r!.width / 2, y: r!.top + sy + r!.height / 2, sc: (r!.width * 1.36) / 300 }));
+      // The two splats, centred on the logo slots, SPLAT_SIZE x a slot's width.
+      const centres = slots.map((r) => ({ x: r!.left + r!.width / 2, y: r!.top + sy + r!.height / 2, sc: (r!.width * SPLAT_SIZE) / 300 }));
       const M = { x: (centres[0].x + centres[1].x) / 2, y: (centres[0].y + centres[1].y) / 2 };
 
       // How far along: 1 once the logos are mid-screen.
