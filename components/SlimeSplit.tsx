@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react"
 import { createPortal } from "react-dom";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
-import ProgramPreview, { type Preview } from "@/components/ProgramPreview";
+import ProgramBubble from "@/components/ProgramBubble";
 import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 
 // The draft's programs. The hero's top-right green slime (the hero leaves it
@@ -76,25 +76,25 @@ export default function SlimeSplit() {
   const inBrowser = useSyncExternalStore(noop, () => true, () => false);
   const layerHost = inBrowser ? document.querySelector<HTMLElement>("[data-slime-host]") : null;
 
-  // Hover preview of a program's page (mouse only; touch just opens the page).
-  const [preview, setPreview] = useState<Preview | null>(null);
+  // Hover preview of a program's page in a small jelly bubble behind its logo
+  // (mouse only; touch just opens the page). shown: bubbles mounted so far.
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [shown, setShown] = useState<boolean[]>([false, false]);
+  const [bubble, setBubble] = useState(360);
   const hoverTimer = useRef(0);
   const openPreview = (i: number) => (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     window.clearTimeout(hoverTimer.current);
     hoverTimer.current = window.setTimeout(() => {
-      const r = slotRefs.current[i]?.getBoundingClientRect();
-      if (!r) return;
-      const top = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
-      const base = { program: PROGRAMS[i].key, x: r.left + r.width / 2, y: r.top + r.height / 2, r0: (r.width * SPLAT_SIZE) / 2.6, top };
-      setPreview({ ...base, open: false });
-      // Next frame: grow (so the transition runs from the splat's size).
-      requestAnimationFrame(() => requestAnimationFrame(() => setPreview((p) => (p && p.program === base.program ? { ...p, open: true } : p))));
+      const w = slotRefs.current[i]?.getBoundingClientRect().width ?? 280;
+      setBubble(Math.round(w * 1.3));
+      setShown((sh) => (sh[i] ? sh : sh.map((v, k) => v || k === i)));
+      setHovered(i);
     }, PREVIEW_DELAY);
   };
   const closePreview = () => {
     window.clearTimeout(hoverTimer.current);
-    setPreview((p) => (p ? { ...p, open: false } : p));
+    setHovered(null);
   };
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
@@ -255,9 +255,6 @@ export default function SlimeSplit() {
     <div className="relative flex flex-col items-center gap-10 px-[6%] max-[860px]:pr-5 max-[860px]:pl-8">
       {/* The slime: a layer over the whole page content. It appears with the
           hero's other blobs in the opening sequence. */}
-      {/* Hover preview of a program's page, over the whole window (in <body>, so the
-          page's scroll bounce doesn't shift it) */}
-      {inBrowser && createPortal(<ProgramPreview preview={preview} />, document.body)}
       {layerHost && createPortal(
       <svg
         ref={svgRef}
@@ -290,9 +287,10 @@ export default function SlimeSplit() {
           <Link key={p.name} href={p.href} onPointerEnter={openPreview(i)} onPointerLeave={closePreview} className="group flex flex-col items-center gap-6 text-ink no-underline">
             {/* The splat lands centred on this slot; the logo pops in over it */}
             <span ref={(el) => { slotRefs.current[i] = el; }} className="relative z-30 grid aspect-square w-[clamp(170px,22vw,280px)] place-items-center">
+              {shown[i] && <ProgramBubble program={p.key} open={hovered === i} size={bubble} offset={[(i === 0 ? -1 : 1) * bubble * 0.62, -bubble * 0.12]} />}
               <span
                 ref={(el) => { logoRefs.current[i] = el; }}
-                className="grid w-full scale-50 place-items-center opacity-0 transition-[opacity,scale,translate] duration-500 group-hover:-translate-y-1.5 ease-[cubic-bezier(0.34,1.56,0.64,1)] data-on:scale-100 data-on:opacity-100"
+                className="relative grid w-full scale-50 place-items-center opacity-0 transition-[opacity,scale,translate] duration-500 group-hover:-translate-y-1.5 ease-[cubic-bezier(0.34,1.56,0.64,1)] data-on:scale-100 data-on:opacity-100"
               >
                 {i === 0 ? (
                   <Image src={psLogo} alt="Power Soccer Inc." className="h-auto w-full" />
