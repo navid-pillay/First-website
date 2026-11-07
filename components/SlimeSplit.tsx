@@ -8,11 +8,10 @@ import FcCrest from "@/components/FcCrest";
 import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 
 // The draft's programs. The hero's top-right green slime (the hero leaves it
-// out with scrollAway) crawls down the page as the reader scrolls: its body
-// follows the trail behind its head along a meandering path, so it turns and
-// changes shape as it goes, with a wave running down it that bunches and
-// stretches it (more when scrolling fast), and it overshoots and recoils on
-// loose springs. When the logos reach the middle of the screen it splatters
+// out with scrollAway) rolls down the page as the reader scrolls as a ball of
+// jelly: it follows a meandering path, squashed and stretched along the way
+// it is heading (more when scrolling fast), its lumps rolling round, and it
+// overshoots and recoils on loose springs. When the logos reach the middle of the screen it splatters
 // into two splats, one behind each logo. Scrolling back pulls it together.
 //
 // The slime is 22 gooey circles on one fixed layer, simulated in page
@@ -21,8 +20,8 @@ import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 // softer than the head's, so the body lags, stretches and wobbles.
 
 const N = 22;
-const STIFF_HEAD = 70, STIFF_TAIL = 26; // loose springs, per second², head to tail
-const DAMPING = 4.8; // low, so it overshoots and wobbles back like jelly
+const STIFF_HEAD = 150, STIFF_TAIL = 110; // loose springs, per second², front to back
+const DAMPING = 8; // low, so it overshoots and wobbles back like jelly
 const DRAG = 7; // how much of the cursor's movement a circle picks up
 const REACH = 14; // px past a circle's edge that still counts as touching
 const SPLAT_SIZE = 0.95; // a splat's size, relative to its logo slot
@@ -131,31 +130,29 @@ export default function SlimeSplit() {
         a = b;
       }
 
-      // Scroll speed stretches the body.
+      // Scroll speed squashes and stretches the ball.
       speed += (Math.abs(sy - lastSy) / Math.max(1 / 120, dtFrame) - speed) * 0.15;
       lastSy = sy;
       const kd = phone ? 0.6 : 1;
-      const stretch = 1 + Math.min(0.9, speed / 1600);
-      // Crawling: a wave runs down the body, bunching and stretching it like an
-      // inchworm, driven by how far it has travelled (and a slow idle squirm).
-      const phase = (q * length) / 22 + ((now - t0) / 1000) * 1.1;
-      const kt = k * 1.15;
-      let along = 0;
+      // Which way it is heading (it turns as the path curves).
+      const here = path(q), ahead = path(q + 0.01), behind = path(q - 0.01);
+      let ux = ahead.x - behind.x, uy = ahead.y - behind.y;
+      const ul = Math.hypot(ux, uy);
+      if (ul < 1e-3) { ux = 0; uy = 1; } else { ux /= ul; uy /= ul; }
+      // Rolls as it travels (and breathes a little at rest).
+      const phase = (q * length) / 40 + ((now - t0) / 1000) * 0.9;
+      // Stretched along its heading when moving fast, plus a slow wobble.
+      const stretch = 1 + Math.min(0.3, speed / 3000) + 0.07 * Math.sin(phase * 1.7);
+      const R = 44 * kd; // radius of the ball the lumps sit in
       for (let j = 0; j < N; j++) {
         const i = CHAIN[j];
         const [cx, cy, cr] = SHAPE[i];
-        // Each link sits on the trail behind the head, so the body turns as it goes.
-        if (j > 0) along += 7.5 * kd * stretch * (1 + 0.55 * Math.sin(phase - j * 0.6));
-        const at = path(q - along / (length || 1));
-        const ahead = path(q - along / (length || 1) + 0.004);
-        let ux = ahead.x - at.x, uy = ahead.y - at.y;
-        const ul = Math.hypot(ux, uy);
-        if (ul < 1e-3) { ux = 0; uy = 1; } else { ux /= ul; uy /= ul; }
-        // Lumps on alternate sides, and a squirm across the body.
-        const side = (j % 2 ? 1 : -1) * cr * kt * 0.35 + Math.sin(phase * 0.7 - j * 0.4) * 6 * kd;
-        const sx = at.x - uy * side, syy = at.y + ux * side;
-        const body = Math.sin(Math.PI * (j + 0.5) / N);
-        const sr = kt * (20 + 18 * body) * (1 + 0.2 * Math.sin(phase * 1.3 - j * 0.7)) / Math.sqrt(stretch);
+        // Travelling: the lumps pack into a ball (a sunflower spiral), rolling
+        // round as it moves, squashed and stretched along its heading.
+        const rr = Math.sqrt((j + 0.5) / N), th = j * 2.39996 + phase * 0.6;
+        const a = Math.cos(th) * rr * R * stretch, b = Math.sin(th) * rr * R / Math.sqrt(stretch);
+        const sx = here.x + ux * a - uy * b, syy = here.y + uy * a + ux * b;
+        const sr = (13 + 13 * (1 - rr)) * kd * (1 + 0.15 * Math.sin(phase * 1.3 + j));
         // Splat: even links go left, odd right.
         const g = j % 2, [px, py, pr] = SPLATS[g][j >> 1], c = centres[g];
         TX[i] = lerp(lerp(L + cx * k, sx, m), c.x + (px - 150) * c.sc, s);
