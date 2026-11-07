@@ -1,5 +1,6 @@
 import HalftonePortrait from "@/components/heroes/HalftonePortrait";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
+import { COLUMN_DOTS, COLUMN_TRAILS, COLUMN_WIDTH } from "@/components/heroes/slime";
 import { at, FloodlightPhoto, Crosshair, HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -40,12 +41,6 @@ const HEADLINE_TRAILS = [
   "524,138 560,118",
   "440,262 492,248 532,270",
 ];
-
-// Beside the photo: a chain of blobs running down to the player.
-const COLUMN_DOTS: Dot[] = [
-  [60, 30, 39], [42, 92, 28], [70, 150, 46], [52, 226, 32], [78, 290, 41], [50, 360, 25], [66, 420, 34], [44, 490, 21], [96, 520, 14], [18, 200, 12],
-];
-const COLUMN_TRAILS = ["60,30 42,92 70,150 52,226 78,290 50,360 66,420 44,490"];
 
 // A small pair over the photo's top-left corner.
 const CORNER_PAIR = { viewBox: "0 0 200 70", dots: [[40, 35, 26], [100, 30, 18], [150, 40, 22], [188, 22, 8]] as Dot[], trails: ["40,35 100,30 150,40"], width: 22 };
@@ -98,8 +93,10 @@ export default function PowerFcHero({ fullScreen = false, intro = false, scrollA
         {/* Collage behind the player */}
         <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
         <FloodlightPhoto style={at(LATE_AT)} className="intro-in absolute top-[19%] left-[30%] h-[28.5%] w-[22.4%] max-[860px]:hidden" />
-        {/* Blobs running down beside the photo, and a pair over its corner */}
-        <Blobs viewBox="0 0 120 540" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={38} style={at(LATE_AT + 0.5)} className="intro-pop absolute top-[15%] left-[51.6%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />
+        {/* Blobs running down beside the photo (with scrollAway, SlimeSplit draws
+            this piece instead, so it can slither down the page), and a pair
+            over the photo's corner */}
+        {!scrollAway && <Blobs viewBox="0 0 120 540" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={COLUMN_WIDTH} style={at(LATE_AT + 0.5)} className="intro-pop absolute top-[15%] left-[51.6%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />}
         <Blobs {...CORNER_PAIR} style={at(LATE_AT + 0.6)} className="intro-pop absolute top-[26.5%] left-[26%] w-[13%] mix-blend-multiply max-[860px]:hidden" />
         {FLOATERS.map(({ className, ...blob }, i) => (
           <Blobs key={className} {...blob} style={at(LATE_AT + 0.65 + i * 0.1)} className={cn("intro-pop absolute mix-blend-multiply max-[860px]:hidden", className)} />

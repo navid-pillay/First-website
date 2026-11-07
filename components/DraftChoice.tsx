@@ -5,12 +5,12 @@ import Blobs, { type Dot } from "@/components/heroes/Blobs";
 import DotCluster from "@/components/heroes/DotCluster";
 import { Crosshair, Sparkle } from "@/components/heroes/FcHeroArt";
 import { CONTACT } from "@/lib/site";
-import HexChoice from "@/components/HexChoice";
+import SlimeSplit from "@/components/SlimeSplit";
 import { cn } from "@/lib/utils";
 
 // Below the draft hero: the hero's left rule keeps drawing down the page as
 // the reader scrolls (only then), small captions appear as the line reaches
-// them, and it passes the programs hexagon (HexChoice), which sits mid-page.
+// them, and it passes the programs (SlimeSplit), which sit mid-page.
 // The draft stands on its own: nothing links to the old site's pages.
 
 // The line's tip sits this far down the window, so it is drawn as you scroll.
@@ -131,8 +131,8 @@ export default function DraftChoice() {
         ))}
         </div>
 
-        {/* The programs: six dots from the player gather into a spinning hexagon */}
-        <HexChoice />
+        {/* The programs: the hero's slime slithers down and splats behind the logos */}
+        <SlimeSplit />
       </div>
     </section>
   );
