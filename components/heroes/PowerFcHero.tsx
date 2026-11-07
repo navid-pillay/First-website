@@ -80,7 +80,7 @@ function Line({ n, rule, text, children }: { n: string; rule: number; text: numb
 // the hero clips only sideways).
 export default function PowerFcHero({ fullScreen = false, intro = false, scrollAway = false }: { fullScreen?: boolean; intro?: boolean; scrollAway?: boolean }) {
   return (
-    <section className={cn("relative bg-paper", scrollAway ? "overflow-x-clip" : "overflow-hidden", intro && "hero-intro")}>
+    <section data-hero className={cn("relative bg-paper", scrollAway ? "overflow-x-clip" : "overflow-hidden", intro && "hero-intro")}>
       <div className={cn(
           "relative mx-auto h-[min(calc(100svh-76px),860px)] min-h-[560px] w-full max-w-[1440px] max-[860px]:h-auto max-[860px]:min-h-[min(calc(100svh-110px),780px)]",
           fullScreen && "h-svh",

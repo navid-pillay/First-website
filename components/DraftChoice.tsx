@@ -1,20 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
-import psLogo from "@/assets/power-soccer-logo.png";
-import FcCrest from "@/components/FcCrest";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
 import DotCluster from "@/components/heroes/DotCluster";
 import { Crosshair, Sparkle } from "@/components/heroes/FcHeroArt";
 import { CONTACT } from "@/lib/site";
+import HexChoice from "@/components/HexChoice";
 import { cn } from "@/lib/utils";
 
 // Below the draft hero: the hero's left rule keeps drawing down the page as
 // the reader scrolls (only then), small captions appear as the line reaches
-// them, and it passes the two programs, which sit mid-page. The draft stands
-// on its own: the logos don't link anywhere yet (the old site's pages are not
-// part of it).
+// them, and it passes the programs hexagon (HexChoice), which sits mid-page.
+// The draft stands on its own: nothing links to the old site's pages.
 
 // The line's tip sits this far down the window, so it is drawn as you scroll.
 const TIP = 0.72;
@@ -24,18 +21,6 @@ const CAPTIONS: { top: string; lines: [string, string] }[] = [
   { top: "30%", lines: ["Power Soccer Inc.", "Training & soccer schools since 1996"] },
   { top: "52%", lines: ["Power FC", "High performance academy since 2005"] },
   { top: "74%", lines: ["Toronto, ON", "Choose where to start"] },
-];
-
-// Blobs behind each logo (viewBox 0 0 300 300; the logo sits in the middle).
-const BEHIND: { dots: Dot[]; trails: string[] }[] = [
-  {
-    dots: [[150, 150, 78], [84, 112, 44], [224, 104, 40], [222, 206, 50], [96, 214, 36], [150, 46, 24], [262, 160, 22], [40, 160, 16], [176, 270, 18], [276, 52, 10], [30, 250, 9]],
-    trails: ["84,112 150,150 224,104", "96,214 150,150 222,206"],
-  },
-  {
-    dots: [[150, 150, 74], [206, 88, 46], [92, 92, 34], [86, 204, 48], [214, 214, 38], [150, 262, 24], [268, 140, 18], [34, 140, 20], [150, 34, 14], [252, 268, 10], [44, 54, 9]],
-    trails: ["92,92 150,150 206,88", "86,204 150,150 214,214"],
-  },
 ];
 
 // Loose blobs floating at the edges, like the hero's corners (wide screens).
@@ -59,11 +44,6 @@ const BAND = [
   ["Power FC Academy", "Est. 2005"],
   [CONTACT.addressLines[0], CONTACT.addressLines[1]],
   [CONTACT.email, CONTACT.phone],
-];
-
-const PROGRAMS = [
-  { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools" },
-  { index: "02", name: "Power FC", tagline: "High Performance Academy" },
 ];
 
 export default function DraftChoice() {
@@ -98,7 +78,7 @@ export default function DraftChoice() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-x-clip">
       <div className="relative mx-auto w-full max-w-[1440px] pb-[45svh]">
         {/* Poster details, as in the hero */}
         <svg aria-hidden="true" viewBox="0 0 2000 2000" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" fill="none">
@@ -151,38 +131,8 @@ export default function DraftChoice() {
         ))}
         </div>
 
-        {/* The choice */}
-        <div className="relative flex flex-col items-center gap-10 px-[6%] max-[860px]:pr-5 max-[860px]:pl-8">
-          <p className="m-0 flex w-full max-w-[760px] items-center gap-4 font-mono text-[0.75rem] font-bold uppercase tracking-[0.2em] whitespace-nowrap text-ink/70">
-            <span className="h-px flex-1 bg-ink/40" />
-            03 / Select a program &darr;
-            <span className="h-px flex-1 bg-ink/40" />
-          </p>
-          <div className="flex items-start justify-center gap-[clamp(2rem,9vw,9rem)] max-sm:flex-col max-sm:items-center max-sm:gap-14">
-            {PROGRAMS.map((p, i) => (
-              <div key={p.name} className="group flex flex-col items-center gap-6 text-ink">
-                <span className="relative grid aspect-square w-[clamp(170px,22vw,280px)] place-items-center">
-                  <Blobs viewBox="0 0 300 300" {...BEHIND[i]} width={46} className="absolute -inset-[18%] h-[136%] w-[136%] transition-transform duration-500 group-hover:scale-105" />
-                  {i === 0 ? (
-                    <Image src={psLogo} alt="Power Soccer Inc." className="relative h-auto w-full transition-transform duration-300 group-hover:-translate-y-1.5" />
-                  ) : (
-                    <span className="relative block w-[62%] transition-transform duration-300 group-hover:-translate-y-1.5">
-                      <FcCrest title="Power FC" className="block h-auto w-full drop-shadow-[8px_10px_0_rgba(13,15,14,0.9)]" />
-                    </span>
-                  )}
-                </span>
-                <span className="flex flex-col items-center gap-1 text-center">
-                  <span className="font-mono text-[0.72rem] font-bold tracking-[0.16em] text-ink/60">[{p.index}]</span>
-                  <strong className={cn(
-                    "font-display text-[clamp(1.2rem,2.2vw,1.6rem)] font-normal uppercase leading-none",
-                    "group-hover:underline group-hover:decoration-ink group-hover:decoration-2 group-hover:underline-offset-[6px]",
-                  )}>{p.name}</strong>
-                  <span className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink/70">{p.tagline}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* The programs: six dots from the player gather into a spinning hexagon */}
+        <HexChoice />
       </div>
     </section>
   );
