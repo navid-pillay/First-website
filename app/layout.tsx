@@ -32,7 +32,7 @@ const buildId = process.env.NEXT_PUBLIC_BUILD_ID || "";
 // Runs before the page shows. Marks that JavaScript is on, and (in the built
 // site) sends visitors to the intro when they refresh an inner page or arrive
 // on one from outside the site, so the intro is always the first thing seen.
-// The /draft page is left out so it can be opened from a shared link.
+// The /draft pages are left out so they can be opened from a shared link.
 const bootScript = `(function () {
   document.documentElement.classList.add("js");
   if (!${gateEnabled}) return;
@@ -40,7 +40,7 @@ const bootScript = `(function () {
   var path = location.pathname.slice(base.length) || "/";
   if (path === "/" || path === "/index.html") return;
   // The draft page is shared on its own, so it opens directly.
-  if (path === "/draft" || path === "/draft/" || path === "/draft.html") return;
+  if (path === "/draft" || path.indexOf("/draft/") === 0 || path === "/draft.html") return;
   var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
   var type = nav ? nav.type : "navigate";
   var fromSite = false;

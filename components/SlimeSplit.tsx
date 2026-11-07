@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useId, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import psLogo from "@/assets/power-soccer-logo.png";
@@ -27,8 +28,8 @@ const REACH = 14; // px past a circle's edge that still counts as touching
 const SPLAT_SIZE = 0.95; // a splat's size, relative to its logo slot
 
 const PROGRAMS = [
-  { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools" },
-  { index: "02", name: "Power FC", tagline: "High Performance Academy" },
+  { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", href: "/draft/power-soccer/" },
+  { index: "02", name: "Power FC", tagline: "High Performance Academy", href: "/draft/power-fc/" },
 ];
 
 const noop = () => () => {};
@@ -259,12 +260,12 @@ export default function SlimeSplit() {
       </p>
       <div className="flex items-start justify-center gap-[clamp(2rem,9vw,9rem)] max-sm:flex-col max-sm:items-center max-sm:gap-14">
         {PROGRAMS.map((p, i) => (
-          <div key={p.name} className="flex flex-col items-center gap-6 text-ink">
+          <Link key={p.name} href={p.href} className="group flex flex-col items-center gap-6 text-ink no-underline">
             {/* The splat lands centred on this slot; the logo pops in over it */}
             <span ref={(el) => { slotRefs.current[i] = el; }} className="relative z-30 grid aspect-square w-[clamp(170px,22vw,280px)] place-items-center">
               <span
                 ref={(el) => { logoRefs.current[i] = el; }}
-                className="grid w-full scale-50 place-items-center opacity-0 transition-[opacity,scale] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] data-on:scale-100 data-on:opacity-100"
+                className="grid w-full scale-50 place-items-center opacity-0 transition-[opacity,scale,translate] duration-500 group-hover:-translate-y-1.5 ease-[cubic-bezier(0.34,1.56,0.64,1)] data-on:scale-100 data-on:opacity-100"
               >
                 {i === 0 ? (
                   <Image src={psLogo} alt="Power Soccer Inc." className="h-auto w-full" />
@@ -275,10 +276,10 @@ export default function SlimeSplit() {
             </span>
             <span className="flex flex-col items-center gap-1 text-center">
               <span className="font-mono text-[0.72rem] font-bold tracking-[0.16em] text-ink/60">[{p.index}]</span>
-              <strong className="font-display text-[clamp(1.2rem,2.2vw,1.6rem)] font-normal uppercase leading-none">{p.name}</strong>
+              <strong className="font-display text-[clamp(1.2rem,2.2vw,1.6rem)] font-normal uppercase leading-none group-hover:underline group-hover:decoration-ink group-hover:decoration-2 group-hover:underline-offset-[6px] group-focus-visible:underline">{p.name}</strong>
               <span className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink/70">{p.tagline}</span>
             </span>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
