@@ -80,14 +80,21 @@ export default function SlimeSplit() {
   // (mouse only; touch just opens the page). shown: bubbles mounted so far.
   const [hovered, setHovered] = useState<number | null>(null);
   const [shown, setShown] = useState<boolean[]>([false, false]);
-  const [bubble, setBubble] = useState(360);
+  const [bubble, setBubble] = useState(480);
+  const [bubbleAt, setBubbleAt] = useState<[number, number]>([0, 0]);
   const hoverTimer = useRef(0);
   const openPreview = (i: number) => (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     window.clearTimeout(hoverTimer.current);
     hoverTimer.current = window.setTimeout(() => {
-      const w = slotRefs.current[i]?.getBoundingClientRect().width ?? 280;
-      setBubble(Math.round(w * 1.3));
+      const r = slotRefs.current[i]?.getBoundingClientRect();
+      if (!r) return;
+      const size = Math.round(Math.min(r.width * 1.75, window.innerWidth * 0.36));
+      // Its spot: beside the logo, at the middle height of the screen.
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const tx = cx + (i === 0 ? -1 : 1) * size * 0.4, ty = window.innerHeight * 0.52;
+      setBubble(size);
+      setBubbleAt([tx - cx, ty - cy]);
       setShown((sh) => (sh[i] ? sh : sh.map((v, k) => v || k === i)));
       setHovered(i);
     }, PREVIEW_DELAY);
@@ -287,7 +294,7 @@ export default function SlimeSplit() {
           <Link key={p.name} href={p.href} onPointerEnter={openPreview(i)} onPointerLeave={closePreview} className="group flex flex-col items-center gap-6 text-ink no-underline">
             {/* The splat lands centred on this slot; the logo pops in over it */}
             <span ref={(el) => { slotRefs.current[i] = el; }} className="relative z-30 grid aspect-square w-[clamp(170px,22vw,280px)] place-items-center">
-              {shown[i] && <ProgramBubble program={p.key} open={hovered === i} size={bubble} offset={[(i === 0 ? -1 : 1) * bubble * 0.62, -bubble * 0.12]} />}
+              {shown[i] && <ProgramBubble program={p.key} open={hovered === i} size={bubble} offset={bubbleAt} />}
               <span
                 ref={(el) => { logoRefs.current[i] = el; }}
                 className="relative grid w-full scale-50 place-items-center opacity-0 transition-[opacity,scale,translate] duration-500 group-hover:-translate-y-1.5 ease-[cubic-bezier(0.34,1.56,0.64,1)] data-on:scale-100 data-on:opacity-100"
