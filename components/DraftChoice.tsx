@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
@@ -12,7 +11,9 @@ import { cn } from "@/lib/utils";
 
 // Below the draft hero: the hero's left rule keeps drawing down the page as
 // the reader scrolls (only then), small captions appear as the line reaches
-// them, and it passes the two programs to choose from, which sit mid-page.
+// them, and it passes the two programs, which sit mid-page. The draft stands
+// on its own: the logos don't link anywhere yet (the old site's pages are not
+// part of it).
 
 // The line's tip sits this far down the window, so it is drawn as you scroll.
 const TIP = 0.72;
@@ -59,8 +60,8 @@ const BAND = [
 ];
 
 const PROGRAMS = [
-  { href: "/power-soccer/", index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools" },
-  { href: "/power-fc/", index: "02", name: "Power FC", tagline: "High Performance Academy" },
+  { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools" },
+  { index: "02", name: "Power FC", tagline: "High Performance Academy" },
 ];
 
 export default function DraftChoice() {
@@ -157,7 +158,7 @@ export default function DraftChoice() {
           </p>
           <div className="flex items-start justify-center gap-[clamp(2rem,9vw,9rem)] max-sm:flex-col max-sm:items-center max-sm:gap-14">
             {PROGRAMS.map((p, i) => (
-              <Link key={p.href} href={p.href} className="group flex flex-col items-center gap-6 text-ink no-underline">
+              <div key={p.name} className="group flex flex-col items-center gap-6 text-ink">
                 <span className="relative grid aspect-square w-[clamp(170px,22vw,280px)] place-items-center">
                   <Blobs viewBox="0 0 300 300" {...BEHIND[i]} width={46} className="absolute -inset-[18%] h-[136%] w-[136%] transition-transform duration-500 group-hover:scale-105" />
                   {i === 0 ? (
@@ -172,11 +173,11 @@ export default function DraftChoice() {
                   <span className="font-mono text-[0.72rem] font-bold tracking-[0.16em] text-ink/60">[{p.index}]</span>
                   <strong className={cn(
                     "font-display text-[clamp(1.2rem,2.2vw,1.6rem)] font-normal uppercase leading-none",
-                    "group-hover:underline group-hover:decoration-ink group-hover:decoration-2 group-hover:underline-offset-[6px] group-focus-visible:underline",
+                    "group-hover:underline group-hover:decoration-ink group-hover:decoration-2 group-hover:underline-offset-[6px]",
                   )}>{p.name}</strong>
                   <span className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink/70">{p.tagline}</span>
                 </span>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
