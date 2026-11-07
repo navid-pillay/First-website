@@ -1,6 +1,6 @@
 import HalftonePortrait from "@/components/heroes/HalftonePortrait";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
-import { COLUMN_DOTS, COLUMN_TRAILS, COLUMN_WIDTH } from "@/components/heroes/slime";
+import { COLUMN_DOTS, COLUMN_TRAILS, COLUMN_WIDTH, TRAVELLER } from "@/components/heroes/slime";
 import { at, FloodlightPhoto, Crosshair, HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -46,13 +46,14 @@ const HEADLINE_TRAILS = [
 const CORNER_PAIR = { viewBox: "0 0 200 70", dots: [[40, 35, 26], [100, 30, 18], [150, 40, 22], [188, 22, 8]] as Dot[], trails: ["40,35 100,30 150,40"], width: 22 };
 
 // Wide screens: loose blobs floating in the corners, some bleeding off the edge.
-const FLOATERS: { className: string; viewBox: string; dots: Dot[]; trails: string[]; width: number }[] = [
+const FLOATERS: { className: string; viewBox: string; dots: Dot[]; trails: string[]; width: number; travels?: boolean }[] = [
   // Top left, under the caption band
   { className: "top-[11%] left-[11%] w-[13%]", viewBox: "0 0 260 150", dots: [[60, 60, 34], [122, 44, 22], [170, 74, 30], [222, 50, 12], [96, 112, 14], [20, 116, 8]], trails: ["60,60 122,44 170,74"], width: 26 },
   // Bottom left, running off the bottom edge
   { className: "bottom-[4%] left-[2%] w-[19%]", viewBox: "0 0 380 160", dots: [[40, 120, 40], [110, 96, 28], [176, 126, 46], [250, 104, 26], [306, 128, 34], [356, 70, 12], [214, 40, 14], [124, 30, 8]], trails: ["40,120 110,96 176,126 250,104 306,128"], width: 34 },
-  // Top right, running off the right edge
-  { className: "top-[9%] right-[-1.2%] w-[11%]", viewBox: "0 0 220 220", dots: [[170, 50, 42], [118, 96, 26], [160, 150, 36], [196, 196, 18], [70, 60, 14], [84, 172, 10]], trails: ["170,50 118,96 160,150 196,196"], width: 30 },
+  // Top right, running off the right edge (with scrollAway, SlimeSplit draws
+  // this one instead, so it can travel down the page)
+  { className: "top-[9%] right-[-1.2%] w-[11%]", ...TRAVELLER, travels: true },
   // Right edge, droplets around the crosshair
   { className: "top-[57%] right-[1%] w-[6%]", viewBox: "0 0 120 140", dots: [[70, 40, 24], [44, 84, 16], [84, 108, 12], [20, 30, 8]], trails: ["70,40 44,84"], width: 18 },
 ];
@@ -93,12 +94,10 @@ export default function PowerFcHero({ fullScreen = false, intro = false, scrollA
         {/* Collage behind the player */}
         <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
         <FloodlightPhoto style={at(LATE_AT)} className="intro-in absolute top-[19%] left-[30%] h-[28.5%] w-[22.4%] max-[860px]:hidden" />
-        {/* Blobs running down beside the photo (with scrollAway, SlimeSplit draws
-            this piece instead, so it can slither down the page), and a pair
-            over the photo's corner */}
-        {!scrollAway && <Blobs viewBox="0 0 120 540" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={COLUMN_WIDTH} style={at(LATE_AT + 0.5)} className="intro-pop absolute top-[15%] left-[51.6%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />}
+        {/* Blobs running down beside the photo, and a pair over its corner */}
+        <Blobs viewBox="0 0 120 540" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={COLUMN_WIDTH} style={at(LATE_AT + 0.5)} className="intro-pop absolute top-[15%] left-[51.6%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />
         <Blobs {...CORNER_PAIR} style={at(LATE_AT + 0.6)} className="intro-pop absolute top-[26.5%] left-[26%] w-[13%] mix-blend-multiply max-[860px]:hidden" />
-        {FLOATERS.map(({ className, ...blob }, i) => (
+        {FLOATERS.map(({ className, travels, ...blob }, i) => !(travels && scrollAway) && (
           <Blobs key={className} {...blob} style={at(LATE_AT + 0.65 + i * 0.1)} className={cn("intro-pop absolute mix-blend-multiply max-[860px]:hidden", className)} />
         ))}
         <span aria-hidden="true" style={at(LATE_AT + 0.2)} className="intro-in absolute right-[0.8%] bottom-0 h-[25%] w-[10%] bg-[#9fa29f] max-[860px]:hidden" />

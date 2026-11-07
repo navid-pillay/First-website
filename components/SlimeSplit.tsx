@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useEffect, useId, useRef } from "react";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
-import { COLUMN_DOTS, COLUMN_TRAILS, COLUMN_WIDTH, SPLATS } from "@/components/heroes/slime";
+import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 
-// The draft's programs. The green slime beside the hero's photo (the hero
-// leaves it out with scrollAway) slithers down the page as the reader scrolls,
-// wiggling side to side and stretching, overshooting and recoiling on its
-// springs. When the logos reach the middle of the screen it splatters into
+// The draft's programs. The hero's top-right green slime (the hero leaves it
+// out with scrollAway) travels down the page as the reader scrolls, as one
+// rounded blob wobbling side to side and stretching, overshooting and
+// recoiling on its springs. When the logos reach the middle of the screen it splatters into
 // two splats, one behind each logo. Scrolling back pulls it together again.
 //
 // The slime is 22 gooey circles on one fixed layer, simulated in page
@@ -36,23 +36,26 @@ const smooth = (a: number, b: number, x: number) => {
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-// The column's shape as 22 circles: its own 10, plus 12 spread evenly along
-// its trail (the thick stroke between them), in the column's viewBox units.
-const COLUMN_SHAPE: [number, number, number][] = (() => {
-  const pts = COLUMN_TRAILS[0].split(" ").map((p) => p.split(",").map(Number));
+// The piece's shape as 22 circles: its own dots, plus the rest spread evenly
+// along its trail (the thick stroke between them), in its viewBox units.
+const SHAPE: [number, number, number][] = (() => {
+  const pts = TRAVELLER.trails[0].split(" ").map((p) => p.split(",").map(Number));
   const segs = pts.slice(1).map((b, i) => Math.hypot(b[0] - pts[i][0], b[1] - pts[i][1]));
   const total = segs.reduce((a, b) => a + b, 0);
   const extra: [number, number, number][] = [];
-  for (let k = 1; k <= N - COLUMN_DOTS.length; k++) {
-    let d = (k / (N - COLUMN_DOTS.length + 1)) * total, s = 0;
+  const n = N - TRAVELLER.dots.length;
+  for (let k = 1; k <= n; k++) {
+    let d = (k / (n + 1)) * total, s = 0;
     while (d > segs[s]) d -= segs[s++];
     const [ax, ay] = pts[s], [bx, by] = pts[s + 1], f = d / segs[s];
-    extra.push([ax + (bx - ax) * f, ay + (by - ay) * f, COLUMN_WIDTH / 2]);
+    extra.push([ax + (bx - ax) * f, ay + (by - ay) * f, TRAVELLER.width / 2]);
   }
-  return [...COLUMN_DOTS, ...extra];
+  return [...TRAVELLER.dots, ...extra];
 })();
-// Chain order: the bottom of the column leads the way down.
-const CHAIN = COLUMN_SHAPE.map((_, i) => i).sort((a, b) => COLUMN_SHAPE[b][1] - COLUMN_SHAPE[a][1]);
+// The centre of the shape (viewBox units), and the order circles lead in:
+// bottom first, as it travels down.
+const MID = SHAPE.reduce((a, [x, y]) => [a[0] + x / N, a[1] + y / N], [0, 0]);
+const CHAIN = SHAPE.map((_, i) => i).sort((a, b) => SHAPE[b][1] - SHAPE[a][1]);
 
 export default function SlimeSplit() {
   const id = useId().replace(/:/g, "");
@@ -77,11 +80,12 @@ export default function SlimeSplit() {
       const slots = slotRefs.current.map((s) => s?.getBoundingClientRect());
       if (!inner || !slots[0] || !slots[1]) return -1;
 
-      // The column's spot in the hero (on phones, right of the slogan).
-      const k = phone ? inner.width * 0.0011 : (inner.height * 0.58) / 540;
-      const L = inner.left + (phone ? 0.72 : 0.516) * inner.width;
-      const T = inner.top + sy + (phone ? 0.5 : 0.15) * inner.height;
-      const S = { x: L + 60 * k, y: T + 270 * k };
+      // The piece's spot in the hero (on phones, where the corner blobs are
+      // hidden, right of the slogan).
+      const k = (phone ? 0.36 : TRAVELLER_SPOT.width) * inner.width / 220;
+      const L = phone ? inner.left + 0.6 * inner.width : inner.right - (TRAVELLER_SPOT.right + TRAVELLER_SPOT.width) * inner.width;
+      const T = inner.top + sy + (phone ? 0.52 : TRAVELLER_SPOT.top) * inner.height;
+      const S = { x: L + MID[0] * k, y: T + MID[1] * k };
 
       // The two splats, centred on the logo slots.
       const centres = slots.map((r) => ({ x: r!.left + r!.width / 2, y: r!.top + sy + r!.height / 2, sc: (r!.width * 1.36) / 300 }));
@@ -94,7 +98,7 @@ export default function SlimeSplit() {
       const m = smooth(0, 0.1, p); // from the column's shape into a slug
       const s = smooth(0.8, 0.97, p); // splitting into the two splats
 
-      // The path: an S-curve from the column down to between the logos.
+      // The path: an S-curve from the corner down to between the logos.
       const C1 = { x: S.x + 0.22 * vw, y: S.y + 0.35 * (M.y - S.y) };
       const C2 = { x: M.x - 0.28 * vw, y: M.y - 0.35 * (M.y - S.y) };
       const u = 1 - q;
@@ -109,13 +113,13 @@ export default function SlimeSplit() {
       const phase = q * 30 + ((now - t0) / 1000) * 1.2;
       for (let j = 0; j < N; j++) {
         const i = CHAIN[j];
-        const [cx, cy, cr] = COLUMN_SHAPE[i];
-        // Slug: trailing back from the head, slithering side to side, with
-        // bulges rippling down its body.
-        const back = j * 15 * kd;
-        const wag = Math.sin(phase - j * 0.55) * 20 * kd * (0.35 + 0.65 * (j / N));
-        const sx = hx - dx * back - dy * wag, syy = hy - dy * back + dx * wag;
-        const sr = Math.max(9, 34 - j * 1.1) * kd * (1 + 0.22 * Math.sin(phase * 0.8 - j * 0.9));
+        const [cx, cy, cr] = SHAPE[i];
+        // Travelling: the same rounded blob, a little bigger, wobbling side
+        // to side (the trailing side a beat behind) with lumps that swell.
+        const kt = k * 1.15;
+        const wag = Math.sin(phase - j * 0.35) * 14 * kd;
+        const sx = hx + (cx - MID[0]) * kt - dy * wag, syy = hy + (cy - MID[1]) * kt + dx * wag;
+        const sr = cr * kt * (1 + 0.18 * Math.sin(phase * 0.8 - j * 0.9));
         // Splat: even links go left, odd right.
         const g = j % 2, [px, py, pr] = SPLATS[g][j >> 1], c = centres[g];
         TX[i] = lerp(lerp(L + cx * k, sx, m), c.x + (px - 150) * c.sc, s);

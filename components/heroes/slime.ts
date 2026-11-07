@@ -3,12 +3,23 @@ import type { Dot } from "@/components/heroes/Blobs";
 // Shared green slime shapes.
 
 // Beside the hero's photo: a chain of blobs running down to the player
-// (viewBox 0 0 120 540). On the draft this piece slithers down the page.
+// (viewBox 0 0 120 540).
 export const COLUMN_DOTS: Dot[] = [
   [60, 30, 39], [42, 92, 28], [70, 150, 46], [52, 226, 32], [78, 290, 41], [50, 360, 25], [66, 420, 34], [44, 490, 21], [96, 520, 14], [18, 200, 12],
 ];
 export const COLUMN_TRAILS = ["60,30 42,92 70,150 52,226 78,290 50,360 66,420 44,490"];
 export const COLUMN_WIDTH = 38; // stroke width of the trails
+
+// The hero's top-right blob, running off the right edge (viewBox 0 0 220 220,
+// placed at top 9%, right -1.2%, 11% of the hero's width). On the draft this
+// piece travels down the page and splats behind the two logos.
+export const TRAVELLER = {
+  viewBox: "0 0 220 220",
+  dots: [[170, 50, 42], [118, 96, 26], [160, 150, 36], [196, 196, 18], [70, 60, 14], [84, 172, 10]] as Dot[],
+  trails: ["170,50 118,96 160,150 196,196"],
+  width: 30,
+};
+export const TRAVELLER_SPOT = { top: 0.09, right: -0.012, width: 0.11 };
 
 // The splats behind the two program logos (viewBox 0 0 300 300).
 export const SPLATS: Dot[][] = [
