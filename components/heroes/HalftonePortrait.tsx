@@ -9,8 +9,8 @@ import { useEffect, useRef } from "react";
 // already printed react: the player, his rim light, the light streaks and the
 // small ink clusters by the floodlight photo. Bare paper stays still.
 const LENS_RADIUS = 38; // px: how far from the cursor dots swell
-const HOVER = 0.6; // how much dots swell under the cursor (1 = double size)
-const PUSH = 4; // px: how far dots bulge outward from the cursor
+const HOVER = 0.42; // how much dots swell under the cursor (1 = double size)
+const PUSH = 3; // px: how far dots bulge outward from the cursor
 
 // Spring tuning (per second). Low damping relative to stiffness = more wobble.
 const DOT_STIFFNESS = 170; // each dot's size and position spring
