@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     // Project-specific: bundled skills and generated map worker.
     ".claude/**",
     "public/maplibre/**",
+    // Figma board tooling (Node scripts and Figma Plugin API snippets).
+    "scripts/figma/**",
   ]),
 ]);
 
