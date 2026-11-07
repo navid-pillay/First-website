@@ -29,10 +29,13 @@ const INTRO_MS = 1400;
 
 // With `scrollAway`: the player stays in place, and as the page scrolls his
 // dots gradually get smaller and fainter, until none are left once the page
-// has scrolled SCROLL_GONE x the hero's height. The dots also taper away
-// toward the bottom of the photo, so he dissolves instead of being cut off.
+// has scrolled SCROLL_GONE x the hero's height. The canvas also runs EXTEND x
+// the hero's height, below the hero, and under the photo his shoulders carry
+// on as dots that get smaller and sparser until they dissolve (over FADE x the
+// hero's height), so he is never cut off on a flat line.
 const SCROLL_GONE = 0.9;
-const TAPER = 0.16; // share of the photo's height that tapers at its bottom
+const EXTEND = 1.5;
+const FADE = 0.42;
 
 // Black ink for the player, green for the stadium light streaks and his rim light.
 const COLORS = ["#0d0f0e", "#5ad62a", "#42e202"];
@@ -78,7 +81,8 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // Dot spacing on screen: coarse like a printed poster on wide screens.
     let sp = 10;
-    let w = 0, h = 0, cols = 0, rows = 0, raf = 0, last = 0, visible = true;
+    // h is the canvas's height; hh the hero's (they differ with scrollAway).
+    let w = 0, h = 0, hh = 0, cols = 0, rows = 0, raf = 0, last = 0, visible = true;
     const pointer = { x: 0, y: 0, inside: false };
     // The spot under the cursor: a stiff spring on position (tiny follow-through),
     // velocity for squash and stretch, and a bouncy spring on its strength.
@@ -122,8 +126,27 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
         // Lift the dark tones so his curls and shirt folds show as dot sizes.
         baseK[i] = a * Math.min(1, Math.max(0, 1.08 - Math.pow(L, 0.7) * 1.1));
       }
-      // Rim light: a green line just inside the outline and a softer halo outside.
-      for (let r = 0; r < rows; r++) {
+      // Below the photo (scrollAway only): his shoulders carry on downward,
+      // borrowing the texture of the photo's last rows, with dots that shrink
+      // and drop out until none are left.
+      const photoEnd = Math.floor((fit.y + PHOTO.height * fit.s) / sp) - 1;
+      if (scrollAway && photoEnd > 8 && photoEnd < rows - 1) {
+        const fadeRows = Math.max(6, Math.round((w < 860 ? 80 : hh * FADE) / sp));
+        for (let r = photoEnd + 1; r < rows; r++) {
+          const d = (r - photoEnd) / fadeRows;
+          const src = photoEnd - ((r - photoEnd) % 8);
+          for (let c = 0; c < cols; c++) {
+            const i = r * cols + c, j = src * cols + c;
+            alpha[i] = alpha[j];
+            if (d >= 1 || alpha[j] < 0.02 || hash(c * 1.7, r * 2.3) < d * 0.85) continue;
+            baseK[i] = baseK[j] * Math.pow(1 - d, 1.3) * (0.7 + 0.6 * noise(c * 0.21, r * 0.21));
+          }
+        }
+      }
+      // Rim light: a green line just inside the outline and a softer halo
+      // outside (not along the photo's cropped bottom edge, or below it).
+      const rimRows = scrollAway ? Math.min(rows, photoEnd - 1) : rows;
+      for (let r = 0; r < rimRows; r++) {
         for (let c = 0; c < cols; c++) {
           const i = r * cols + c;
           let near = 1, far = 0;
@@ -144,7 +167,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
 
     // Soft diagonal streaks of green light behind the player, slowly drifting.
     const streak = (x: number, y: number, t: number) => {
-      if (w >= 860 && x < w * 0.4) return 0;
+      if ((w >= 860 && x < w * 0.4) || y > hh) return 0;
       const u = x * 0.87 - y * 0.5 + t * 14, v = x * 0.5 + y * 0.87;
       const n = noise(u * 0.0032, v * 0.016) * 0.75 + noise(u * 0.009, v * 0.04 + 50) * 0.25;
       const edge = w >= 860 ? Math.min(1, (x / w - 0.4) / 0.2) : 1;
@@ -155,6 +178,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = canvas.clientWidth;
       h = canvas.clientHeight;
+      hh = scrollAway ? h / EXTEND : h;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -166,19 +190,19 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       } else {
         // Wide screens: a big player on the right, head near the top and
         // shoulders cropped by the bottom edge like a poster.
-        const sc = Math.max(w * 0.000288, (h * 0.9) / PHOTO.height);
-        fit = { s: sc, x: w * 0.68 - PHOTO.headX * sc, y: h * 0.12 - PHOTO.headTop * sc };
+        const sc = Math.max(w * 0.000288, (hh * 0.9) / PHOTO.height);
+        fit = { s: sc, x: w * 0.68 - PHOTO.headX * sc, y: hh * 0.12 - PHOTO.headTop * sc };
       }
       cols = Math.ceil(w / sp) + 1;
       rows = Math.ceil(h / sp) + 1;
       const cx: number[] = [], cy: number[] = [], cr: number[] = [];
       if (w >= 860) {
         for (const [l, t, cw, ch] of CLUSTERS) {
-          const x0 = l * w, y0 = t * h, bw = cw * w, bh = ch * h;
+          const x0 = l * w, y0 = t * hh, bw = cw * w, bh = ch * hh;
           for (let y = CLUSTER_SPACING / 2; y < bh; y += CLUSTER_SPACING) {
             for (let x = CLUSTER_SPACING / 2; x < bw; x += CLUSTER_SPACING) {
               const px = x0 + x, py = y0 + y;
-              if (COVERS.some(([a, b, c, d]) => px >= a * w && px <= (a + c) * w && py >= b * h && py <= (b + d) * h)) continue;
+              if (COVERS.some(([a, b, c, d]) => px >= a * w && px <= (a + c) * w && py >= b * hh && py <= (b + d) * hh)) continue;
               // Elliptical fade: full size to 30% of the way out, gone by 75%.
               const e = Math.hypot(x / bw - 0.5, y / bh - 0.5) * Math.SQRT2;
               const a = Math.min(1, Math.max(0, (0.75 - e) / 0.45));
@@ -259,17 +283,11 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       const y = Math.max(0, window.scrollY);
       if (y === scrollY) return false;
       scrollY = y;
-      scrollP = Math.min(1, y / (h * SCROLL_GONE || 1));
+      scrollP = Math.min(1, y / (hh * SCROLL_GONE || 1));
       return true;
     };
     const left = (x: number, y: number) =>
       scrollP === 0 ? 1 : Math.min(1, Math.max(0, (1 - scrollP) * 1.3 - hash(x * 0.37, y * 0.29) * 0.3));
-    // Taper toward the bottom of the photo (scrollAway only).
-    const taper = (y: number) => {
-      if (!scrollAway) return 1;
-      const bottom = fit.y + PHOTO.height * fit.s, range = PHOTO.height * fit.s * TAPER;
-      return Math.min(1, Math.max(0, (bottom - y) / range));
-    };
 
     const dotRadius = (rb: number, grow: number, max: number) =>
       rb < 0.35 ? 0 : Math.min(max * 1.2, rb + max * 1.1 * grow * Math.min(1, rb / (max * 0.25)));
@@ -311,7 +329,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
           }
           if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
-          const radius = dotRadius(max * k * left(x, y) * taper(y), grow, max);
+          const radius = dotRadius(max * k * left(x, y), grow, max);
           if (radius === 0) continue;
           // Dots keep their own colour as they swell.
           dot(x + ox[i], y + oy[i], radius, COLORS[type]);
@@ -385,5 +403,12 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
   }, [introAt, lateAt, scrollAway]);
 
   // Hidden until the photo is ready, then revealed by the opening animation.
-  return <canvas ref={ref} aria-hidden="true" style={{ opacity: 0 }} className={`absolute inset-0 h-full w-full ${className}`} />;
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden="true"
+      style={{ opacity: 0, height: `${(scrollAway ? EXTEND : 1) * 100}%` }}
+      className={`absolute inset-x-0 top-0 w-full ${className}`}
+    />
+  );
 }
