@@ -1,6 +1,6 @@
-:HL["/First-website/_next/static/chunks/0berxw-umhxr2.css","style"]
+:HL["/First-website/_next/static/chunks/1om1yonas53j2.css","style"]
 :HL["/First-website/_next/static/media/audiowide_latin_400-s.p.0o_bu-5778xpa.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 3:[["children",{"s":"__PAGE__","h":160}]]
 2:[["children",{"s":"power-soccer","h":96,"c":"$Q3"}]]
 1:[["children",{"s":"(site)","h":96,"c":"$Q2"}]]
-0:{"b":"9LgsmE_HqnK-qygsKIFOM","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"inIlS4MZYbRz1mpuMVPcq","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
