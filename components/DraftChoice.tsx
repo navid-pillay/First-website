@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
+import DotCluster from "@/components/heroes/DotCluster";
 import { Crosshair, Sparkle } from "@/components/heroes/FcHeroArt";
 import { CONTACT } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -45,7 +46,8 @@ const FLOATERS: { className: string; viewBox: string; dots: Dot[]; trails: strin
   { className: "top-[84%] right-[7%] w-[8%]", viewBox: "0 0 160 120", dots: [[44, 60, 24], [94, 50, 18], [130, 74, 14], [20, 20, 7]], trails: ["44,60 94,50 130,74"], width: 20 },
 ];
 
-// Small halftone dot clusters (left, top, width, height), as in the hero.
+// Small halftone dot clusters (left, top, width, height), as in the hero; the
+// dots swell under the cursor.
 const PATCHES = [
   ["38%", "11%", "13%", "11%"],
   ["16%", "50%", "9%", "9%"],
@@ -110,7 +112,7 @@ export default function DraftChoice() {
         </svg>
         <span aria-hidden="true" className="pointer-events-none absolute top-[3%] right-[6%] font-display text-[clamp(7rem,17vw,16rem)] leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(13,15,14,0.35)] max-[860px]:right-5 max-[860px]:text-[6.5rem]">02</span>
         {PATCHES.map(([left, top, width, height]) => (
-          <span key={left + top} aria-hidden="true" style={{ left, top, width, height }} className="dot-patch absolute max-[860px]:hidden" />
+          <DotCluster key={left + top} style={{ left, top, width, height }} className="absolute max-[860px]:hidden" />
         ))}
         {FLOATERS.map(({ className, ...blob }) => (
           <Blobs key={className} {...blob} className={cn("absolute mix-blend-multiply max-[860px]:hidden", className)} />

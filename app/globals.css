@@ -73,15 +73,6 @@ body::after {
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.18) 1.3px, transparent 1.7px);
 }
 
-/* Small halftone dot cluster that fades out toward its edges */
-.dot-patch {
-  pointer-events: none;
-  background-image: radial-gradient(circle, var(--color-ink) 1.6px, transparent 2px);
-  background-size: 11px 11px;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-}
-
 /* Film grain over the hero photo */
 .photo-grain {
   pointer-events: none;
