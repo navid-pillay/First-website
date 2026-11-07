@@ -20,12 +20,16 @@ const LENS_DAMPING = 48; // ...with only a touch of follow-through
 const POP_STIFFNESS = 260; // the spot pops in and out with a little bounce
 const POP_DAMPING = 14;
 
-// Opening animation: once the photo has loaded, the player slides in from
-// slightly to the right (a share of the hero's width) and fades in. In the
-// hero's longer opening sequence, the slide waits until `introAt` and the ink
+// Opening animation: once the photo has loaded, the player builds himself out
+// of dots. They start bunched and scattered near his middle and burst out to
+// their places, the inner ones first, with a little springy overshoot. In the
+// hero's longer opening sequence this waits until `introAt`, and the ink
 // clusters and light streaks fade in from `lateAt` (ms after the page opened).
-const INTRO_SHIFT = "5%";
-const INTRO_MS = 1400;
+const FORM_SPREAD = 0.5; // s between the first (central) and last (outer) dots
+const FORM_JITTER = 0.3; // s of random extra delay per dot
+const FORM_FLIGHT = 0.9; // s each dot takes to reach its place
+const FORM_TOTAL = FORM_SPREAD + FORM_JITTER + FORM_FLIGHT;
+const easeOutBack = (t: number) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2);
 
 // With `scrollAway`: the player stays in place, and as the page scrolls his
 // dots gradually get smaller and fainter, until none are left once the page
@@ -94,6 +98,8 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
     // after them come the ink cluster dots, with their size in clusterR.
     let X = new Float32Array(0), Y = new Float32Array(0), clusterR = new Float32Array(0);
     let settled = true;
+    // Forming the player from dots: 0 = waiting for the photo / introAt.
+    let formStart = 0, formDone = reduce;
     // How the picture covers the canvas: scale, and offset so the player sits
     // to the right of the text on wide screens and in the middle on phones.
     let fit = { s: 1, x: 0, y: 0 };
@@ -316,6 +322,10 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
         if (radius > 0) dot(X[i] + ox[i], Y[i] + oy[i], radius, COLORS[0]);
       }
       ctx.globalAlpha = fade;
+      // Seconds into forming the player (-1 = not started), and his middle.
+      const fsec = formDone ? Infinity : formStart ? (performance.now() - formStart) / 1000 : -1;
+      if (fsec > FORM_TOTAL) formDone = true;
+      const CX = fit.x + PHOTO.headX * fit.s, CY = fit.y + PHOTO.height * fit.s * 0.45, span = PHOTO.height * fit.s * 0.7;
       for (let r = 0; r < rows; r++) {
         const y = r * sp;
         for (let c = 0; c < cols; c++) {
@@ -323,16 +333,29 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
           const i = r * cols + c;
           // The photo's dot here (or a light streak behind him), breathing slightly.
           let k = baseK[i], type = baseT[i];
+          let px = x, py = y, form = 1;
+          if (!formDone && (k > 0 || type === 2)) {
+            if (fsec < 0) continue;
+            const delay = Math.min(1, Math.hypot(x - CX, y - CY) / span) * FORM_SPREAD + hash(c * 1.3 + 7, r * 0.7) * FORM_JITTER;
+            const e = Math.min(1, (fsec - delay) / FORM_FLIGHT);
+            if (e <= 0) continue;
+            // From a scattered spot near his middle out to its place.
+            const ang = hash(c * 2.1, r * 1.7 + 3) * Math.PI * 2, jit = 25 + hash(c + 11, r * 3.1) * 70;
+            const sx = CX + (x - CX) * 0.1 + Math.cos(ang) * jit, sy = CY + (y - CY) * 0.1 + Math.sin(ang) * jit;
+            const ee = easeOutBack(e);
+            px = sx + (x - sx) * ee; py = sy + (y - sy) * ee;
+            form = Math.min(1, e * 1.6);
+          }
           if (k < 0.04 && type === 0) {
             const sk = streak(x, y, t);
             if (sk > 0) { k = sk * 0.8 * late; type = 1; }
           }
           if (k > 0) k *= 0.93 + 0.14 * noise(c * 0.09 + t * 0.35, r * 0.09 - t * 0.2);
           const grow = g[i];
-          const radius = dotRadius(max * k * left(x, y), grow, max);
+          const radius = dotRadius(max * k * left(x, y) * form, grow, max);
           if (radius === 0) continue;
           // Dots keep their own colour as they swell.
-          dot(x + ox[i], y + oy[i], radius, COLORS[type]);
+          dot(px + ox[i], py + oy[i], radius, COLORS[type]);
         }
       }
     };
@@ -342,7 +365,7 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
       // ~30fps is plenty for the slow drift; run every frame while springs
       // move or the page scrolls.
       const scrolled = followScroll();
-      if (!visible || (!scrolled && now - last < (settled ? 33 : 0))) return;
+      if (!visible || (!scrolled && now - last < (settled && formDone ? 33 : 0))) return;
       let dt = last ? (now - last) / 1000 : 1 / 60;
       last = now;
       dt = Math.min(dt, 1 / 20);
@@ -366,14 +389,9 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
     };
     const onLeave = () => { pointer.inside = false; };
 
-    let intro: Animation | null = null;
     const reveal = () => {
       canvas.style.opacity = "1";
-      if (reduce) return;
-      intro = canvas.animate(
-        [{ transform: `translateX(${INTRO_SHIFT})`, opacity: 0 }, { transform: "none", opacity: 1 }],
-        { duration: INTRO_MS, delay: Math.max(0, introAt - performance.now()), easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "backwards" },
-      );
+      if (!formDone) formStart = Math.max(performance.now(), introAt);
     };
     photo.onload = () => { sample(); draw(last / 1000); reveal(); };
     photo.onerror = reveal;
@@ -393,7 +411,6 @@ export default function HalftonePortrait({ className = "", introAt = 0, lateAt =
 
     return () => {
       cancelAnimationFrame(raf);
-      intro?.cancel();
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("blur", onLeave);

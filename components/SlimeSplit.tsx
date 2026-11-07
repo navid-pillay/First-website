@@ -8,10 +8,12 @@ import FcCrest from "@/components/FcCrest";
 import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 
 // The draft's programs. The hero's top-right green slime (the hero leaves it
-// out with scrollAway) travels down the page as the reader scrolls, as one
-// rounded blob wobbling side to side and stretching, overshooting and
-// recoiling on its springs. When the logos reach the middle of the screen it splatters into
-// two splats, one behind each logo. Scrolling back pulls it together again.
+// out with scrollAway) crawls down the page as the reader scrolls: its body
+// follows the trail behind its head along a meandering path, so it turns and
+// changes shape as it goes, with a wave running down it that bunches and
+// stretches it (more when scrolling fast), and it overshoots and recoils on
+// loose springs. When the logos reach the middle of the screen it splatters
+// into two splats, one behind each logo. Scrolling back pulls it together.
 //
 // The slime is 22 gooey circles on one fixed layer, simulated in page
 // coordinates (so it stays put on the page while it rests). Each has its own
@@ -19,8 +21,8 @@ import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 // softer than the head's, so the body lags, stretches and wobbles.
 
 const N = 22;
-const STIFF_HEAD = 120, STIFF_TAIL = 48; // springs, per second², head to tail
-const DAMPING = 6.5; // low, so it overshoots and wobbles back
+const STIFF_HEAD = 70, STIFF_TAIL = 26; // loose springs, per second², head to tail
+const DAMPING = 4.8; // low, so it overshoots and wobbles back like jelly
 const DRAG = 7; // how much of the cursor's movement a circle picks up
 const REACH = 14; // px past a circle's edge that still counts as touching
 const SPLAT_SIZE = 0.95; // a splat's size, relative to its logo slot
@@ -76,7 +78,7 @@ export default function SlimeSplit() {
     const X = new Float32Array(N), Y = new Float32Array(N), R = new Float32Array(N);
     const VX = new Float32Array(N), VY = new Float32Array(N);
     const TX = new Float32Array(N), TY = new Float32Array(N), TR = new Float32Array(N);
-    let raf = 0, last = 0, started = false;
+    let raf = 0, last = 0, started = false, lastSy = window.scrollY, speed = 0, dtFrame = 1 / 60;
     const t0 = performance.now();
 
     // Work out where every circle should be right now (page coordinates).
@@ -105,28 +107,54 @@ export default function SlimeSplit() {
       const m = smooth(0, 0.1, p); // from the column's shape into a slug
       const s = smooth(0.8, 0.97, p); // splitting into the two splats
 
-      // The path: an S-curve from the corner down to between the logos.
+      // The path: an S-curve from the corner down to between the logos, with
+      // a meander, so the slime keeps changing direction as it crawls.
       const C1 = { x: S.x + 0.22 * vw, y: S.y + 0.35 * (M.y - S.y) };
       const C2 = { x: M.x - 0.28 * vw, y: M.y - 0.35 * (M.y - S.y) };
-      const u = 1 - q;
-      const hx = u * u * u * S.x + 3 * u * u * q * C1.x + 3 * u * q * q * C2.x + q * q * q * M.x;
-      const hy = u * u * u * S.y + 3 * u * u * q * C1.y + 3 * u * q * q * C2.y + q * q * q * M.y;
-      let dx = 3 * u * u * (C1.x - S.x) + 6 * u * q * (C2.x - C1.x) + 3 * q * q * (M.x - C2.x);
-      let dy = 3 * u * u * (C1.y - S.y) + 6 * u * q * (C2.y - C1.y) + 3 * q * q * (M.y - C2.y);
-      const dl = Math.hypot(dx, dy) || 1;
-      dx /= dl; dy /= dl;
+      const path = (t: number) => {
+        t = clamp01(t);
+        const u = 1 - t;
+        const bx = u * u * u * S.x + 3 * u * u * t * C1.x + 3 * u * t * t * C2.x + t * t * t * M.x;
+        const by = u * u * u * S.y + 3 * u * u * t * C1.y + 3 * u * t * t * C2.y + t * t * t * M.y;
+        let tx = 3 * u * u * (C1.x - S.x) + 6 * u * t * (C2.x - C1.x) + 3 * t * t * (M.x - C2.x);
+        let ty = 3 * u * u * (C1.y - S.y) + 6 * u * t * (C2.y - C1.y) + 3 * t * t * (M.y - C2.y);
+        const tl = Math.hypot(tx, ty) || 1;
+        tx /= tl; ty /= tl;
+        const wander = Math.sin(t * Math.PI * 2.4) * Math.sin(Math.PI * t) * (phone ? 0.1 : 0.14) * vw;
+        return { x: bx - ty * wander, y: by + tx * wander };
+      };
+      let length = 0;
+      for (let n = 0, a = path(0); n < 24; n++) {
+        const b = path((n + 1) / 24);
+        length += Math.hypot(b.x - a.x, b.y - a.y);
+        a = b;
+      }
 
+      // Scroll speed stretches the body.
+      speed += (Math.abs(sy - lastSy) / Math.max(1 / 120, dtFrame) - speed) * 0.15;
+      lastSy = sy;
       const kd = phone ? 0.6 : 1;
-      const phase = q * 30 + ((now - t0) / 1000) * 1.2;
+      const stretch = 1 + Math.min(0.9, speed / 1600);
+      // Crawling: a wave runs down the body, bunching and stretching it like an
+      // inchworm, driven by how far it has travelled (and a slow idle squirm).
+      const phase = (q * length) / 22 + ((now - t0) / 1000) * 1.1;
+      const kt = k * 1.15;
+      let along = 0;
       for (let j = 0; j < N; j++) {
         const i = CHAIN[j];
         const [cx, cy, cr] = SHAPE[i];
-        // Travelling: the same rounded blob, a little bigger, wobbling side
-        // to side (the trailing side a beat behind) with lumps that swell.
-        const kt = k * 1.15;
-        const wag = Math.sin(phase - j * 0.35) * 14 * kd;
-        const sx = hx + (cx - MID[0]) * kt - dy * wag, syy = hy + (cy - MID[1]) * kt + dx * wag;
-        const sr = cr * kt * (1 + 0.18 * Math.sin(phase * 0.8 - j * 0.9));
+        // Each link sits on the trail behind the head, so the body turns as it goes.
+        if (j > 0) along += 7.5 * kd * stretch * (1 + 0.55 * Math.sin(phase - j * 0.6));
+        const at = path(q - along / (length || 1));
+        const ahead = path(q - along / (length || 1) + 0.004);
+        let ux = ahead.x - at.x, uy = ahead.y - at.y;
+        const ul = Math.hypot(ux, uy);
+        if (ul < 1e-3) { ux = 0; uy = 1; } else { ux /= ul; uy /= ul; }
+        // Lumps on alternate sides, and a squirm across the body.
+        const side = (j % 2 ? 1 : -1) * cr * kt * 0.35 + Math.sin(phase * 0.7 - j * 0.4) * 6 * kd;
+        const sx = at.x - uy * side, syy = at.y + ux * side;
+        const body = Math.sin(Math.PI * (j + 0.5) / N);
+        const sr = kt * (20 + 18 * body) * (1 + 0.2 * Math.sin(phase * 1.3 - j * 0.7)) / Math.sqrt(stretch);
         // Splat: even links go left, odd right.
         const g = j % 2, [px, py, pr] = SPLATS[g][j >> 1], c = centres[g];
         TX[i] = lerp(lerp(L + cx * k, sx, m), c.x + (px - 150) * c.sc, s);
@@ -138,10 +166,11 @@ export default function SlimeSplit() {
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
-      const p = targets(now);
-      if (p < 0) return;
       const dt = Math.min(1 / 20, last ? (now - last) / 1000 : 1 / 60);
       last = now;
+      dtFrame = dt;
+      const p = targets(now);
+      if (p < 0) return;
       if (!started || reduce) {
         X.set(TX); Y.set(TY); R.set(TR); started = true;
       } else {

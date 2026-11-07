@@ -10,37 +10,16 @@ import { cn } from "@/lib/utils";
 // on the /draft page, where `fullScreen` lets it fill the whole window.
 //
 // With `intro`, the hero plays an opening sequence: bare paper, then the ink
-// lines trace in, the player slides in, and everything else comes on. The
+// lines trace in, the player builds himself from dots, and everything else
+// comes on. The
 // start times (seconds) are set on each piece with at(); the classes only
 // animate inside .hero-intro (globals.css).
 const PLAYER_AT = 1.5;
 const LATE_AT = 2.2;
 //
-// The green is set like a Swiss poster: bubbly blobs of fluorescent ink laid
-// across the headline (sized in em, so they track the type at every screen
-// size). Black type stays black where green crosses it (multiply); inside the
-// outlined letters the green shows through.
-
-// The headline blobs, in units of 1/100 em from the start of the text: a few
-// small, separate clusters scattered over the words (not one connected shape),
-// with loose droplets between them. Lines are 98 units tall.
-const HEADLINE_DOTS: Dot[] = [
-  // over the end of Learn.
-  [344, 48, 17], [384, 58, 25], [426, 40, 17],
-  // in Develop.
-  [200, 150, 21], [240, 168, 15],
-  [524, 138, 20], [560, 118, 13],
-  // under the end of Grow.
-  [440, 262, 24], [492, 248, 17], [532, 270, 13],
-  // droplets
-  [130, 60, 12], [296, 116, 12], [316, 230, 13], [618, 236, 13], [604, 66, 11],
-];
-const HEADLINE_TRAILS = [
-  "344,48 384,58 426,40",
-  "200,150 240,168",
-  "524,138 560,118",
-  "440,262 492,248 532,270",
-];
+// The green is set like a Swiss poster: a few bubbly blobs of fluorescent ink
+// around the collage, kept clear of the slogan. Black stays black where green
+// crosses it (multiply).
 
 // A small pair over the photo's top-left corner.
 const CORNER_PAIR = { viewBox: "0 0 200 70", dots: [[40, 35, 26], [100, 30, 18], [150, 40, 22], [188, 22, 8]] as Dot[], trails: ["40,35 100,30 150,40"], width: 22 };
@@ -49,13 +28,9 @@ const CORNER_PAIR = { viewBox: "0 0 200 70", dots: [[40, 35, 26], [100, 30, 18],
 const FLOATERS: { className: string; viewBox: string; dots: Dot[]; trails: string[]; width: number; travels?: boolean }[] = [
   // Top left, under the caption band
   { className: "top-[11%] left-[11%] w-[13%]", viewBox: "0 0 260 150", dots: [[60, 60, 34], [122, 44, 22], [170, 74, 30], [222, 50, 12], [96, 112, 14], [20, 116, 8]], trails: ["60,60 122,44 170,74"], width: 26 },
-  // Bottom left, running off the bottom edge
-  { className: "bottom-[4%] left-[2%] w-[19%]", viewBox: "0 0 380 160", dots: [[40, 120, 40], [110, 96, 28], [176, 126, 46], [250, 104, 26], [306, 128, 34], [356, 70, 12], [214, 40, 14], [124, 30, 8]], trails: ["40,120 110,96 176,126 250,104 306,128"], width: 34 },
   // Top right, running off the right edge (with scrollAway, SlimeSplit draws
   // this one instead, so it can travel down the page)
   { className: "top-[9%] right-[-1.2%] w-[11%]", ...TRAVELLER, travels: true },
-  // Right edge, droplets around the crosshair
-  { className: "top-[57%] right-[1%] w-[6%]", viewBox: "0 0 120 140", dots: [[70, 40, 24], [44, 84, 16], [84, 108, 12], [20, 30, 8]], trails: ["70,40 44,84"], width: 18 },
 ];
 
 const mono = "font-mono text-[0.68rem] font-semibold uppercase leading-none tracking-[0.14em]";
@@ -118,9 +93,6 @@ export default function PowerFcHero({ fullScreen = false, intro = false, scrollA
             <Line n="03" rule={0.74} text={LATE_AT + 0.34}>
               <span className="block origin-left -skew-x-[10deg]">Grow.</span>
             </Line>
-            {/* The blobs over the words: black letters stay black under them. They are drawn
-                at a larger scale than the others, so they jiggle less to match them on screen. */}
-            <Blobs viewBox="0 0 720 300" dots={HEADLINE_DOTS} trails={HEADLINE_TRAILS} width={24} jiggle={0.65} style={at(LATE_AT + 0.8)} className="intro-pop absolute top-0 left-[3.2rem] h-[3em] w-[7.2em] mix-blend-multiply max-[860px]:left-0" />
           </h1>
         </div>
       </div>
