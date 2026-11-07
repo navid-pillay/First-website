@@ -2,13 +2,16 @@ import type { Dot } from "@/components/heroes/Blobs";
 
 // Shared green slime shapes.
 
-// Beside the hero's photo: a chain of blobs running down to the player
-// (viewBox 0 0 120 540).
+// Beside the hero's photo, running down to the player: two short chains of
+// blobs at opposite angles with a gap between them (viewBox 0 0 200 560).
 export const COLUMN_DOTS: Dot[] = [
-  [60, 30, 39], [42, 92, 28], [70, 150, 46], [52, 226, 32], [78, 290, 41], [50, 360, 25], [66, 420, 34], [44, 490, 21], [96, 520, 14], [18, 200, 12],
+  // upper piece, leaning right
+  [44, 34, 34], [70, 94, 26], [100, 152, 38], [128, 212, 22], [154, 70, 10], [20, 128, 9],
+  // lower piece, leaning back left
+  [156, 330, 30], [128, 390, 36], [98, 450, 24], [74, 504, 16], [176, 432, 10], [62, 378, 8],
 ];
-export const COLUMN_TRAILS = ["60,30 42,92 70,150 52,226 78,290 50,360 66,420 44,490"];
-export const COLUMN_WIDTH = 38; // stroke width of the trails
+export const COLUMN_TRAILS = ["44,34 70,94 100,152 128,212", "156,330 128,390 98,450 74,504"];
+export const COLUMN_WIDTH = 34; // stroke width of the trails
 
 // The hero's top-right blob, running off the right edge (viewBox 0 0 220 220,
 // placed at top 9%, right -1.2%, 11% of the hero's width). On the draft this

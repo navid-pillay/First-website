@@ -5,7 +5,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 // Gives the page a little give as it scrolls: the content lags a few
 // millimetres behind fast scrolling, on a spring, and bounces back with a
 // small overshoot when the scrolling stops. (Anything fixed-position inside
-// would move with it, so fixed layers are rendered into <body> instead.)
+// would move with it.)
 
 // A virtual scroll position springs after the real one; the content is
 // offset by the gap between them, softly capped at MAX.
@@ -38,5 +38,6 @@ export default function ScrollBounce({ children }: { children: ReactNode }) {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  return <div ref={ref}>{children}</div>;
+  // data-slime-host: SlimeSplit draws its layer in here (see there).
+  return <div ref={ref} data-slime-host className="relative">{children}</div>;
 }

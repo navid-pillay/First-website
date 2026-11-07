@@ -68,10 +68,11 @@ export default function SlimeSplit() {
   const circleRefs = useRef<(SVGCircleElement | null)[]>([]);
   const slotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const logoRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  // The slime layer goes straight into <body>, so the page's scroll bounce
-  // (a transform on the content) doesn't shift its window coordinates.
+  // The slime layer goes into the page's content wrapper (ScrollBounce,
+  // marked data-slime-host), covering it: in the same layer as the logos, so
+  // they always sit on top of the green, even while the page bounces.
   const inBrowser = useSyncExternalStore(noop, () => true, () => false);
-  const layerHost = inBrowser ? document.body : null;
+  const layerHost = inBrowser ? document.querySelector<HTMLElement>("[data-slime-host]") : null;
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -186,12 +187,14 @@ export default function SlimeSplit() {
         }
         for (let i = 0; i < N; i++) R[i] += (TR[i] - R[i]) * Math.min(1, dt * 10);
       }
-      const sy = window.scrollY;
+      // Drawn relative to the layer's host.
+      const host = svgRef.current?.parentElement?.getBoundingClientRect();
+      const ox = host?.left ?? 0, oy = window.scrollY + (host?.top ?? 0);
       for (let i = 0; i < N; i++) {
         const c = circleRefs.current[i];
         if (!c) continue;
-        c.setAttribute("cx", X[i].toFixed(1));
-        c.setAttribute("cy", (Y[i] - sy).toFixed(1));
+        c.setAttribute("cx", (X[i] - ox).toFixed(1));
+        c.setAttribute("cy", (Y[i] - oy).toFixed(1));
         c.setAttribute("r", Math.max(0, R[i]).toFixed(1));
       }
       logoRefs.current.forEach((l) => l?.toggleAttribute("data-on", p > 0.93));
@@ -228,13 +231,13 @@ export default function SlimeSplit() {
 
   return (
     <div className="relative flex flex-col items-center gap-10 px-[6%] max-[860px]:pr-5 max-[860px]:pl-8">
-      {/* The slime: fixed over the page, drawn in window coordinates. It
-          appears with the hero's other blobs in the opening sequence. */}
+      {/* The slime: a layer over the whole page content. It appears with the
+          hero's other blobs in the opening sequence. */}
       {layerHost && createPortal(
       <svg
         ref={svgRef}
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-20 h-full w-full opacity-0 mix-blend-multiply motion-reduce:opacity-100"
+        className="pointer-events-none absolute inset-0 z-20 h-full w-full opacity-0 mix-blend-multiply motion-reduce:opacity-100"
         style={{ animation: "fade-in 0.6s ease-out 2.7s forwards" }}
       >
         <defs>

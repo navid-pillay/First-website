@@ -70,7 +70,7 @@ export default function PowerFcHero({ fullScreen = false, intro = false, scrollA
         <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
         <FloodlightPhoto style={at(LATE_AT)} className="intro-in absolute top-[19%] left-[30%] h-[28.5%] w-[22.4%] max-[860px]:hidden" />
         {/* Blobs running down beside the photo, and a pair over its corner */}
-        <Blobs viewBox="0 0 120 540" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={COLUMN_WIDTH} style={at(LATE_AT + 0.5)} className="intro-pop absolute top-[15%] left-[51.6%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />
+        <Blobs viewBox="0 0 200 560" dots={COLUMN_DOTS} trails={COLUMN_TRAILS} width={COLUMN_WIDTH} style={at(LATE_AT + 0.5)} className="intro-pop absolute top-[15%] left-[49.5%] h-[58%] w-auto mix-blend-multiply max-[860px]:hidden" />
         <Blobs {...CORNER_PAIR} style={at(LATE_AT + 0.6)} className="intro-pop absolute top-[26.5%] left-[26%] w-[13%] mix-blend-multiply max-[860px]:hidden" />
         {FLOATERS.map(({ className, travels, ...blob }, i) => !(travels && scrollAway) && (
           <Blobs key={className} {...blob} style={at(LATE_AT + 0.65 + i * 0.1)} className={cn("intro-pop absolute mix-blend-multiply max-[860px]:hidden", className)} />
