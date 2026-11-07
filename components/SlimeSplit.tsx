@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
 import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
@@ -29,6 +30,7 @@ const PROGRAMS = [
   { index: "02", name: "Power FC", tagline: "High Performance Academy" },
 ];
 
+const noop = () => () => {};
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (a: number, b: number, x: number) => {
   const t = clamp01((x - a) / (b - a));
@@ -64,6 +66,10 @@ export default function SlimeSplit() {
   const circleRefs = useRef<(SVGCircleElement | null)[]>([]);
   const slotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const logoRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  // The slime layer goes straight into <body>, so the page's scroll bounce
+  // (a transform on the content) doesn't shift its window coordinates.
+  const inBrowser = useSyncExternalStore(noop, () => true, () => false);
+  const layerHost = inBrowser ? document.body : null;
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -195,6 +201,7 @@ export default function SlimeSplit() {
     <div className="relative flex flex-col items-center gap-10 px-[6%] max-[860px]:pr-5 max-[860px]:pl-8">
       {/* The slime: fixed over the page, drawn in window coordinates. It
           appears with the hero's other blobs in the opening sequence. */}
+      {layerHost && createPortal(
       <svg
         ref={svgRef}
         aria-hidden="true"
@@ -212,7 +219,9 @@ export default function SlimeSplit() {
             <circle key={i} ref={(el) => { circleRefs.current[i] = el; }} r="0" />
           ))}
         </g>
-      </svg>
+      </svg>,
+        layerHost,
+      )}
 
       <p className="m-0 flex w-full max-w-[760px] items-center gap-4 font-mono text-[0.75rem] font-bold uppercase tracking-[0.2em] whitespace-nowrap text-ink/70">
         <span className="h-px flex-1 bg-ink/40" />

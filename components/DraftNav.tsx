@@ -5,7 +5,8 @@ import FcCrest from "@/components/FcCrest";
 // The draft's navigation bar: sticky, no border, just the two badges on the
 // left and three links on the right. The draft has no inner pages yet, so the
 // links stay on this page (they don't lead back to the old site), and the
-// badges take you to the top. It comes in with the hero's ruled lines.
+// badges take you to the top. It comes in with the hero's ruled lines, and a
+// soft fade hangs below it.
 const NAV = [
   { href: "#about", label: "About" },
   { href: "#locations", label: "Locations" },
@@ -35,6 +36,9 @@ export default function DraftNav() {
           </ul>
         </nav>
       </div>
+      {/* A soft fade under the bar, so the page melts away as it scrolls up
+          beneath it instead of being cut off on a hard edge */}
+      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-full h-14 bg-linear-to-b from-paper/92 to-paper/0 max-sm:h-10" />
     </header>
   );
 }
