@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useRef, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
+import ProgramPreview, { type Preview } from "@/components/ProgramPreview";
 import { SPLATS, TRAVELLER, TRAVELLER_SPOT } from "@/components/heroes/slime";
 
 // The draft's programs. The hero's top-right green slime (the hero leaves it
@@ -28,9 +29,10 @@ const REACH = 14; // px past a circle's edge that still counts as touching
 const SPLAT_SIZE = 0.95; // a splat's size, relative to its logo slot
 
 const PROGRAMS = [
-  { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", href: "/draft/power-soccer/" },
-  { index: "02", name: "Power FC", tagline: "High Performance Academy", href: "/draft/power-fc/" },
+  { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", href: "/draft/power-soccer/", key: "power-soccer" as const },
+  { index: "02", name: "Power FC", tagline: "High Performance Academy", href: "/draft/power-fc/", key: "power-fc" as const },
 ];
+const PREVIEW_DELAY = 120; // ms of hover before the preview starts growing
 
 const noop = () => () => {};
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -73,6 +75,28 @@ export default function SlimeSplit() {
   // they always sit on top of the green, even while the page bounces.
   const inBrowser = useSyncExternalStore(noop, () => true, () => false);
   const layerHost = inBrowser ? document.querySelector<HTMLElement>("[data-slime-host]") : null;
+
+  // Hover preview of a program's page (mouse only; touch just opens the page).
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const hoverTimer = useRef(0);
+  const openPreview = (i: number) => (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => {
+      const r = slotRefs.current[i]?.getBoundingClientRect();
+      if (!r) return;
+      const top = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+      const base = { program: PROGRAMS[i].key, x: r.left + r.width / 2, y: r.top + r.height / 2, r0: (r.width * SPLAT_SIZE) / 2.6, top };
+      setPreview({ ...base, open: false });
+      // Next frame: grow (so the transition runs from the splat's size).
+      requestAnimationFrame(() => requestAnimationFrame(() => setPreview((p) => (p && p.program === base.program ? { ...p, open: true } : p))));
+    }, PREVIEW_DELAY);
+  };
+  const closePreview = () => {
+    window.clearTimeout(hoverTimer.current);
+    setPreview((p) => (p ? { ...p, open: false } : p));
+  };
+  useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -231,6 +255,9 @@ export default function SlimeSplit() {
     <div className="relative flex flex-col items-center gap-10 px-[6%] max-[860px]:pr-5 max-[860px]:pl-8">
       {/* The slime: a layer over the whole page content. It appears with the
           hero's other blobs in the opening sequence. */}
+      {/* Hover preview of a program's page, over the whole window (in <body>, so the
+          page's scroll bounce doesn't shift it) */}
+      {inBrowser && createPortal(<ProgramPreview preview={preview} />, document.body)}
       {layerHost && createPortal(
       <svg
         ref={svgRef}
@@ -260,7 +287,7 @@ export default function SlimeSplit() {
       </p>
       <div className="flex items-start justify-center gap-[clamp(2rem,9vw,9rem)] max-sm:flex-col max-sm:items-center max-sm:gap-14">
         {PROGRAMS.map((p, i) => (
-          <Link key={p.name} href={p.href} className="group flex flex-col items-center gap-6 text-ink no-underline">
+          <Link key={p.name} href={p.href} onPointerEnter={openPreview(i)} onPointerLeave={closePreview} className="group flex flex-col items-center gap-6 text-ink no-underline">
             {/* The splat lands centred on this slot; the logo pops in over it */}
             <span ref={(el) => { slotRefs.current[i] = el; }} className="relative z-30 grid aspect-square w-[clamp(170px,22vw,280px)] place-items-center">
               <span

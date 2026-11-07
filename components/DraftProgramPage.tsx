@@ -16,13 +16,24 @@ const PROGRAMS = {
 
 const mono = "font-mono text-[0.72rem] font-semibold uppercase leading-[1.5] tracking-[0.14em]";
 
-export default function DraftProgramPage({ program }: { program: keyof typeof PROGRAMS }) {
-  const p = PROGRAMS[program];
-  const dots: Dot[] = p.splat;
+export type ProgramKey = keyof typeof PROGRAMS;
+
+export default function DraftProgramPage({ program }: { program: ProgramKey }) {
   return (
     <>
       <DraftNav />
       <main className="relative bg-paper">
+        <ProgramPageBody program={program} />
+      </main>
+    </>
+  );
+}
+
+/** The page's content under the navigation bar (also shown as the hover preview on the draft). */
+export function ProgramPageBody({ program }: { program: ProgramKey }) {
+  const p = PROGRAMS[program];
+  const dots: Dot[] = p.splat;
+  return (
         <div className="relative mx-auto flex min-h-[calc(100svh-76px)] w-full max-w-[1440px] flex-col px-[6%] pt-10 pb-12 max-sm:px-5">
           {/* Ruled caption band, as on the draft's hero */}
           <div className={`grid grid-cols-3 gap-6 border-t border-ink pt-2.5 text-ink ${mono} max-sm:grid-cols-1 max-sm:gap-1`}>
@@ -55,7 +66,5 @@ export default function DraftProgramPage({ program }: { program: keyof typeof PR
             &larr; Back to the programs
           </Link>
         </div>
-      </main>
-    </>
   );
 }
