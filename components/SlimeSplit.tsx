@@ -33,9 +33,9 @@ const PROGRAMS = [
   { index: "02", name: "Power FC", tagline: "High Performance Academy", href: "/draft/power-fc/", key: "power-fc" as const },
 ];
 const PREVIEW_DELAY = 120; // ms of hover before the preview starts growing
-// The hover "dream" preview (ProgramBubble) is switched off for now: it was too
-// heavy on the owner's computer. Set to true to bring it back; the code is kept.
-const PREVIEW_ENABLED = false;
+// The hover "dream" preview (ProgramBubble). Set to false to switch it off
+// (the code stays) if it is too heavy on a computer.
+const PREVIEW_ENABLED = true;
 
 const noop = () => () => {};
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
