@@ -35,6 +35,15 @@ const buildId = process.env.NEXT_PUBLIC_BUILD_ID || "";
 // The /draft pages are left out so they can be opened from a shared link.
 const bootScript = `(function () {
   document.documentElement.classList.add("js");
+  // On the draft, a reload always starts at the top (the hero), instead of
+  // the browser putting you back where you were.
+  var draftPath = location.pathname.slice(${JSON.stringify(base)}.length);
+  if (draftPath === "/draft" || draftPath.indexOf("/draft/") === 0) {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo(0, 0);
+    window.addEventListener("load", function () { window.scrollTo(0, 0); });
+  }
   if (!${gateEnabled}) return;
   var base = ${JSON.stringify(base)};
   var path = location.pathname.slice(base.length) || "/";
