@@ -21,6 +21,7 @@ const LOBES = [[-0.35, 0.2, 0.36], [1.05, 0.13, 0.3], [2.05, 0.22, 0.42], [3.35,
 const DROPS = [[0.55, 1.36, 0.085], [2.9, 1.34, 0.06], [4.9, 1.4, 0.05], [3.9, 1.3, 0.035]];
 const RIM = 9; // px of green around the picture
 const PAGE_W = 1440, PAGE_H = 976; // the page is drawn at this size, then shrunk
+const DREAM_LOOP = 14; // s for the dream ripple to drift one full tile (a clean loop)
 
 export default function ProgramBubble({ program, open, size, offset }: { program: ProgramKey; open: boolean; size: number; offset: [number, number] }) {
   const id = useId().replace(/:/g, "");
@@ -99,11 +100,17 @@ export default function ProgramBubble({ program, open, size, offset }: { program
     >
       {/* The TV-dream distortion: a slow wavy shimmer */}
       <svg width="0" height="0" className="absolute">
-        <filter id={`${id}-dream`} x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.018" numOctaves="2" seed="4" result="n">
-            <animate attributeName="baseFrequency" dur="7s" values="0.0035 0.018; 0.006 0.012; 0.0035 0.018" repeatCount="indefinite" />
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="64" xChannelSelector="R" yChannelSelector="G" />
+        {/* A seamless tile of wavy noise (stitched to the page's size), tiled and
+            slid diagonally by exactly one tile per loop, so the ripple drifts one
+            way forever with no seam and no turning back. */}
+        <filter id={`${id}-dream`} x="-100%" y="-100%" width="200%" height="200%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+          <feTurbulence x="0" y="0" width={PAGE_W} height={PAGE_H} type="fractalNoise" baseFrequency="0.0035 0.018" numOctaves="2" seed="4" stitchTiles="stitch" result="n" />
+          <feTile in="n" x={-PAGE_W} y={-PAGE_H} width={PAGE_W * 2} height={PAGE_H * 2} result="t" />
+          <feOffset in="t" x="0" y="0" width={PAGE_W} height={PAGE_H} dx="0" dy="0" result="o">
+            <animate attributeName="dx" from="0" to={PAGE_W} dur={`${DREAM_LOOP}s`} repeatCount="indefinite" />
+            <animate attributeName="dy" from="0" to={PAGE_H} dur={`${DREAM_LOOP}s`} repeatCount="indefinite" />
+          </feOffset>
+          <feDisplacementMap in="SourceGraphic" in2="o" x="0" y="0" width={PAGE_W} height={PAGE_H} scale="64" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
       <div ref={greenRef} className="absolute inset-0 bg-green" style={{ clipPath: "circle(0px at 50% 50%)" }} />
