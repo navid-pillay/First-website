@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+
+/** The bouncing content box, once it is on the page (SlimeSplit draws its layer in it). */
+export const SlimeHost = createContext<HTMLElement | null>(null);
 
 // Gives the page a little give as it scrolls: the content lags a few
 // millimetres behind fast scrolling, on a spring, and bounces back with a
@@ -15,6 +18,10 @@ const DAMPING = 8.5; // under-damped, so it swings past and bounces back
 
 export default function ScrollBounce({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
+  // Hand the box to SlimeSplit once it exists (also after coming back from
+  // another page, when the old page was still showing during the first render).
+  const [host, setHost] = useState<HTMLElement | null>(null);
+  const setRef = useCallback((el: HTMLDivElement | null) => { ref.current = el; setHost(el); }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -39,5 +46,9 @@ export default function ScrollBounce({ children }: { children: ReactNode }) {
   }, []);
 
   // data-slime-host: SlimeSplit draws its layer in here (see there).
-  return <div ref={ref} data-slime-host className="relative">{children}</div>;
+  return (
+    <SlimeHost.Provider value={host}>
+      <div ref={setRef} data-slime-host className="relative">{children}</div>
+    </SlimeHost.Provider>
+  );
 }

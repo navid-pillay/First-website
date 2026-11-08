@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useContext, useEffect, useId, useRef, useState } from "react";
+import { SlimeHost } from "@/components/ScrollBounce";
 import { createPortal } from "react-dom";
 import psLogo from "@/assets/power-soccer-logo.png";
 import FcCrest from "@/components/FcCrest";
@@ -37,7 +38,6 @@ const PREVIEW_DELAY = 120; // ms of hover before the preview starts growing
 // (the code stays) if it is too heavy on a computer.
 const PREVIEW_ENABLED = true;
 
-const noop = () => () => {};
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (a: number, b: number, x: number) => {
   const t = clamp01((x - a) / (b - a));
@@ -73,11 +73,10 @@ export default function SlimeSplit() {
   const circleRefs = useRef<(SVGCircleElement | null)[]>([]);
   const slotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const logoRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  // The slime layer goes into the page's content wrapper (ScrollBounce,
-  // marked data-slime-host), covering it: in the same layer as the logos, so
+  // The slime layer goes into the page's content wrapper (ScrollBounce hands
+  // it over once it is on the page), covering it: in the same layer as the logos, so
   // they always sit on top of the green, even while the page bounces.
-  const inBrowser = useSyncExternalStore(noop, () => true, () => false);
-  const layerHost = inBrowser ? document.querySelector<HTMLElement>("[data-slime-host]") : null;
+  const layerHost = useContext(SlimeHost);
 
   // Hover preview of a program's page in a small jelly bubble behind its logo
   // (mouse only; touch just opens the page). shown: bubbles mounted so far.
