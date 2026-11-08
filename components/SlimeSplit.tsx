@@ -33,6 +33,9 @@ const PROGRAMS = [
   { index: "02", name: "Power FC", tagline: "High Performance Academy", href: "/draft/power-fc/", key: "power-fc" as const },
 ];
 const PREVIEW_DELAY = 120; // ms of hover before the preview starts growing
+// The hover "dream" preview (ProgramBubble) is switched off for now: it was too
+// heavy on the owner's computer. Set to true to bring it back; the code is kept.
+const PREVIEW_ENABLED = false;
 
 const noop = () => () => {};
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -84,7 +87,7 @@ export default function SlimeSplit() {
   const [bubbleAt, setBubbleAt] = useState<[number, number]>([0, 0]);
   const hoverTimer = useRef(0);
   const openPreview = (i: number) => (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!PREVIEW_ENABLED || e.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     window.clearTimeout(hoverTimer.current);
     hoverTimer.current = window.setTimeout(() => {
       const r = slotRefs.current[i]?.getBoundingClientRect();
