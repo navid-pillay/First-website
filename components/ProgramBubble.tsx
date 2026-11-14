@@ -120,7 +120,7 @@ export default function ProgramBubble({ program, open, size, offset }: { program
         >
           <div className="h-full w-full bg-paper">
             <DraftNav />
-            <ProgramPageBody program={program} />
+            <ProgramPageBody program={program} preview />
           </div>
         </div>
         {/* Scan lines and a soft dark rim, like an old TV */}

@@ -1,13 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
-import psLogo from "@/assets/power-soccer-logo.png";
 import DraftNav from "@/components/DraftNav";
 import FcCrest from "@/components/FcCrest";
+import PowerSoccerHero from "@/components/PowerSoccerHero";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
 import { SPLATS } from "@/components/heroes/slime";
 
-// A program's page on the draft. Blank for now: the program's logo on its
-// green splat, its name, and a way back to the draft's home.
+// A program's page on the draft. Power Soccer Inc. has its designed hero
+// (PowerSoccerHero); Power FC is blank for now: its logo on its green splat,
+// its name, and a way back to the draft's home.
 
 const PROGRAMS = {
   "power-soccer": { index: "01", name: "Power Soccer", tagline: "Training & Soccer Schools", meta: ["Power Soccer Inc.", "Est. 1996", "Toronto, ON"], splat: SPLATS[0] },
@@ -30,7 +30,8 @@ export default function DraftProgramPage({ program }: { program: ProgramKey }) {
 }
 
 /** The page's content under the navigation bar (also shown as the hover preview on the draft). */
-export function ProgramPageBody({ program }: { program: ProgramKey }) {
+export function ProgramPageBody({ program, preview = false }: { program: ProgramKey; preview?: boolean }) {
+  if (program === "power-soccer") return <PowerSoccerHero preview={preview} />;
   const p = PROGRAMS[program];
   const dots: Dot[] = p.splat;
   return (
@@ -45,11 +46,7 @@ export function ProgramPageBody({ program }: { program: ProgramKey }) {
           <div className="flex flex-1 flex-col items-center justify-center gap-8 py-16 text-center">
             <span className="relative grid aspect-square w-[clamp(200px,26vw,340px)] place-items-center">
               <Blobs viewBox="0 0 300 300" dots={dots} width={46} className="absolute inset-[2%] h-[96%] w-[96%] mix-blend-multiply" />
-              {program === "power-soccer" ? (
-                <Image src={psLogo} alt="Power Soccer Inc." priority className="relative h-auto w-full" />
-              ) : (
-                <FcCrest title="Power FC" className="relative block h-auto w-[62%] drop-shadow-[8px_10px_0_rgba(13,15,14,0.9)]" />
-              )}
+              <FcCrest title="Power FC" className="relative block h-auto w-[62%] drop-shadow-[8px_10px_0_rgba(13,15,14,0.9)]" />
             </span>
             <div className="flex flex-col items-center gap-2">
               <h1 className="m-0 font-display text-[clamp(2.2rem,5vw,4rem)] font-normal uppercase leading-none">{p.name}</h1>
