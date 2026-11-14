@@ -6,8 +6,8 @@ import { useEffect, useRef } from "react";
 // faces stay true to the original): black ink dots whose size follows how dark
 // the photo is, and a green halo of dots fading out around the cut-out. The
 // photo needs a transparent background. The canvas has the photo's shape; give
-// it a width with className. The dots are fine (about 3px apart) so faces
-// read. The finished print is kept on a hidden canvas: the picture spreads out
+// it a width with className. Dots are spaced like the main hero's player
+// (7px apart, 5px on phones). The finished print is kept on a hidden canvas: the picture spreads out
 // from its middle when the photo loads, then is still, and when the cursor
 // moves over it only the patch of dots under the cursor is redrawn, swelling
 // like jelly.
@@ -76,9 +76,9 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
         const lit = Math.pow(Math.min(1, Math.max(0, (L - 0.05) / 0.8)), 0.8);
         K[i] = a * Math.min(1, Math.max(0, 1.02 - lit));
       }
-      // Green halo: three rings of dots outside the cut-out, each fainter.
+      // Green halo: two rings of dots outside the cut-out, the outer fainter.
       let edge = A;
-      for (let ring = 0; ring < 3; ring++) {
+      for (let ring = 0; ring < 2; ring++) {
         const next = new Float32Array(edge);
         for (let r = 0; r < rows; r++) {
           for (let c = 0; c < cols; c++) {
@@ -89,7 +89,7 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
               const rr = r + dr, cc = c + dc;
               if (rr >= 0 && cc >= 0 && rr < rows && cc < cols) near = Math.max(near, edge[rr * cols + cc]);
             }
-            if (near > 0.5 && r < rows - 2) { next[i] = 1; T[i] = 1; K[i] = [0.62, 0.42, 0.24][ring] * (0.75 + 0.5 * hash(c, r)); }
+            if (near > 0.5 && r < rows - 2) { next[i] = 1; T[i] = 1; K[i] = [0.6, 0.32][ring] * (0.75 + 0.5 * hash(c, r)); }
           }
         }
         edge = next;
@@ -98,7 +98,7 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
     };
 
     const dots = (c: CanvasRenderingContext2D, c0: number, c1: number, r0: number, r1: number, springs: boolean) => {
-      const max = sp * 0.62;
+      const max = sp * 0.5; // same as the main hero's player
       for (let kind = 0; kind < 2; kind++) {
         c.fillStyle = kind ? GREEN : INK;
         c.beginPath();
@@ -107,7 +107,7 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
           if (T[i] !== kind || K[i] <= 0) continue;
           const rb = max * K[i];
           if (rb < 0.25) continue;
-          const radius = springs ? Math.min(max * 1.3, rb + max * g[i] * Math.min(1, rb / (max * 0.25))) : rb;
+          const radius = springs ? Math.min(max * 1.2, rb + max * g[i] * Math.min(1, rb / (max * 0.25))) : rb;
           const x = col * sp + (springs ? ox[i] : 0), y = r * sp + (springs ? oy[i] : 0);
           c.moveTo(x + radius, y);
           c.arc(x, y, radius, 0, Math.PI * 2);
@@ -129,8 +129,8 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
       w = canvas.clientWidth; h = canvas.clientHeight;
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // Fine dots, finer still on small screens, so faces read.
-      sp = w < 700 ? 2.4 : 3;
+      // The main hero's dot spacing: 7px apart, 5px on phones.
+      sp = window.innerWidth < 860 ? 5 : 7;
       box = null;
       cols = Math.ceil(w / sp) + 1; rows = Math.ceil(h / sp) + 1;
       sample();
