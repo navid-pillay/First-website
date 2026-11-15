@@ -1,32 +1,29 @@
 import Image from "next/image";
-import { useId } from "react";
 import cornerFlag from "@/assets/corner-flag.webp";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
 import DotCluster from "@/components/heroes/DotCluster";
 import { HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
 import HalftonePhoto from "@/components/heroes/HalftonePhoto";
 
-// The Power Soccer Inc. page's hero (draft): "See you on the pitch." over the
+// The Power Soccer Inc. page's hero (draft): "See you on the pitch." (with
+// green squiggles round "Pitch.") and ruled fact lines top left, over the
 // poster collage, with the three players printed as halftone dots straight
 // from the photo (public/draft/kids-tone.webp, cut out with a transparent
 // background), the corner-flag photo, and the Power Soccer Inc. wordmark.
 // `preview`: shown inside the hover preview on the draft, so nothing reacts
 // to the cursor.
 
-/** A rough-edged green brush block behind a word. */
-function Brush({ className = "" }: { className?: string }) {
-  const id = useId().replace(/:/g, "");
+// The green as it looks blended into the paper, like the main page's (the
+// headline is its own layer, so it can't blend with the paper itself).
+const BLENDED_GREEN = "#3ed602";
+
+/** Hand-drawn green squiggles around a word: two wavy underlines and a curl. */
+function Squiggles({ className = "" }: { className?: string }) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 1000 300" preserveAspectRatio="none" className={`pointer-events-none ${className}`}>
-      <defs>
-        <filter id={`${id}-rough`} x="-5%" y="-15%" width="110%" height="130%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.03 0.5" numOctaves="2" seed="5" result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </defs>
-      {/* The green as it looks blended into the paper (as on the main page; the
-          headline is its own layer, so it can't blend with the paper itself). */}
-      <path filter={`url(#${id}-rough)`} d="M30 36 L985 14 L965 268 L8 286 Z" fill="#3ed602" />
+    <svg aria-hidden="true" viewBox="0 0 400 160" className={`pointer-events-none overflow-visible ${className}`} fill="none" stroke={BLENDED_GREEN} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M-6 150 C 22 126 46 172 76 148 S 130 124 158 150 S 214 174 244 146 S 300 122 328 150 S 384 172 414 140" strokeWidth="20" />
+      <path d="M470 40 C 500 0 545 30 525 62 C 507 90 468 66 492 42 C 512 22 540 32 546 54" strokeWidth="14" />
+      <path d="M-40 166 C -20 190 10 150 40 176 S 90 196 118 172" strokeWidth="10" />
     </svg>
   );
 }
@@ -53,11 +50,23 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
   return (
     <section className="relative overflow-hidden bg-paper">
       <div className="relative mx-auto h-[min(calc(100svh-76px),860px)] min-h-[600px] w-full max-w-[1440px] max-[860px]:flex max-[860px]:h-auto max-[860px]:min-h-0 max-[860px]:flex-col">
+        {/* Ruled lines with facts, top left (like the main hero's caption band) */}
+        <div aria-hidden="true" className="absolute top-[4.5%] left-[6%] w-[33%] font-mono text-[0.68rem] font-semibold uppercase leading-[1.5] tracking-[0.14em] text-ink max-[860px]:hidden">
+          <span className="block h-px w-full bg-ink" />
+          <div className="grid grid-cols-3 gap-5 pt-2.5">
+            <span>Power Soccer Inc.<br /><span className="text-ink/55">Est. 1996</span></span>
+            <span>Soccer schools<br /><span className="text-ink/55">Summer camps</span></span>
+            <span>Toronto &amp; GTA<br /><span className="text-ink/55">Team &amp; private</span></span>
+          </div>
+          <span className="mt-2.5 block h-px w-[64%] bg-ink/40" />
+        </div>
+        <span aria-hidden="true" className="absolute top-[5%] bottom-0 left-[6%] w-px bg-ink/25 max-[860px]:hidden" />
+
         {/* Collage */}
         <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
         {!preview && (
           <>
-            <DotCluster style={{ left: "11.5%", top: "15%", width: "20%", height: "12%" }} className="absolute max-[860px]:hidden" />
+            <DotCluster style={{ left: "11.5%", top: "16.5%", width: "20%", height: "10%" }} className="absolute max-[860px]:hidden" />
             <DotCluster style={{ left: "31%", top: "36%", width: "6%", height: "16%" }} className="absolute max-[860px]:hidden" />
             <DotCluster style={{ left: "18%", top: "62%", width: "6%", height: "8%" }} className="absolute max-[860px]:hidden" />
             <DotCluster style={{ left: "79%", top: "19%", width: "5%", height: "7%" }} className="absolute max-[860px]:hidden" />
@@ -84,7 +93,7 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
             <span className="ml-[0.45em] flex w-fit origin-left -skew-x-[12deg] items-center gap-[0.22em] max-[860px]:ml-0">
               <span>The</span>
               <span className="relative block">
-                <Brush className="absolute top-[2%] -left-[5%] h-[100%] w-[110%] mix-blend-multiply" />
+                <Squiggles className="absolute top-[12%] left-[2%] h-[100%] w-[100%]" />
                 <span className="relative block px-[0.06em]">Pitch.</span>
               </span>
             </span>
