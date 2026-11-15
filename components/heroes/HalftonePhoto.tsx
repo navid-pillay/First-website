@@ -9,14 +9,20 @@ import { useEffect, useRef } from "react";
 // it a width with className. Dots are spaced like the main hero's player
 // (7px apart, 5px on phones). The finished print is kept on a hidden canvas: the picture spreads out
 // from its middle when the photo loads, then is still, and when the cursor
-// moves over it only the patch of dots under the cursor is redrawn, swelling
+// moves over it only the patch of dots under the cursor is redrawn (the
+// opening is the main hero's scatter), swelling
 // like jelly.
 
 const LENS_RADIUS = 34; // px: how far from the cursor dots swell
 const HOVER = 0.4; // how much dots swell under the cursor
 const PUSH = 3; // px: how far dots bulge outward from the cursor
 const STIFFNESS = 170, DAMPING = 11; // each dot's spring (per second)
-const FORM_S = 1.3; // s: the opening, spreading from the middle
+// Opening, as the main hero's player: dots start bunched and scattered near
+// the middle and burst out to their places, the inner ones first, with a
+// little springy overshoot.
+const FORM_SPREAD = 0.5, FORM_JITTER = 0.3, FORM_FLIGHT = 0.9; // s
+const FORM_TOTAL = FORM_SPREAD + FORM_JITTER + FORM_FLIGHT;
+const easeOutBack = (t: number) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2);
 const INK = "#0d0f0e", GREEN = "#42e202";
 
 function hash(x: number, y: number) {
@@ -24,7 +30,7 @@ function hash(x: number, y: number) {
   return s - Math.floor(s);
 }
 
-export default function HalftonePhoto({ src, width, height, className = "", interactive = true }: {
+export default function HalftonePhoto({ src, width, height, className = "", interactive = true, introAt = 0 }: {
   src: string;
   /** The photo's size in pixels (sets the canvas's shape). */
   width: number;
@@ -32,6 +38,8 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
   className?: string;
   /** false: no hover and no opening animation (used inside the hover preview). */
   interactive?: boolean;
+  /** ms after this appears on the page when the dots start to form (0: as soon as the photo loads). */
+  introAt?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -147,18 +155,34 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
         ctx.clearRect(box.c0 * sp - pad, box.r0 * sp - pad, (box.c1 - box.c0) * sp + pad * 2, (box.r1 - box.r0) * sp + pad * 2);
         dots(ctx, Math.max(0, box.c0 - 1), Math.min(cols - 1, box.c1 + 1), Math.max(0, box.r0 - 1), Math.min(rows - 1, box.r1 + 1), true);
       }
-      // Opening: the print spreads out from the middle, soft-edged.
-      const f = !animate || !formStart ? 1 : Math.min(1, Math.max(0, (now - formStart) / 1000 / FORM_S));
-      if (f < 1) {
-        const R = Math.hypot(w, h) * 0.75 * (1 - Math.pow(1 - f, 2.2)) + 1;
-        const grad = ctx.createRadialGradient(w * 0.55, h * 0.6, R * 0.55, w * 0.55, h * 0.6, R);
-        grad.addColorStop(0, "#000"); grad.addColorStop(1, "transparent");
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-        ctx.globalCompositeOperation = "source-over";
+      // Opening: every dot flies from a scattered spot near the middle to its place.
+      const fsec = !animate || !formStart ? Infinity : (now - formStart) / 1000;
+      if (fsec >= FORM_TOTAL) return false;
+      ctx.clearRect(0, 0, w, h);
+      if (fsec < 0) return true;
+      const max = sp * 0.5, CX = w * 0.55, CY = h * 0.55, span = Math.hypot(w, h) * 0.6;
+      for (let kind = 0; kind < 2; kind++) {
+        ctx.fillStyle = kind ? GREEN : INK;
+        ctx.beginPath();
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+          const i = r * cols + c;
+          if (T[i] !== kind || K[i] <= 0) continue;
+          const x = c * sp, y = r * sp;
+          const delay = Math.min(1, Math.hypot(x - CX, y - CY) / span) * FORM_SPREAD + hash(c * 1.3 + 7, r * 0.7) * FORM_JITTER;
+          const e = Math.min(1, (fsec - delay) / FORM_FLIGHT);
+          if (e <= 0) continue;
+          const ang = hash(c * 2.1, r * 1.7 + 3) * Math.PI * 2, jit = 25 + hash(c + 11, r * 3.1) * 70;
+          const sx = CX + (x - CX) * 0.1 + Math.cos(ang) * jit, sy = CY + (y - CY) * 0.1 + Math.sin(ang) * jit;
+          const ee = easeOutBack(e);
+          const radius = max * K[i] * Math.min(1, e * 1.6);
+          if (radius < 0.25) continue;
+          const px = sx + (x - sx) * ee, py = sy + (y - sy) * ee;
+          ctx.moveTo(px + radius, py);
+          ctx.arc(px, py, radius, 0, Math.PI * 2);
+        }
+        ctx.fill();
       }
-      return f < 1;
+      return true;
     };
 
     // Springs for the dots near the cursor; returns whether any still move.
@@ -217,7 +241,8 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
     };
     const onLeave = () => { if (pointer.inside) { pointer.inside = false; wake(); } };
 
-    photo.onload = () => { sample(); formStart = performance.now(); wake(); };
+    const mounted = performance.now();
+    photo.onload = () => { sample(); formStart = Math.max(performance.now(), mounted + introAt); wake(); };
     photo.src = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${src}`;
     resize();
     const ro = new ResizeObserver(() => { resize(); wake(); });
@@ -232,7 +257,7 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
-  }, [src, interactive]);
+  }, [src, interactive, introAt]);
 
   return <canvas ref={ref} aria-hidden="true" style={{ aspectRatio: `${width} / ${height}` }} className={`block ${className}`} />;
 }
