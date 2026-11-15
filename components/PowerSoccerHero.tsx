@@ -5,36 +5,25 @@ import DotCluster from "@/components/heroes/DotCluster";
 import { HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
 import HalftonePhoto from "@/components/heroes/HalftonePhoto";
 
-// The Power Soccer Inc. page's hero (draft): "See you on the pitch." (with
-// green squiggles round "Pitch.") and ruled fact lines top left, over the
+// The Power Soccer Inc. page's hero (draft), in the main hero's style (ruled
+// caption band across the top, left rule, numbered headline lines with
+// hairlines, jelly blobs): "See you on the pitch." over the
 // poster collage, with the three players printed as halftone dots straight
 // from the photo (public/draft/kids-tone.webp, cut out with a transparent
 // background), the corner-flag photo, and the Power Soccer Inc. wordmark.
 // `preview`: shown inside the hover preview on the draft, so nothing reacts
 // to the cursor.
 
-// The green as it looks blended into the paper, like the main page's (the
-// headline is its own layer, so it can't blend with the paper itself).
-const BLENDED_GREEN = "#3ed602";
+const mono = "font-mono text-[0.68rem] font-semibold uppercase leading-none tracking-[0.14em]";
 
-/** Hand-drawn green squiggles around a word: two wavy underlines and a curl. */
-function Squiggles({ className = "" }: { className?: string }) {
+/** One line of the headline: index number, the words, a hairline rule on its baseline (as on the main hero). */
+function Line({ n, children }: { n: string; children: React.ReactNode }) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 400 160" className={`pointer-events-none overflow-visible ${className}`} fill="none" stroke={BLENDED_GREEN} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M-6 150 C 22 126 46 172 76 148 S 130 124 158 150 S 214 174 244 146 S 300 122 328 150 S 384 172 414 140" strokeWidth="20" />
-      <path d="M470 40 C 500 0 545 30 525 62 C 507 90 468 66 492 42 C 512 22 540 32 546 54" strokeWidth="14" />
-      <path d="M-40 166 C -20 190 10 150 40 176 S 90 196 118 172" strokeWidth="10" />
-    </svg>
-  );
-}
-
-/** Two tapered green strokes under the wordmark. */
-function Swoosh({ className = "" }: { className?: string }) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 440 70" className={className} fill="var(--color-green)">
-      <path d="M2 52 C 110 18 300 2 438 6 C 300 14 130 30 2 52 Z" />
-      <path d="M150 62 C 220 40 320 28 400 26 C 320 36 230 46 150 62 Z" />
-    </svg>
+    <span className="relative block w-fit">
+      <span aria-hidden="true" className={`${mono} absolute top-[0.2em] -left-[3.2rem] text-ink/60 max-[860px]:hidden`}>{n}</span>
+      {children}
+      <span aria-hidden="true" className="absolute right-[-40vw] bottom-[0.1em] -left-[3.2rem] h-px bg-ink/25 max-[860px]:-left-5" />
+    </span>
   );
 }
 
@@ -43,6 +32,7 @@ const BLOBS: { className: string; viewBox: string; dots: Dot[]; trails: string[]
   { className: "top-[8%] left-[33%] w-[11%]", viewBox: "0 0 260 150", dots: [[60, 60, 34], [122, 44, 22], [170, 74, 30], [222, 50, 12], [96, 112, 14], [20, 116, 8]], trails: ["60,60 122,44 170,74"], width: 26 },
   { className: "top-[52%] left-[29.5%] w-[5%]", viewBox: "0 0 120 300", dots: [[60, 40, 28], [48, 110, 20], [70, 170, 30], [54, 240, 18], [96, 210, 9], [20, 140, 7]], trails: ["60,40 48,110 70,170 54,240"], width: 22 },
   { className: "top-[11%] right-[3%] w-[8%]", viewBox: "0 0 200 220", dots: [[110, 50, 36], [80, 110, 24], [118, 160, 30], [150, 200, 12], [40, 60, 11]], trails: ["110,50 80,110 118,160"], width: 26 },
+  { className: "top-[33%] left-[83%] w-[7%]", viewBox: "0 0 200 70", dots: [[40, 35, 26], [100, 30, 18], [150, 40, 22], [188, 22, 8]], trails: ["40,35 100,30 150,40"], width: 22 },
   { className: "bottom-[24%] left-[2%] w-[7%]", viewBox: "0 0 180 140", dots: [[50, 70, 30], [104, 56, 22], [144, 84, 18], [30, 120, 8]], trails: ["50,70 104,56 144,84"], width: 22 },
 ];
 
@@ -50,17 +40,14 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
   return (
     <section className="relative overflow-hidden bg-paper">
       <div className="relative mx-auto h-[min(calc(100svh-76px),860px)] min-h-[600px] w-full max-w-[1440px] max-[860px]:flex max-[860px]:h-auto max-[860px]:min-h-0 max-[860px]:flex-col">
-        {/* Ruled lines with facts, top left (like the main hero's caption band) */}
-        <div aria-hidden="true" className="absolute top-[4.5%] left-[6%] w-[33%] font-mono text-[0.68rem] font-semibold uppercase leading-[1.5] tracking-[0.14em] text-ink max-[860px]:hidden">
-          <span className="block h-px w-full bg-ink" />
-          <div className="grid grid-cols-3 gap-5 pt-2.5">
-            <span>Power Soccer Inc.<br /><span className="text-ink/55">Est. 1996</span></span>
-            <span>Soccer schools<br /><span className="text-ink/55">Summer camps</span></span>
-            <span>Toronto &amp; GTA<br /><span className="text-ink/55">Team &amp; private</span></span>
-          </div>
-          <span className="mt-2.5 block h-px w-[64%] bg-ink/40" />
+        {/* Swiss grid: a ruled caption band across the top, and the left rule (as on the main hero) */}
+        <div aria-hidden="true" className={`${mono} absolute top-[4.5%] right-[3%] left-[6%] grid grid-cols-4 gap-6 border-t border-ink pt-2.5 text-ink max-[860px]:hidden`}>
+          <span>Power Soccer Inc.<br /><span className="text-ink/55">Est. 1996</span></span>
+          <span>Soccer schools<br /><span className="text-ink/55">Summer camps</span></span>
+          <span>Team &amp; private<br /><span className="text-ink/55">Training</span></span>
+          <span className="text-right">Toronto, ON<br /><span className="text-ink/55">&amp; the GTA</span></span>
         </div>
-        <span aria-hidden="true" className="absolute top-[5%] bottom-0 left-[6%] w-px bg-ink/25 max-[860px]:hidden" />
+        <span aria-hidden="true" className="absolute top-[4.5%] bottom-0 left-[6%] w-px bg-ink/25 max-[860px]:hidden" />
 
         {/* Collage */}
         <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
@@ -80,31 +67,25 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
         {BLOBS.map(({ className, ...blob }) => (
           <Blobs key={className} {...blob} jiggle={preview ? 0 : 1} className={`absolute mix-blend-multiply max-[860px]:hidden ${className}`} />
         ))}
-        <span aria-hidden="true" className="absolute bottom-[10%] left-[35.8%] h-[13%] w-[5%] bg-[#9fa29f]/45 max-[860px]:hidden" />
+        <span aria-hidden="true" className="absolute top-[44%] left-[37%] h-[13%] w-[4.5%] bg-[#9fa29f]/45 max-[860px]:hidden" />
         <Sparkle className="absolute top-[38.5%] left-[4.2%] w-[2.6%] min-w-5 text-ink max-[860px]:hidden" />
 
         {/* Headline */}
-        <h1 className="rise-in absolute top-[13.5%] left-[42%] z-10 m-0 text-[clamp(2.6rem,5.6vw,5.4rem)] uppercase leading-[1.02] tracking-[-0.01em] max-[860px]:static max-[860px]:px-5 max-[860px]:pt-10 max-[860px]:text-[clamp(2.4rem,11.5vw,4rem)]">
-          {/* (The slant sits on inner spans: the rise-in animation owns the lines' own transform.) */}
-          <span className="block">
-            <span className="block origin-left -skew-x-[12deg] text-transparent [-webkit-text-stroke:2px_var(--color-ink)]">See you on</span>
-          </span>
-          <span className="block">
-            <span className="ml-[0.45em] flex w-fit origin-left -skew-x-[12deg] items-center gap-[0.22em] max-[860px]:ml-0">
-              <span>The</span>
-              <span className="relative block">
-                <Squiggles className="absolute top-[12%] left-[2%] h-[100%] w-[100%]" />
-                <span className="relative block px-[0.06em]">Pitch.</span>
-              </span>
-            </span>
-          </span>
+        <h1 className="rise-in absolute top-[18%] left-[44%] z-10 m-0 pl-[3.2rem] text-[clamp(2.6rem,5.4vw,5.2rem)] uppercase leading-[0.98] tracking-[-0.01em] max-[860px]:static max-[860px]:px-5 max-[860px]:pt-10 max-[860px]:text-[clamp(2.4rem,11.5vw,4rem)]">
+          <Line n="01">
+            <span className="block text-transparent [-webkit-text-stroke:2px_var(--color-ink)]">See you on</span>
+          </Line>
+          <Line n="02">
+            <span className="block origin-left -skew-x-[10deg]">The pitch.</span>
+          </Line>
         </h1>
 
         {/* Wordmark */}
-        <div className="absolute bottom-[9%] left-[6%] z-10 max-[860px]:static max-[860px]:order-3 max-[860px]:px-5 max-[860px]:pt-2 max-[860px]:pb-10">
-          <p className="m-0 origin-left -skew-x-[12deg] font-display text-[clamp(1.8rem,3.5vw,3.3rem)] uppercase leading-none">Power Soccer</p>
-          <p className="m-0 mt-[0.35em] origin-left -skew-x-[12deg] pl-[0.1em] font-display text-[clamp(1rem,2vw,1.9rem)] uppercase leading-none tracking-[0.55em]">Inc.</p>
-          <Swoosh className="mt-3 block w-[clamp(180px,24vw,340px)] mix-blend-multiply" />
+        <div className="absolute bottom-[9%] left-[6%] z-10 pl-[3.2rem] max-[860px]:static max-[860px]:order-3 max-[860px]:px-5 max-[860px]:pt-2 max-[860px]:pb-10">
+          <Line n="03">
+            <span className="block origin-left -skew-x-[10deg] font-display text-[clamp(1.8rem,3.5vw,3.3rem)] uppercase leading-[1.1]">Power Soccer</span>
+          </Line>
+          <p className={`${mono} m-0 mt-3 text-ink/60`}>Inc. — Training &amp; soccer schools</p>
         </div>
 
         {/* The players, as halftone dots from the photo */}
