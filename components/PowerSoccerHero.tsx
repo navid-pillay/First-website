@@ -1,8 +1,7 @@
 import Image from "next/image";
 import cornerFlag from "@/assets/corner-flag.webp";
 import Blobs, { type Dot } from "@/components/heroes/Blobs";
-import DotCluster from "@/components/heroes/DotCluster";
-import { at, Crosshair, HeroArcs, Sparkle } from "@/components/heroes/FcHeroArt";
+import { at, Crosshair, Sparkle } from "@/components/heroes/FcHeroArt";
 import HalftonePhoto from "@/components/heroes/HalftonePhoto";
 
 // The Power Soccer Inc. page's hero (draft), in the main hero's style (ruled
@@ -27,6 +26,32 @@ function Line({ n, rule, text, children, short = false }: { n: string; rule: num
   );
 }
 
+/**
+ * This page's own background lines (the main hero has sweeping arcs): football
+ * pitch markings drawn like ink on the poster: a centre circle and its
+ * halfway line, a penalty arc, and dotted running lines. The
+ * solid lines trace in during the opening; the dotted ones fade in later.
+ */
+function PitchLines({ late }: { late: number }) {
+  const ink = "#0d0f0e", green = "#42e202";
+  const dotted = { strokeDasharray: "0.1 14", strokeLinecap: "round" as const, strokeWidth: 5, vectorEffect: "non-scaling-stroke" as const };
+  return (
+    <svg aria-hidden="true" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full max-[860px]:hidden" fill="none">
+      {/* Centre circle in the top-right corner, on its halfway line */}
+      <path className="intro-trace" style={at(0.3)} pathLength={1} d="M1440 250 A 115 115 0 1 0 1210 250 A 115 115 0 1 0 1440 250" stroke={green} strokeWidth="2.2" vectorEffect="non-scaling-stroke" />
+      <path className="intro-trace" style={at(0.45)} pathLength={1} d="M1120 250 L 1460 250" stroke={ink} strokeWidth="1" vectorEffect="non-scaling-stroke" opacity="0.3" />
+      {/* Penalty arc under the wordmark */}
+      <path className="intro-trace" style={at(0.6)} pathLength={1} d="M40 880 A 380 380 0 0 1 480 880" stroke={green} strokeWidth="1.6" vectorEffect="non-scaling-stroke" opacity="0.85" />
+      {/* Dotted running lines, like a coach's chalk diagram */}
+      <g style={at(late)} className="intro-in">
+        <path d="M150 230 C 240 150 380 130 480 170" stroke={ink} {...dotted} />
+        <path d="M560 470 C 620 410 700 400 760 430" stroke={ink} {...dotted} />
+        <path d="M250 600 C 300 560 360 560 400 590" stroke={ink} {...dotted} />
+      </g>
+    </svg>
+  );
+}
+
 // Jelly blobs floating around the collage, like the main hero's (wide screens).
 const BLOBS: { className: string; viewBox: string; dots: Dot[]; trails: string[]; width: number }[] = [
   { className: "top-[8%] left-[33%] w-[11%]", viewBox: "0 0 260 150", dots: [[60, 60, 34], [122, 44, 22], [170, 74, 30], [222, 50, 12], [96, 112, 14], [20, 116, 8]], trails: ["60,60 122,44 170,74"], width: 26 },
@@ -36,8 +61,8 @@ const BLOBS: { className: string; viewBox: string; dots: Dot[]; trails: string[]
   { className: "bottom-[24%] left-[2%] w-[7%]", viewBox: "0 0 180 140", dots: [[50, 70, 30], [104, 56, 22], [144, 84, 18], [30, 120, 8]], trails: ["50,70 104,56 144,84"], width: 22 },
 ];
 
-// The opening sequence, as on the main hero: bare paper, the ink lines trace
-// in, the players form from scattering dots at PLAYERS_AT, and everything else
+// The opening sequence, as on the main hero: bare paper, the ink lines (here
+// pitch markings) trace in, the players form from scattering dots at PLAYERS_AT, and everything else
 // comes on from LATE_AT (seconds; set on each piece with at()).
 const PLAYERS_AT = 1.5;
 const LATE_AT = 2.2;
@@ -57,15 +82,7 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
         <span aria-hidden="true" style={at(0.3)} className="intro-y absolute top-[4.5%] bottom-0 left-[6%] w-px bg-ink/25 max-[860px]:hidden" />
 
         {/* Collage */}
-        <HeroArcs className="absolute inset-0 h-full w-full max-[860px]:hidden" />
-        {!preview && (
-          <>
-            <DotCluster style={{ left: "11.5%", top: "16.5%", width: "20%", height: "10%", ...at(LATE_AT + 0.15) }} className="intro-in absolute max-[860px]:hidden" />
-            <DotCluster style={{ left: "31%", top: "36%", width: "6%", height: "16%", ...at(LATE_AT + 0.23) }} className="intro-in absolute max-[860px]:hidden" />
-            <DotCluster style={{ left: "18%", top: "62%", width: "6%", height: "8%", ...at(LATE_AT + 0.31) }} className="intro-in absolute max-[860px]:hidden" />
-            <DotCluster style={{ left: "79%", top: "19%", width: "5%", height: "7%", ...at(LATE_AT + 0.39) }} className="intro-in absolute max-[860px]:hidden" />
-          </>
-        )}
+        <PitchLines late={LATE_AT + 0.2} />
         <span aria-hidden="true" style={at(LATE_AT + 0.3)} className="intro-x absolute top-[25.8%] left-[8.2%] h-[3%] w-[8%] bg-green max-[860px]:hidden" />
         <span style={at(LATE_AT)} className="intro-in absolute top-[23.5%] left-[11.7%] h-[24.6%] w-[22.4%] overflow-hidden max-[860px]:hidden">
           <Image src={cornerFlag} alt="" fill sizes="(min-width: 860px) 24vw, 0px" className="object-cover contrast-[1.1] grayscale" />
