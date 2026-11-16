@@ -17,12 +17,12 @@ import HalftonePhoto from "@/components/heroes/HalftonePhoto";
 const mono = "font-mono text-[0.68rem] font-semibold uppercase leading-none tracking-[0.14em]";
 
 /** One line of the headline: index number, the words, a hairline rule on its baseline (as on the main hero). */
-function Line({ n, rule, text, children }: { n: string; rule: number; text: number; children: React.ReactNode }) {
+function Line({ n, rule, text, children, short = false }: { n: string; rule: number; text: number; children: React.ReactNode; short?: boolean }) {
   return (
     <span className="relative block w-fit">
       <span aria-hidden="true" style={at(text)} className={`${mono} intro-in absolute top-[0.2em] -left-[3.2rem] text-ink/60 max-[860px]:hidden`}>{n}</span>
       <span style={at(text)} className="intro-in block">{children}</span>
-      <span aria-hidden="true" style={at(rule)} className="intro-x absolute right-[-40vw] bottom-[0.1em] -left-[3.2rem] h-px bg-ink/25 max-[860px]:-left-5" />
+      <span aria-hidden="true" style={at(rule)} className={`intro-x absolute ${short ? "right-0" : "right-[-40vw]"} bottom-[0.1em] -left-[3.2rem] h-px bg-ink/25 max-[860px]:-left-5`} />
     </span>
   );
 }
@@ -80,7 +80,7 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
         <Crosshair className="absolute top-[60%] right-[2.5%] w-[5%] min-w-10 text-ink/70 max-[860px]:hidden" />
 
         {/* Headline */}
-        <h1 className="absolute top-[18%] left-[44%] z-10 m-0 pl-[3.2rem] text-[clamp(2.6rem,5.4vw,5.2rem)] uppercase leading-[0.98] tracking-[-0.01em] max-[860px]:static max-[860px]:px-5 max-[860px]:pt-10 max-[860px]:text-[clamp(2.4rem,11.5vw,4rem)]">
+        <h1 className="absolute top-[15%] left-[44%] z-10 m-0 pl-[3.2rem] text-[clamp(2.6rem,5.4vw,5.2rem)] uppercase leading-[0.98] tracking-[-0.01em] max-[860px]:static max-[860px]:px-5 max-[860px]:pt-10 max-[860px]:text-[clamp(2.4rem,11.5vw,4rem)]">
           <Line n="01" rule={0.5} text={LATE_AT + 0.1}>
             <span className="block text-transparent [-webkit-text-stroke:2px_var(--color-ink)]">See you on</span>
           </Line>
@@ -91,7 +91,7 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
 
         {/* Wordmark */}
         <div className="absolute bottom-[9%] left-[6%] z-10 pl-[3.2rem] max-[860px]:static max-[860px]:order-3 max-[860px]:px-5 max-[860px]:pt-2 max-[860px]:pb-10">
-          <Line n="03" rule={0.74} text={LATE_AT + 0.34}>
+          <Line n="03" rule={0.74} text={LATE_AT + 0.34} short>
             <span className="block origin-left -skew-x-[10deg] font-display text-[clamp(1.8rem,3.5vw,3.3rem)] uppercase leading-[1.1]">Power Soccer</span>
           </Line>
           <p style={at(LATE_AT + 0.45)} className={`${mono} intro-in m-0 mt-3 text-ink/60`}>Inc. — Training &amp; soccer schools</p>
@@ -105,7 +105,7 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
           interactive={!preview}
           introAt={PLAYERS_AT * 1000}
           spacing={4} // finer than the main hero's 7, so the children's faces read
-          className="mix-blend-multiply absolute right-[-5%] bottom-0 w-[66%] max-[860px]:static max-[860px]:order-2 max-[860px]:mt-6 max-[860px]:-ml-[18%] max-[860px]:w-[136%] max-[860px]:max-w-none"
+          className="mix-blend-multiply absolute right-[-3%] bottom-0 w-[57%] max-[860px]:static max-[860px]:order-2 max-[860px]:mt-6 max-[860px]:-ml-[18%] max-[860px]:w-[136%] max-[860px]:max-w-none"
         />
         <p className="sr-only">Three young Power Soccer players sitting on the pitch with a ball, laughing together.</p>
       </div>
