@@ -30,7 +30,7 @@ function hash(x: number, y: number) {
   return s - Math.floor(s);
 }
 
-export default function HalftonePhoto({ src, width, height, className = "", interactive = true, introAt = 0 }: {
+export default function HalftonePhoto({ src, width, height, className = "", interactive = true, introAt = 0, spacing = 7 }: {
   src: string;
   /** The photo's size in pixels (sets the canvas's shape). */
   width: number;
@@ -40,6 +40,8 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
   interactive?: boolean;
   /** ms after this appears on the page when the dots start to form (0: as soon as the photo loads). */
   introAt?: number;
+  /** px between dots on wide screens (3/4 of it on phones). 7 is the main hero's. */
+  spacing?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -138,7 +140,7 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       // The main hero's dot spacing: 7px apart, 5px on phones.
-      sp = window.innerWidth < 860 ? 5 : 7;
+      sp = window.innerWidth < 860 ? spacing * 0.75 : spacing;
       box = null;
       cols = Math.ceil(w / sp) + 1; rows = Math.ceil(h / sp) + 1;
       sample();
@@ -257,7 +259,7 @@ export default function HalftonePhoto({ src, width, height, className = "", inte
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
-  }, [src, interactive, introAt]);
+  }, [src, interactive, introAt, spacing]);
 
   return <canvas ref={ref} aria-hidden="true" style={{ aspectRatio: `${width} / ${height}` }} className={`block ${className}`} />;
 }

@@ -104,6 +104,7 @@ export default function PowerSoccerHero({ preview = false }: { preview?: boolean
           height={905}
           interactive={!preview}
           introAt={PLAYERS_AT * 1000}
+          spacing={4} // finer than the main hero's 7, so the children's faces read
           className="mix-blend-multiply absolute right-[-5%] bottom-0 w-[66%] max-[860px]:static max-[860px]:order-2 max-[860px]:mt-6 max-[860px]:-ml-[18%] max-[860px]:w-[136%] max-[860px]:max-w-none"
         />
         <p className="sr-only">Three young Power Soccer players sitting on the pitch with a ball, laughing together.</p>
