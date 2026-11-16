@@ -36,7 +36,7 @@ const PROGRAMS = [
 const PREVIEW_DELAY = 120; // ms of hover before the preview starts growing
 // The hover "dream" preview (ProgramBubble). Set to false to switch it off
 // (the code stays) if it is too heavy on a computer.
-const PREVIEW_ENABLED = true;
+const PREVIEW_ENABLED = false;
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (a: number, b: number, x: number) => {
